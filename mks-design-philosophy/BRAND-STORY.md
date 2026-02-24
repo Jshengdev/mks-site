@@ -8,7 +8,7 @@ This is not a bio. This is the narrative architecture beneath everything — the
 
 ## The Image He Carries
 
-A figure walks forward. He carries a skull — not death as ending, but death as the thing you've already survived. The weight of what you've been through, held openly, not hidden. Behind him: a white horse. Not ridden. Following. The white horse is potential, freedom, the next thing — but it's behind him, not in front. He's not chasing it. It chose to follow.
+A figure walks forward. He carries a music scroll — the handwritten scores, the body of work, the craft itself held in his hands. Not hidden, not protected in a case. Carried openly, the way you carry something you've committed your life to. Behind him: a white horse. Not ridden. Following. The white horse is potential, freedom, the next thing — but it's behind him, not in front. He's not chasing it. It chose to follow.
 
 Above: a sky breaking open. Light pours through a cloud mass in visible rays. The sun is hidden — you can't see the source. But the light reaches everything. It touches the ground. It touches the figure. It touches you looking at it.
 
@@ -92,7 +92,7 @@ If the entire brand had to be one sentence:
 
 If the entire visual identity had to be one image:
 
-**A dark sky cracking open with light. Rays fanning outward from a hidden source. A figure below — carrying what he's survived, followed by what hasn't happened yet — walking forward into the light he himself is creating, without knowing he's the source.**
+**A dark sky cracking open with light. Rays fanning outward from a hidden source. A figure below — carrying a music scroll, followed by a white horse — walking forward into the light he himself is creating, without knowing he's the source.**
 
 ---
 

@@ -75,7 +75,7 @@ Not just the sky. Not just the score. The score flying through the sky. The musi
 
 **Rule:** The landing page merges two worlds — the handwritten craft (the score) and the infinite natural world (the sky). The score is not pinned to a desk. It's airborne. The music has escaped the page.
 
-**The image in Mike's mind:** Cloud mass with rays behind it. A figure carrying a skull with a white horse behind him. This is the personal mythology. The cinematic self-image. Build toward this.
+**The image in Mike's mind:** Cloud mass with rays behind it. A figure carrying a music scroll with a white horse behind him. The scroll is the craft — the handwritten scores, the body of work, carried forward. This is the personal mythology. The cinematic self-image. Build toward this.
 
 ---
 
@@ -124,7 +124,7 @@ The overall feeling: "distant, but in a huge room." A whisper that carries becau
 
 The cloud mass with rays behind it (image 13). But not alone — layered with Mike's personal vision: carrying a skull, a white horse behind him. The hidden sun. The light you can't see but whose effects radiate outward into everything.
 
-> "That one. Cloud mass with the rays behind it, and you carrying a skull with a white horse behind you."
+> "That one. Cloud mass with the rays behind it, and you carrying a scroll with a white horse behind you."
 
 **Rule:** The entire site's visual identity can be reduced to this: a source of light hidden behind something massive, whose rays fan out and touch everything around it. The artist is the sun. The music is the light. The world is what the light transforms.
 
