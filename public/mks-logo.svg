@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300">
+  <defs>
+    <style>
+      .main { fill: #111111; }
+      .accent { fill: #c23b22; }
+      .stripe { fill: #faf8f5; opacity: 0.15; }
+    </style>
+  </defs>
+  
+  <!-- Warm paper background -->
+  <rect width="800" height="300" fill="#faf8f5"/>
+  
+  <!-- ==================== M ==================== -->
+  <!-- Two long-neck dinosaurs (brachiosaurus) forming the M shape -->
+  <!-- Their necks are the outer verticals, heads meet at top, bodies merge at bottom -->
+  
+  <!-- Left dinosaur body/leg base -->
+  <path d="M 42,265 Q 38,260 35,250 L 35,235 Q 36,225 42,220 L 58,220 Q 64,225 65,235 L 65,250 Q 62,260 58,265 Z" class="main"/>
+  
+  <!-- Left neck rising up - thick brushy stroke -->
+  <path d="M 38,225 Q 34,180 36,130 Q 38,90 44,55 Q 46,45 52,38 L 58,36 Q 62,38 64,44 Q 60,48 56,55 L 52,50 Q 48,60 46,80 Q 42,120 44,160 Q 46,190 50,225" 
+        class="main"/>
+  
+  <!-- Left dino head at top -->
+  <path d="M 52,38 Q 56,30 64,28 Q 72,27 76,32 Q 78,36 76,40 Q 72,38 68,34 Q 62,33 58,36" class="main"/>
+  <!-- Tiny eye -->
+  <circle cx="68" cy="32" r="1.5" fill="#faf8f5"/>
+  
+  <!-- M center valley - tails intertwining downward -->
+  <path d="M 70,36 Q 80,55 90,80 Q 98,105 105,140 Q 108,155 110,148 Q 112,105 120,80 Q 128,58 138,38" class="main"/>
+  
+  <!-- Right dinosaur neck -->
+  <path d="M 138,38 Q 144,45 148,60 Q 154,90 156,130 Q 158,170 160,225 L 152,225 Q 150,170 148,130 Q 146,90 142,60 Q 140,48 136,42" class="main"/>
+  
+  <!-- Right dino head -->
+  <path d="M 138,38 Q 142,30 150,28 Q 158,27 162,32 Q 164,38 160,42 Q 155,38 150,33 Q 144,32 140,36" class="main"/>
+  <circle cx="154" cy="32" r="1.5" fill="#faf8f5"/>
+  
+  <!-- Right dinosaur body/leg base -->
+  <path d="M 148,265 Q 144,260 141,250 L 141,235 Q 142,225 148,220 L 164,220 Q 170,225 171,235 L 171,250 Q 168,260 164,265 Z" class="main"/>
+  
+  <!-- Filled M letterform - clean bold version overlaid -->
+  <!-- Actually let me redo this as a single bold shape -->
+  
+  <!-- ==================== REDO: CLEAN BOLD APPROACH ==================== -->
+  <!-- Clear previous attempts with a background patch -->
+  <rect x="20" y="20" width="200" height="260" fill="#faf8f5"/>
+  <rect x="240" y="20" width="240" height="260" fill="#faf8f5"/>
+  <rect x="500" y="20" width="280" height="260" fill="#faf8f5"/>
+  
+  <!-- === M: Two brachiosaurus necks forming the letter === -->
+  <g transform="translate(30, 0)">
+    <!-- Unified M shape - dinosaur silhouettes -->
+    <path d="
+      M 20,270 
+      L 20,240
+      Q 18,180 22,120 
+      Q 26,70 38,42
+      Q 42,34 48,30
+      Q 54,27 60,30
+      L 65,34
+      Q 58,32 54,30
+      
+      Q 62,28 70,26
+      Q 78,26 82,30
+      Q 86,34 84,40
+      Q 80,36 74,32
+      
+      Q 84,50 94,80
+      Q 104,115 108,150
+      
+      Q 112,115 122,80
+      Q 130,52 140,34
+      
+      Q 134,30 128,27
+      Q 136,25 144,26
+      Q 152,28 156,34
+      Q 160,40 158,46
+      Q 154,40 148,34
+      
+      Q 156,50 162,75
+      Q 170,110 172,160
+      Q 174,210 176,240
+      L 176,270
+      L 156,270
+      L 156,240
+      Q 154,180 150,130
+      Q 146,90 140,65
+      
+      L 118,150
+      Q 114,162 108,168
+      Q 102,162 98,150
+      L 76,65
+      
+      Q 68,90 64,130
+      Q 58,180 56,240
+      L 56,270
+      Z
+    " class="main"/>
+    
+    <!-- Left dino eye -->
+    <circle cx="75" cy="30" r="2.5" fill="#faf8f5"/>
+    <!-- Right dino eye -->
+    <circle cx="149" cy="30" r="2.5" fill="#faf8f5"/>
+    
+    <!-- Subtle dino teeth on left head -->
+    <path d="M 82,38 L 80,42 L 78,38" fill="#faf8f5" opacity="0.5"/>
+    <!-- Subtle dino teeth on right head -->
+    <path d="M 156,42 L 154,46 L 152,42" fill="#faf8f5" opacity="0.5"/>
+  </g>
+  
+  
+  <!-- === K: Raptor/velociraptor lunging - body is vertical, arms/tail are diagonals === -->
+  <g transform="translate(260, 0)">
+    <!-- Raptor body forming K -->
+    <path d="
+      M 30,270
+      L 30,240
+      L 28,180
+      Q 26,140 28,100
+      Q 30,70 34,50
+      Q 36,40 40,34
+      Q 44,30 48,32
+      Q 52,35 50,42
+      L 50,50
+      Q 46,70 44,100
+      Q 42,130 42,145
+      
+      L 80,100
+      Q 100,76 118,54
+      Q 128,42 138,34
+      Q 144,30 150,32
+      Q 156,36 154,42
+      Q 148,38 142,38
+      Q 134,42 124,54
+      Q 108,74 90,98
+      L 56,145
+      
+      L 90,185
+      Q 110,210 130,232
+      Q 140,244 150,250
+      Q 158,254 164,252
+      Q 168,256 166,262
+      Q 160,268 150,264
+      Q 138,258 126,244
+      Q 106,220 86,195
+      L 50,145
+      
+      Q 50,180 48,220
+      L 48,240
+      L 48,270
+      Z
+    " class="main"/>
+    
+    <!-- Raptor eye -->
+    <circle cx="44" cy="37" r="2.5" fill="#faf8f5"/>
+    
+    <!-- Raptor claws on upper arm -->
+    <path d="M 152,36 L 158,30 M 154,40 L 162,34 M 150,34 L 156,26" 
+          stroke="#111111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Raptor foot claws bottom -->
+    <path d="M 162,254 L 170,248 M 164,258 L 174,252 M 166,262 L 176,258" 
+          stroke="#111111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    
+    <!-- Tiger stripes on the body -->
+    <path d="M 34,80 Q 40,76 46,80" stroke="#faf8f5" stroke-width="2" fill="none" opacity="0.2"/>
+    <path d="M 32,110 Q 38,106 48,110" stroke="#faf8f5" stroke-width="2" fill="none" opacity="0.2"/>
+    <path d="M 30,160 Q 38,155 48,160" stroke="#faf8f5" stroke-width="2" fill="none" opacity="0.2"/>
+    <path d="M 32,200 Q 38,195 46,200" stroke="#faf8f5" stroke-width="2" fill="none" opacity="0.2"/>
+  </g>
+  
+  
+  <!-- === S: Tiger in an S-curve pose — arched back, curling tail === -->
+  <g transform="translate(510, 0)">
+    <path d="
+      M 140,52
+      Q 130,36 114,30
+      Q 96,24 78,28
+      Q 58,34 48,50
+      Q 38,68 44,86
+      Q 50,100 68,110
+      Q 88,120 108,132
+      Q 130,145 142,162
+      Q 154,180 148,202
+      Q 142,222 124,236
+      Q 104,248 82,250
+      Q 62,250 48,240
+      Q 36,232 32,218
+    " stroke="#111111" stroke-width="28" fill="none" 
+      stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Tiger head at top of S -->
+    <g transform="translate(130, 40)">
+      <!-- Ears -->
+      <path d="M -4,-18 L 2,-30 L 8,-16" class="main"/>
+      <path d="M 16,-18 L 22,-30 L 28,-16" class="main"/>
+      <!-- Head shape -->
+      <ellipse cx="12" cy="-8" rx="18" ry="14" class="main"/>
+      <!-- Eyes -->
+      <ellipse cx="4" cy="-10" rx="3" ry="2.5" fill="#faf8f5"/>
+      <ellipse cx="20" cy="-10" rx="3" ry="2.5" fill="#faf8f5"/>
+      <circle cx="5" cy="-10" r="1.5" fill="#111"/>
+      <circle cx="21" cy="-10" r="1.5" fill="#111"/>
+      <!-- Nose -->
+      <path d="M 10,-4 Q 12,-2 14,-4" stroke="#faf8f5" stroke-width="1.5" fill="none"/>
+      <!-- Whiskers -->
+      <line x1="-6" y1="-6" x2="-18" y2="-10" stroke="#faf8f5" stroke-width="1" opacity="0.4"/>
+      <line x1="-6" y1="-3" x2="-18" y2="-2" stroke="#faf8f5" stroke-width="1" opacity="0.4"/>
+      <line x1="30" y1="-6" x2="42" y2="-10" stroke="#faf8f5" stroke-width="1" opacity="0.4"/>
+      <line x1="30" y1="-3" x2="42" y2="-2" stroke="#faf8f5" stroke-width="1" opacity="0.4"/>
+    </g>
+    
+    <!-- Tiger tail curl at bottom of S -->
+    <path d="M 32,218 Q 26,208 24,198 Q 22,186 28,180 Q 34,176 38,182" 
+          stroke="#111111" stroke-width="8" fill="none" stroke-linecap="round"/>
+    
+    <!-- Tiger stripes across the S body -->
+    <path d="M 52,42 Q 58,36 64,42" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 44,68 Q 50,62 56,68" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 56,96 Q 64,90 72,96" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 92,118 Q 100,112 108,118" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 120,142 Q 128,136 136,142" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 142,175 Q 148,168 152,175" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 132,210 Q 138,204 142,210" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 100,238 Q 108,232 114,238" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    <path d="M 60,244 Q 68,238 76,244" stroke="#faf8f5" stroke-width="2.5" fill="none" opacity="0.25"/>
+    
+    <!-- Paws at bottom -->
+    <circle cx="38" cy="246" r="4" class="main"/>
+    <circle cx="52" cy="250" r="4" class="main"/>
+  </g>
+  
+  <!-- Red seal chop mark -->
+  <g transform="translate(720, 240)">
+    <rect x="0" y="0" width="24" height="24" rx="2" 
+          stroke="#c23b22" stroke-width="1.5" fill="none" opacity="0.7"/>
+    <text x="12" y="17" font-family="serif" font-size="12" 
+          fill="#c23b22" text-anchor="middle" opacity="0.7">虎</text>
+  </g>
+  
+</svg>
