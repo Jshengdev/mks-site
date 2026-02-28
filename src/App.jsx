@@ -3,6 +3,7 @@ import './App.css'
 import MoonlightCursor from './MoonlightCursor'
 import MiniPlayer from './MiniPlayer'
 import FlowerVisual from './FlowerVisual'
+import LandingSection from './LandingSection.jsx'
 
 function Nav({ page, setPage }) {
   return (
@@ -204,7 +205,7 @@ function App() {
       <Nav page={page} setPage={setPage} />
 
       <div className="page-wrapper" key={page}>
-        {page === 'home' && <HomePage />}
+        {page === 'home' && <LandingSection />}
         {page === 'contact' && <ContactPage />}
         {page === 'tour' && <HomePage />}
       </div>
