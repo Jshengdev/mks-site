@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { noise2D } from './utils/noise.js'
+import FlowerField from './FlowerField.jsx'
+import useScrollAudio from './useScrollAudio.js'
 import './LandingSection.css'
+import './LandingAccessibility.css'
 
 export default function LandingSection() {
   const sectionRef = useRef(null)
@@ -9,6 +12,11 @@ export default function LandingSection() {
   const rafRef = useRef(null)
   const scrollRef = useRef(0)
   const [warmOpacity, setWarmOpacity] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [waveProgress, setWaveProgress] = useState(0)
+
+  // Audio volume ramp tied to wave progress
+  useScrollAudio(waveProgress)
 
   // Scroll tracking — stored in ref to avoid re-renders
   useEffect(() => {
@@ -52,6 +60,8 @@ export default function LandingSection() {
         (progress - warmStart) / (warmEnd - warmStart)
       ))
       setWarmOpacity(warmProgress)
+      // Update scroll progress for FlowerField (throttled — only on change > 0.005)
+      setScrollProgress(prev => Math.abs(prev - progress) > 0.005 ? progress : prev)
 
       // Wave progress (Phase 3: 44%-78%)
       const phase3Start = 0.44
@@ -59,6 +69,7 @@ export default function LandingSection() {
       const waveProgress = Math.max(0, Math.min(1,
         (progress - phase3Start) / (phase3End - phase3Start)
       ))
+      setWaveProgress(prev => Math.abs(prev - waveProgress) > 0.005 ? waveProgress : prev)
 
       // Fill dark
       ctx.fillStyle = '#0a0a0a'
@@ -119,6 +130,9 @@ export default function LandingSection() {
 
       {/* Dark mask canvas */}
       <canvas ref={maskCanvasRef} className="landing-mask" />
+
+      {/* Generative flowers — primary visual layer */}
+      <FlowerField scrollProgress={scrollProgress} />
 
       {/* Phase 1: The Knowing */}
       <div className="landing-phase landing-phase--knowing">

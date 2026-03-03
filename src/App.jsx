@@ -196,7 +196,7 @@ function App() {
 
   return (
     <div className={`hero page-${page}`}>
-      <FlowerVisual />
+      {page !== 'home' && <FlowerVisual />}
       <MiniPlayer />
       <div className="hero-bg">
         <img src="/hero-bg.jpg" alt="Michael Kim-Sheng at the piano" />
