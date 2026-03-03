@@ -4,6 +4,7 @@ import MoonlightCursor from './MoonlightCursor'
 import MiniPlayer from './MiniPlayer'
 import FlowerVisual from './FlowerVisual'
 import LandingSection from './LandingSection.jsx'
+import Overlays from './Overlays.jsx'
 
 function Nav({ page, setPage }) {
   return (
@@ -196,7 +197,6 @@ function App() {
   return (
     <div className={`hero page-${page}`}>
       <FlowerVisual />
-      <MoonlightCursor />
       <MiniPlayer />
       <div className="hero-bg">
         <img src="/hero-bg.jpg" alt="Michael Kim-Sheng at the piano" />
@@ -209,6 +209,8 @@ function App() {
         {page === 'contact' && <ContactPage />}
         {page === 'tour' && <HomePage />}
       </div>
+      <Overlays />
+      <MoonlightCursor />
     </div>
   )
 }
