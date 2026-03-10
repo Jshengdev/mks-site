@@ -198,11 +198,13 @@ function App() {
     <div className={`hero page-${page}`}>
       {page !== 'home' && <FlowerVisual />}
       <MiniPlayer />
-      <div className="hero-bg">
-        <img src="/hero-bg.jpg" alt="Michael Kim-Sheng at the piano" />
-      </div>
+      {page !== 'home' && (
+        <div className="hero-bg">
+          <img src="/hero-bg.jpg" alt="Michael Kim-Sheng at the piano" />
+        </div>
+      )}
 
-      <Nav page={page} setPage={setPage} />
+      {page !== 'home' && <Nav page={page} setPage={setPage} />}
 
       <div className="page-wrapper" key={page}>
         {page === 'home' && <LandingSection />}

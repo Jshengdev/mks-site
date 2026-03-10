@@ -11,21 +11,31 @@ export default function LandingSection() {
   const videoRef = useRef(null)
   const rafRef = useRef(null)
   const scrollRef = useRef(0)
-  const [warmOpacity, setWarmOpacity] = useState(0)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [waveProgress, setWaveProgress] = useState(0)
+  const [debugInfo, setDebugInfo] = useState('')
+
+  // Derive phase values from scroll
+  const warmOpacity = Math.max(0, Math.min(1, (scrollProgress - 0.22) / 0.22)) * 0.6
+  const waveProgress = Math.max(0, Math.min(1, (scrollProgress - 0.44) / 0.34))
 
   // Audio volume ramp tied to wave progress
   useScrollAudio(waveProgress)
 
-  // Scroll tracking — stored in ref to avoid re-renders
+  // Scroll tracking — updates both ref (for canvas) and state (for React)
   useEffect(() => {
     const onScroll = () => {
       if (!sectionRef.current) return
       const rect = sectionRef.current.getBoundingClientRect()
       const totalHeight = sectionRef.current.scrollHeight - window.innerHeight
-      if (totalHeight <= 0) return
-      scrollRef.current = Math.max(0, Math.min(1, -rect.top / totalHeight))
+      const scrollY = window.scrollY
+      if (totalHeight <= 0) {
+        setDebugInfo(`EARLY RETURN: scrollH=${sectionRef.current.scrollHeight} winH=${window.innerHeight} scrollY=${scrollY}`)
+        return
+      }
+      const p = Math.max(0, Math.min(1, -rect.top / totalHeight))
+      scrollRef.current = p
+      setScrollProgress(p)
+      setDebugInfo(`rectTop=${rect.top.toFixed(0)} totalH=${totalHeight.toFixed(0)} scrollY=${scrollY.toFixed(0)}`)
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
@@ -53,30 +63,15 @@ export default function LandingSection() {
       time += 0.016
       const progress = scrollRef.current
 
-      // Warming overlay (Phase 2: 22%-44%)
-      const warmStart = 0.22
-      const warmEnd = 0.44
-      const warmProgress = Math.max(0, Math.min(1,
-        (progress - warmStart) / (warmEnd - warmStart)
-      ))
-      setWarmOpacity(warmProgress)
-      // Update scroll progress for FlowerField (throttled — only on change > 0.005)
-      setScrollProgress(prev => Math.abs(prev - progress) > 0.005 ? progress : prev)
-
       // Wave progress (Phase 3: 44%-78%)
-      const phase3Start = 0.44
-      const phase3End = 0.78
-      const waveProgress = Math.max(0, Math.min(1,
-        (progress - phase3Start) / (phase3End - phase3Start)
-      ))
-      setWaveProgress(prev => Math.abs(prev - waveProgress) > 0.005 ? waveProgress : prev)
+      const wp = Math.max(0, Math.min(1, (progress - 0.44) / 0.34))
 
       // Fill dark
       ctx.fillStyle = '#0a0a0a'
       ctx.fillRect(0, 0, w, h)
 
-      if (waveProgress > 0) {
-        const waveX = waveProgress * w
+      if (wp > 0) {
+        const waveX = wp * w
         const imageData = ctx.getImageData(0, 0, w, h)
         const data = imageData.data
         const feather = 30
@@ -110,6 +105,16 @@ export default function LandingSection() {
 
   return (
     <div ref={sectionRef} className="landing-section">
+      {/* DEBUG — remove after testing */}
+      <div style={{
+        position: 'fixed', top: 10, right: 10, zIndex: 9999,
+        background: 'rgba(0,0,0,0.8)', color: '#0f0', padding: '8px 12px',
+        fontFamily: 'monospace', fontSize: 12, borderRadius: 4,
+      }}>
+        scroll: {scrollProgress.toFixed(3)} | warm: {warmOpacity.toFixed(2)} | wave: {waveProgress.toFixed(3)}<br/>
+        {debugInfo}
+      </div>
+
       {/* Video layer */}
       <video
         ref={videoRef}
@@ -125,7 +130,7 @@ export default function LandingSection() {
       {/* Warming overlay */}
       <div
         className="landing-warming-overlay"
-        style={{ opacity: warmOpacity * 0.6 }}
+        style={{ opacity: warmOpacity }}
       />
 
       {/* Dark mask canvas */}

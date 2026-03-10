@@ -25,6 +25,11 @@
   flex-direction: column;
 }
 
+/* Landing page needs full scroll height for phases */
+.hero.page-home {
+  overflow: visible;
+}
+
 .hero-bg {
   position: fixed;
   inset: 0;
@@ -60,6 +65,15 @@
   flex: 1;
   display: flex;
   animation: pageIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Landing section needs block layout to respect its full scroll height.
+   animation: none is CRITICAL — transform and filter in pageIn create
+   a containing block that breaks position:fixed on child layers. */
+.page-home .page-wrapper {
+  display: block;
+  flex: none;
+  animation: none;
 }
 
 @keyframes pageIn {

@@ -58,11 +58,19 @@ export default function FlowerField({ scrollProgress = 0 }) {
 
       ctx.clearRect(0, 0, w, h)
 
+      // Don't render anything until wave has started
+      if (waveProgress <= 0) {
+        rafRef.current = requestAnimationFrame(draw)
+        return
+      }
+
       // Update bloom states — cluster bloom with spring physics
       for (const flower of flowers) {
         const noiseOffset = (noise2D(flower.y * 0.008, time * 0.15) - 0.5) * 160
 
-        if (flower.x < waveX + noiseOffset && flower.bloomTarget === 0) {
+        // Only trigger bloom if wave has actually reached this flower
+        // waveX must be positive and past the flower's x minus noise
+        if (waveProgress > 0 && flower.x < waveX + noiseOffset && flower.bloomTarget === 0) {
           // Cluster stagger: flowers near wave edge get slight delay
           const distFromEdge = waveX + noiseOffset - flower.x
           flower.bloomDelay = Math.max(0, 0.5 - distFromEdge * 0.005) + Math.random() * 0.3
