@@ -54,8 +54,10 @@ export default class GrassChunkManager {
   }
 
   update(cameraPos, elapsed, splineT) {
-    // Update time uniform
-    this.material.uniforms.uTime.value = elapsed
+    // Update time on ALL chunk materials (cloned materials have their own uTime)
+    for (const [, chunk] of this.chunks) {
+      chunk.material.uniforms.uTime.value = elapsed
+    }
 
     // Determine which chunk indices should be active
     const camChunkZ = Math.floor(-cameraPos.z / CHUNK_SIZE)
@@ -101,7 +103,8 @@ export default class GrassChunkManager {
 
     // Create InstancedMesh (high detail for now, LOD later)
     const mesh = new THREE.InstancedMesh(this.highGeo, mat, this.bladesPerChunk)
-    mesh.instanceMatrix = new THREE.InstancedBufferAttribute(matrices, 16)
+    mesh.instanceMatrix.array.set(matrices)
+    mesh.instanceMatrix.needsUpdate = true
     mesh.frustumCulled = true
 
     this.scene.add(mesh)

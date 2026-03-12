@@ -1,5 +1,6 @@
 // Instanced flowers with toon shading — BotW-inspired
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { getTerrainHeight } from './TerrainPlane.js'
 import flowerVertexShader from './shaders/flower.vert.glsl?raw'
 import flowerFragmentShader from './shaders/flower.frag.glsl?raw'
@@ -32,9 +33,7 @@ export default class FlowerInstances {
     headGeo.translate(0, 0.42, 0)
 
     // Merge into single geometry
-    const merged = THREE.BufferGeometryUtils
-      ? THREE.BufferGeometryUtils.mergeGeometries([stemGeo, headGeo])
-      : this._mergeGeos(stemGeo, headGeo)
+    const merged = mergeGeometries([stemGeo, headGeo])
 
     const flowersPerType = Math.floor(count / FLOWER_COLORS.length)
 

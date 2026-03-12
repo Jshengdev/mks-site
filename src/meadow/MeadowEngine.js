@@ -1,11 +1,16 @@
 // MeadowEngine — Top-level orchestrator for the 3D meadow
 // Creates renderer, scene, camera. Wires scroll → camera → content visibility.
-// Subsystems (grass, flowers, fireflies, post-processing) are added by workers
-// and wired in during the integration phase.
 import * as THREE from 'three'
 import ScrollEngine from './ScrollEngine.js'
 import CameraRig from './CameraRig.js'
 import { detectTier, TIER_CONFIG } from './TierDetection.js'
+import { setupScene } from './MeadowScene.js'
+import { createTerrain } from './TerrainPlane.js'
+import CloudShadows from './CloudShadows.js'
+import GrassChunkManager from './GrassChunkManager.js'
+import FireflySystem from './FireflySystem.js'
+import FlowerInstances from './FlowerInstances.js'
+import PostProcessingStack from './PostProcessingStack.js'
 
 export default class MeadowEngine {
   constructor(canvas) {
@@ -56,14 +61,20 @@ export default class MeadowEngine {
     // Clock for delta time
     this.clock = new THREE.Clock()
 
-    // ─── Subsystem slots (populated during integration phase) ───
-    this.sceneSetup = null      // from MeadowScene.js
-    this.terrain = null         // from TerrainPlane.js
-    this.cloudShadows = null    // from CloudShadows.js
-    this.grassManager = null    // from GrassChunkManager.js
-    this.flowers = null         // from FlowerInstances.js
-    this.fireflies = null       // from FireflySystem.js
-    this.postProcessing = null  // from PostProcessingStack.js
+    // ─── Wire subsystems ───
+    this.sceneSetup = setupScene(this.scene)
+    this.terrain = createTerrain(this.scene)
+    this.cloudShadows = new CloudShadows(this.scene)
+
+    const cloudTexture = this.cloudShadows.texture
+    this.grassManager = new GrassChunkManager(this.scene, this.config, cloudTexture)
+    this.fireflies = new FireflySystem(this.scene, 500)
+    this.flowers = new FlowerInstances(this.scene, this.cameraRig, 800)
+
+    this.postProcessing = new PostProcessingStack(
+      this.renderer, this.scene, this.camera,
+      this.sceneSetup.sunPosition, this.config.postFX
+    )
 
     // Resize handler
     this._onResize = this._onResize.bind(this)
@@ -89,23 +100,19 @@ export default class MeadowEngine {
     // Update camera from scroll
     this.cameraRig.update(this.scrollEngine.progress)
 
-    // Update subsystems (populated during integration phase)
+    // Update subsystems
     const camPos = this.cameraRig.getPosition()
-    this.cloudShadows?.update(animElapsed)
-    this.grassManager?.update(camPos, animElapsed, this.cameraRig.getCurrentT())
-    this.fireflies?.update(animElapsed)
-    this.flowers?.update(animElapsed)
+    this.cloudShadows.update(animElapsed)
+    this.grassManager.update(camPos, animElapsed, this.cameraRig.getCurrentT())
+    this.fireflies.update(animElapsed)
+    this.flowers.update(animElapsed)
 
     // Update content section visibility
     this._updateContentVisibility()
 
-    // Render (post-processing if available, otherwise direct)
-    if (this.postProcessing) {
-      this.postProcessing.update(this.scrollEngine.velocity)
-      this.postProcessing.render(delta)
-    } else {
-      this.renderer.render(this.scene, this.camera)
-    }
+    // Render via post-processing
+    this.postProcessing.update(this.scrollEngine.velocity)
+    this.postProcessing.render(delta)
 
     requestAnimationFrame(this._tick)
   }
@@ -133,7 +140,7 @@ export default class MeadowEngine {
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(w, h)
-    this.postProcessing?.setSize(w, h)
+    this.postProcessing.setSize(w, h)
   }
 
   destroy() {
@@ -143,6 +150,7 @@ export default class MeadowEngine {
     this.flowers?.dispose()
     this.fireflies?.dispose()
     this.postProcessing?.dispose()
+    this.cloudShadows = null
     this.renderer.dispose()
   }
 }

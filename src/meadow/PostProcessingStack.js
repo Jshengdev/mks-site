@@ -10,7 +10,7 @@ import {
   BlendFunction,
   KernelSize,
 } from 'postprocessing'
-import { GodRaysEffect } from 'three-good-godrays'
+import { GodraysPass } from 'three-good-godrays'
 import * as THREE from 'three'
 
 export default class PostProcessingStack {
@@ -48,38 +48,36 @@ export default class PostProcessingStack {
     })
     this.grain.blendMode.opacity.value = 0.03
 
-    const effects = [this.bloom, this.ca, this.vignette, this.grain]
+    // Combine effects into single pass
+    this.effectPass = new EffectPass(camera, this.bloom, this.ca, this.vignette, this.grain)
+    this.composer.addPass(this.effectPass)
 
-    // God Rays — only on Tier 1 (expensive)
+    // God Rays — only on Tier 1 (expensive), uses GodraysPass (a Pass, not an Effect)
     if (!isReduced) {
-      // Create a small bright sphere as the god ray light source
       const sunSphere = new THREE.Mesh(
         new THREE.SphereGeometry(2, 8, 8),
         new THREE.MeshBasicMaterial({
           color: new THREE.Color(1.0, 0.8, 0.4),
           transparent: true,
-          opacity: 0.0, // invisible but needed for godrays
+          opacity: 0.0,
         })
       )
       sunSphere.position.copy(sunPosition).multiplyScalar(50)
       scene.add(sunSphere)
+      this._sunSphere = sunSphere
 
       try {
-        this.godRays = new GodRaysEffect(camera, sunSphere, {
+        this.godraysPass = new GodraysPass(sunSphere, camera, {
           density: 0.96,
           decay: 0.93,
           weight: 0.4,
           samples: 60,
         })
-        effects.push(this.godRays)
+        this.composer.addPass(this.godraysPass)
       } catch (e) {
         console.warn('God rays not available:', e)
       }
     }
-
-    // Combine all effects into single pass
-    this.effectPass = new EffectPass(camera, ...effects)
-    this.composer.addPass(this.effectPass)
   }
 
   // Called each frame with scroll velocity for reactive params

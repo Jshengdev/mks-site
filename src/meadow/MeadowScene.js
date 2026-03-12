@@ -9,7 +9,7 @@ const LIGHT_COLOR = new THREE.Color(1.0, 1.0, 0.99)
 export function setupScene(scene) {
   // Fog (3-zone handled by shaders, this is base fog)
   scene.fog = new THREE.FogExp2(FOG_COLOR, 0.008)
-  scene.background = FOG_COLOR
+  // Do NOT set scene.background — Sky dome handles it
 
   // Sky dome (Preetham atmospheric model)
   const sky = new Sky()

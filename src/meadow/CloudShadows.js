@@ -1,10 +1,11 @@
 // src/meadow/CloudShadows.js
 import * as THREE from 'three'
+import cloudTextureUrl from '../assets/textures/cloud.jpg'
 
 export default class CloudShadows {
   constructor(scene) {
     const loader = new THREE.TextureLoader()
-    this.texture = loader.load('/src/assets/textures/cloud.jpg')
+    this.texture = loader.load(cloudTextureUrl)
     this.texture.wrapS = THREE.RepeatWrapping
     this.texture.wrapT = THREE.RepeatWrapping
 
