@@ -17,9 +17,10 @@ export default class MeadowEngine {
     })
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(window.innerWidth, window.innerHeight)
-    this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 1.0
+    // Shaders handle their own ACES tonemapping + gamma correction
+    // so renderer must use linear output to avoid double-tonemapping
+    this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace
+    this.renderer.toneMapping = THREE.NoToneMapping
 
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(

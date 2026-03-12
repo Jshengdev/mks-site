@@ -11,9 +11,19 @@ html {
   overflow-x: hidden;
 }
 
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
 body {
   min-height: 100%;
   overflow-x: hidden;
+  overscroll-behavior: none;
 }
 
 body {
