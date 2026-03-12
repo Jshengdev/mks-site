@@ -1,39 +1,33 @@
+// Adapted to consume Lenis scroll progress (0->1)
 import { useEffect, useRef } from 'react'
 
-/**
- * Ramps audio volume based on wave progress.
- * waveProgress: 0 (wave hasn't started) -> 1 (wave complete)
- *
- * At 0.0-0.3: silence
- * At 0.3: fade begins
- * At 0.5: full volume
- */
-export default function useScrollAudio(waveProgress) {
-  const prevVolRef = useRef(1)
+export default function useScrollAudio(engineRef) {
+  const rafRef = useRef(null)
 
   useEffect(() => {
-    const audio = document.querySelector('audio')
-    if (!audio || audio.paused) return
-
-    if (waveProgress <= 0) {
-      // Before wave -- don't touch volume (user may be listening)
-      return
-    }
-
-    // Wave started -- modulate volume
-    const audioFade = Math.max(0, Math.min(1,
-      (waveProgress - 0.3) / 0.2
-    ))
-    const targetVol = audioFade * audioFade // quadratic ease-in
-    audio.volume = Math.min(1, targetVol)
-    prevVolRef.current = audio.volume
-  }, [waveProgress])
-
-  // Restore volume on unmount
-  useEffect(() => {
-    return () => {
+    const tick = () => {
+      const engine = engineRef.current
       const audio = document.querySelector('audio')
-      if (audio) audio.volume = 1
+      if (!engine || !audio || audio.paused) {
+        rafRef.current = requestAnimationFrame(tick)
+        return
+      }
+
+      const progress = engine.scrollEngine?.progress ?? 0
+
+      // Volume: silent below 0.05, ramp to full by 0.15
+      if (progress <= 0.05) {
+        audio.volume = 0
+      } else if (progress >= 0.15) {
+        audio.volume = 1
+      } else {
+        const t = (progress - 0.05) / 0.1
+        audio.volume = t * t // quadratic ease-in
+      }
+
+      rafRef.current = requestAnimationFrame(tick)
     }
-  }, [])
+    tick()
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [engineRef])
 }
