@@ -32,8 +32,7 @@ void main() {
 
   vec3 col = diffuse + rimColor;
 
-  // Gamma correction
-  col = pow(col, vec3(0.4545));
+  // Tonemapping + gamma handled by renderer/post-processing pipeline
 
   gl_FragColor = vec4(col, 1.0);
 }

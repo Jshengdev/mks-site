@@ -86,11 +86,8 @@ void main() {
   vec3 rayDir = normalize(vPosition - cameraPosition);
   col = applyFog(col, rayDir, lightDir);
 
-  // ACES tonemapping (from al-ro)
-  col = ACESFilm(col);
-
-  // Gamma correction
-  col = pow(col, vec3(0.4545));
+  // Tonemapping + gamma handled by renderer/post-processing pipeline
+  // to avoid double-correction with bloom and other effects
 
   gl_FragColor = vec4(col, 1.0);
 }

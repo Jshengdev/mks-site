@@ -1,4 +1,5 @@
 // Simplified wind from grass system (gentle sway only)
+// Uses instanceMatrix for InstancedMesh rendering
 uniform float uTime;
 
 varying vec3 vNormal;
@@ -12,9 +13,9 @@ void main() {
   pos.x += sway;
   pos.z += sway * 0.5;
 
-  vec4 worldPosition = modelMatrix * vec4(pos, 1.0);
+  vec4 worldPosition = modelMatrix * instanceMatrix * vec4(pos, 1.0);
   vPosition = worldPosition.xyz;
-  vNormal = normalize(normalMatrix * normal);
+  vNormal = normalize(mat3(instanceMatrix) * normal);
 
   gl_Position = projectionMatrix * viewMatrix * worldPosition;
 }

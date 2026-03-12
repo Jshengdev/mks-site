@@ -22,10 +22,11 @@ export default class MeadowEngine {
     })
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(window.innerWidth, window.innerHeight)
-    // Shaders handle their own ACES tonemapping + gamma correction
-    // so renderer must use linear output to avoid double-tonemapping
-    this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace
-    this.renderer.toneMapping = THREE.NoToneMapping
+    // Shaders output linear values; renderer handles gamma
+    // ACES tonemapping applied by post-processing or renderer fallback
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMappingExposure = 1.0
 
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(
