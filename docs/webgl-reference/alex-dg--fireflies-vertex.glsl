@@ -1,0 +1,25 @@
+// Source: Alex-DG/vite-three-webxr-flowers
+// URL: https://github.com/Alex-DG/vite-three-webxr-flowers/blob/main/js/experience/shader/fireflies/vertex.glsl
+// Fetched: 2026-03-12
+
+uniform float uPixelRatio;
+uniform float uSize;
+uniform float uTime;
+
+attribute float aScale;
+
+
+void main()
+{
+    float time = uTime * 0.001;
+    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
+    modelPosition.y += sin(time + modelPosition.x * 100.0) * aScale * 0.2 - 0.5;
+
+    vec4 viewPosition = viewMatrix * modelPosition;
+    vec4 projectionPosition = projectionMatrix * viewPosition;
+
+    gl_Position = projectionPosition;
+
+    gl_PointSize = uSize * aScale * uPixelRatio;
+    gl_PointSize *= (1.0 / - viewPosition.z);
+}
