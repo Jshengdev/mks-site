@@ -73,8 +73,9 @@ export default class AudioReactive {
 
   _avgBand(start, end) {
     if (!this.dataArray || end <= start) return 0
+    const len = Math.min(end, this.dataArray.length)
     let sum = 0
-    for (let i = start; i < Math.min(end, this.dataArray.length); i++) sum += this.dataArray[i]
+    for (let i = start; i < len; i++) sum += this.dataArray[i]
     return sum / (end - start) / 256
   }
 

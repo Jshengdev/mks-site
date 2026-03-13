@@ -16,6 +16,10 @@ export default class CameraRig {
     this.fovMaxBoost = 8   // max FOV increase during fast scroll
     this.fovLerpBack = 0.04 // speed of return to base FOV
 
+    // Reusable vectors — avoids allocations in update()/getPosition() hot paths
+    this._cachedPos = new THREE.Vector3()
+    this._lookTarget = new THREE.Vector3()
+
     // Mouse parallax — ThreeDOF "Eyes" layer (stolen from L14 NYT pattern)
     this._mouseTarget = { x: 0, y: 0 }
     this._mouseCurrent = { x: 0, y: 0 }
@@ -43,14 +47,15 @@ export default class CameraRig {
     this.targetT = scrollProgress
     this.currentT += (this.targetT - this.currentT) * this.lerpFactor
 
-    const pos = this.curve.getPoint(this.currentT)
-    pos.y = getTerrainHeight(pos.x, pos.z) + CAM_HEIGHT_ABOVE_TERRAIN
+    // Write into reusable vectors instead of allocating new ones
+    this.curve.getPoint(this.currentT, this._cachedPos)
+    this._cachedPos.y = getTerrainHeight(this._cachedPos.x, this._cachedPos.z) + CAM_HEIGHT_ABOVE_TERRAIN
 
-    const lookTarget = this.curve.getPoint(Math.min(this.currentT + 0.01, 1.0))
-    lookTarget.y = getTerrainHeight(lookTarget.x, lookTarget.z) + CAM_HEIGHT_ABOVE_TERRAIN
+    this.curve.getPoint(Math.min(this.currentT + 0.01, 1.0), this._lookTarget)
+    this._lookTarget.y = getTerrainHeight(this._lookTarget.x, this._lookTarget.z) + CAM_HEIGHT_ABOVE_TERRAIN
 
-    this.camera.position.copy(pos)
-    this.camera.lookAt(lookTarget)
+    this.camera.position.copy(this._cachedPos)
+    this.camera.lookAt(this._lookTarget)
 
     // Mouse parallax offset (damped lerp, stolen from L14)
     this._mouseCurrent.x += (this._mouseTarget.x - this._mouseCurrent.x) * 0.05
@@ -67,9 +72,9 @@ export default class CameraRig {
   }
 
   getPosition() {
-    const pos = this.curve.getPoint(this.currentT)
-    pos.y = getTerrainHeight(pos.x, pos.z) + CAM_HEIGHT_ABOVE_TERRAIN
-    return pos
+    // Returns the position computed during the last update() call.
+    // Callers must not mutate the returned vector.
+    return this._cachedPos
   }
 
   getCurrentT() {

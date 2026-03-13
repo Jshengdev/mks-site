@@ -1,4 +1,5 @@
 // src/meadow/ScoreSheetCloth.js
+// "The score flying through the sky. The music unbound from the page, liberated."
 // Wind-driven score sheets with Verlet cloth physics
 // Stolen from cloth-simulation + three-simplecloth
 import * as THREE from 'three'
@@ -30,16 +31,17 @@ export default class ScoreSheetCloth {
       })
 
       const mesh = new THREE.Mesh(geometry, material)
+      // Airborne — "liberated into the vastness" — high Y, spread along path
       mesh.position.set(
-        (Math.random() - 0.5) * 12,
-        2.0 + Math.random() * 2.0,
-        -30 - i * 25
+        (Math.random() - 0.5) * 16,
+        4.5 + Math.random() * 4.0,   // 4.5-8.5m — flying through the sky
+        -20 - i * 30
       )
       mesh.rotation.y = Math.random() * Math.PI * 2
 
       const drift = {
         phaseOffset: Math.random() * Math.PI * 2,
-        driftSpeed: 0.3 + Math.random() * 0.5,
+        driftSpeed: 0.4 + Math.random() * 0.6,  // faster — caught in wind
         baseY: mesh.position.y,
         baseX: mesh.position.x,
       }
@@ -63,9 +65,10 @@ export default class ScoreSheetCloth {
       solver.setWind(this._windStrength, elapsed)
       solver.step(dt)
       solver.updateGeometry(geometry)
-      mesh.position.x = drift.baseX + Math.sin(t * 0.3) * 0.5 * this._windStrength
-      mesh.position.y = drift.baseY + Math.sin(t * drift.driftSpeed) * 0.4
-      mesh.rotation.y += 0.002
+      // Wider lateral drift + more vertical bob = truly airborne
+      mesh.position.x = drift.baseX + Math.sin(t * 0.3) * 1.2 * this._windStrength
+      mesh.position.y = drift.baseY + Math.sin(t * drift.driftSpeed) * 0.8
+      mesh.rotation.y += 0.003 * this._windStrength
     }
   }
 

@@ -89,10 +89,8 @@ export default class MeadowEngine {
     this.fireflies = new FireflySystem(this.scene, 500)
     this.flowers = new FlowerInstances(this.scene, this.cameraRig, 800)
 
-    // PostProcessingStack now receives sunLight for god rays
     this.postProcessing = new PostProcessingStack(
       this.renderer, this.scene, this.camera,
-      this.sceneSetup.sunLight, this.sceneSetup.sunPosition,
       this.config.postFX
     )
 
@@ -160,8 +158,6 @@ export default class MeadowEngine {
   }
 
   _tick() {
-    if (this.tier === 3) return
-
     const delta = this.clock.getDelta()
     const elapsed = this.clock.getElapsedTime()
     const animElapsed = this.reducedMotion ? 0 : elapsed

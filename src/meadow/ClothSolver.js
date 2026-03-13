@@ -13,8 +13,14 @@ export class ClothSolver {
     this.constraints = []
     this.stiffness = 0.4     // paper stiffer than cloth (extraction: 0.3-0.5)
     this.dampening = 0.90    // more energy loss for paper (extraction: 0.88-0.93)
-    this.gravity = new THREE.Vector3(0, -1.5, 0)
+    this.gravity = new THREE.Vector3(0, -0.4, 0)  // light gravity — paper floats, not falls
     this.wind = new THREE.Vector3()
+
+    // Reusable scratch vectors — avoids allocations in step() hot path
+    this._temp = new THREE.Vector3()
+    this._vel = new THREE.Vector3()
+    this._delta = new THREE.Vector3()
+
     this._initParticles()
     this._initConstraints()
   }
@@ -72,11 +78,15 @@ export class ClothSolver {
 
   step(dt) {
     const dtSq = dt * dt
+    const temp = this._temp
+    const vel = this._vel
+    const delta = this._delta
+
     // Verlet integration
     for (const p of this.particles) {
       if (p.pinned) continue
-      const temp = p.pos.clone()
-      const vel = p.pos.clone().sub(p.prev).multiplyScalar(this.dampening)
+      temp.copy(p.pos)
+      vel.copy(p.pos).sub(p.prev).multiplyScalar(this.dampening)
       p.pos.add(vel)
       p.pos.addScaledVector(this.gravity, dtSq)
       p.pos.addScaledVector(this.wind, dtSq)
@@ -87,7 +97,7 @@ export class ClothSolver {
       for (const c of this.constraints) {
         const pa = this.particles[c.a]
         const pb = this.particles[c.b]
-        const delta = pb.pos.clone().sub(pa.pos)
+        delta.copy(pb.pos).sub(pa.pos)
         const dist = delta.length()
         if (dist === 0) continue
         const diff = (dist - c.restLen) / dist * this.stiffness

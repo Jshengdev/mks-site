@@ -17,9 +17,10 @@ import { createDOF } from './DOFSetup.js'
 import { FilmGrainEffect } from './FilmGrainEffect.js'
 import { RadialCAEffect } from './RadialCAEffect.js'
 import { MotionBlurEffect } from './MotionBlurEffect.js'
+import { KuwaharaEffect } from './KuwaharaEffect.js'
 
 export default class PostProcessingStack {
-  constructor(renderer, scene, camera, sunLight, sunPosition, tier) {
+  constructor(renderer, scene, camera, tier) {
     this.composer = new EffectComposer(renderer, {
       frameBufferType: THREE.HalfFloatType,
     })
@@ -29,9 +30,6 @@ export default class PostProcessingStack {
 
     const isReduced = tier === 'reduced'
     const isFull = tier === 'full' || tier === undefined
-
-    // God rays now handled by standalone GodRayPass in MeadowEngine
-    this.godrays = null
 
     // ─── SSAO (NormalPass + SSAOEffect via pmndrs) ───
     this.ssao = createSSAO(scene, camera, tier)
@@ -59,8 +57,6 @@ export default class PostProcessingStack {
     // SEUS-style Color Grade
     this.colorGrade = createColorGradeEffect()
 
-    this.lensFlare = null
-
     // Radial Chromatic Aberration (stolen from filmic-gl — replaces pmndrs CA)
     this.ca = new RadialCAEffect({ distortion: 0.5 })
 
@@ -73,13 +69,15 @@ export default class PostProcessingStack {
     // DOF (Tier 1 only)
     this.dof = isFull ? createDOF(camera) : null
 
+    // Kuwahara painterly — activates at emotional peak via AtmosphereController
+    // Stolen from L19 / heckel-painterly-shaders (4-quadrant variant)
+    this.kuwahara = new KuwaharaEffect({ kernelSize: 4, strength: 0.0 })
+
     // Film Grain — MUST be last (DOF must not blur grain)
-    // 2-layer hash noise with luminance suppression (stolen from glsl-film-grain + filmic-gl)
     this.grain = new FilmGrainEffect({ grainIntensity: 0.06 })
 
-    // Build effects array — order from LAYERS-INDEX post-processing stack:
-    // SSAO → Bloom → Motion Blur → ToneMapping → FogDepth → ColorGrade
-    // → Radial CA → Vignette → DOF → Film Grain (always last)
+    // Stack order: SSAO → Bloom → Motion Blur → ToneMapping → FogDepth → ColorGrade
+    // → Kuwahara → Radial CA → Vignette → DOF → Film Grain
     const effects = [
       this.ssao.effect,
       this.bloom,
@@ -87,6 +85,7 @@ export default class PostProcessingStack {
       this.toneMapping,
       this.fogDepth.effect,
       this.colorGrade.effect,
+      this.kuwahara,
       this.ca,
       this.vignette,
       ...(this.dof ? [this.dof.effect] : []),
@@ -95,7 +94,6 @@ export default class PostProcessingStack {
 
     this.effectPass = new EffectPass(camera, ...effects)
     this.composer.addPass(this.effectPass)
-    this._camera = camera
   }
 
   update(scrollVelocity, cameraPos, sectionPositions) {

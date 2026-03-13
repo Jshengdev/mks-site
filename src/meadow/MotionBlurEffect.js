@@ -53,7 +53,6 @@ export class MotionBlurEffect extends Effect {
     })
     this._prevViewProj = new THREE.Matrix4()
     this._currViewProj = new THREE.Matrix4()
-    this._tempMat = new THREE.Matrix4()
     this._frameCount = 0
   }
 
@@ -61,15 +60,14 @@ export class MotionBlurEffect extends Effect {
     const camera = renderer._camera || this.camera
     if (!camera) return
 
-    // Copy previous frame's matrix
+    // Copy previous frame's matrix into uniform
     this.uniforms.get('uPrevViewProj').value.copy(this._prevViewProj)
 
     // Compute current view-projection
     this._currViewProj.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
 
-    // Inverse for world reconstruction
-    this._tempMat.copy(this._currViewProj).invert()
-    this.uniforms.get('uCurrViewProjInv').value.copy(this._tempMat)
+    // Inverse for world reconstruction — write directly into uniform matrix
+    this.uniforms.get('uCurrViewProjInv').value.copy(this._currViewProj).invert()
 
     // Cache for next frame
     this._prevViewProj.copy(this._currViewProj)
