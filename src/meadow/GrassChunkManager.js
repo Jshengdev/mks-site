@@ -10,6 +10,7 @@ const BLADES_PER_CHUNK = 20000
 const ACTIVATE_DIST = CHUNK_SIZE * 3
 const DISPOSE_DIST = CHUNK_SIZE * 1.5
 const FADE_DURATION = 0.5    // seconds
+const LOD_HYSTERESIS = 2     // dead-zone to prevent flip-flopping at boundary
 
 // Colors from spacejack/terra
 const BASE_COLOR = new THREE.Color(0.45, 0.46, 0.19)
@@ -69,7 +70,7 @@ export default class GrassChunkManager {
     // Activate new chunks
     for (const idx of activeRange) {
       if (!this.chunks.has(idx) && this.chunks.size < this.maxChunks + 2) {
-        this._createChunk(idx, elapsed)
+        this._createChunk(idx, elapsed, cameraPos)
       }
     }
 
@@ -77,6 +78,21 @@ export default class GrassChunkManager {
     for (const [idx, chunk] of this.chunks) {
       if (!activeRange.has(idx)) {
         this._disposeChunk(idx)
+      }
+    }
+
+    // LOD switching with hysteresis
+    for (const [idx, chunk] of this.chunks) {
+      const chunkCenterZ = -idx * CHUNK_SIZE - CHUNK_SIZE / 2
+      const dist = Math.abs(cameraPos.z - chunkCenterZ)
+
+      const shouldBeHigh = dist < this.LOD_THRESHOLD
+      const shouldBeLow = dist > this.LOD_THRESHOLD + LOD_HYSTERESIS
+
+      if (shouldBeHigh && chunk.lod === 'low') {
+        this._swapLOD(idx, 'high')
+      } else if (shouldBeLow && chunk.lod === 'high') {
+        this._swapLOD(idx, 'low')
       }
     }
 
@@ -88,27 +104,53 @@ export default class GrassChunkManager {
     }
   }
 
-  _createChunk(idx, elapsed) {
+  _createChunk(idx, elapsed, cameraPos) {
     const offsetZ = -idx * CHUNK_SIZE
     const offsetX = 0
 
-    // Generate instance matrices
+    // Generate instance matrices (stored for LOD swap reuse)
     const matrices = generateInstanceMatrices(
       this.bladesPerChunk, CHUNK_SIZE, offsetX, offsetZ, getTerrainHeight
     )
+
+    // Determine initial LOD based on camera distance
+    const chunkCenterZ = -idx * CHUNK_SIZE - CHUNK_SIZE / 2
+    const dist = cameraPos ? Math.abs(cameraPos.z - chunkCenterZ) : 0
+    const lod = dist < this.LOD_THRESHOLD ? 'high' : 'low'
+    const geo = lod === 'high' ? this.highGeo : this.lowGeo
 
     // Clone material for per-chunk uChunkFade
     const mat = this.material.clone()
     mat.uniforms.uChunkFade = { value: 0.0 }
 
-    // Create InstancedMesh (high detail for now, LOD later)
-    const mesh = new THREE.InstancedMesh(this.highGeo, mat, this.bladesPerChunk)
+    const mesh = new THREE.InstancedMesh(geo, mat, this.bladesPerChunk)
     mesh.instanceMatrix.array.set(matrices)
     mesh.instanceMatrix.needsUpdate = true
     mesh.frustumCulled = true
 
     this.scene.add(mesh)
-    this.chunks.set(idx, { mesh, material: mat, fadeStart: elapsed })
+    this.chunks.set(idx, { mesh, material: mat, fadeStart: elapsed, lod, matrices })
+  }
+
+  _swapLOD(idx, targetLOD) {
+    const chunk = this.chunks.get(idx)
+    if (!chunk) return
+
+    const geo = targetLOD === 'high' ? this.highGeo : this.lowGeo
+
+    // Remove old mesh
+    this.scene.remove(chunk.mesh)
+    chunk.mesh.dispose()
+
+    // Create new mesh, reuse stored instance matrices
+    const newMesh = new THREE.InstancedMesh(geo, chunk.material, this.bladesPerChunk)
+    newMesh.instanceMatrix.array.set(chunk.matrices)
+    newMesh.instanceMatrix.needsUpdate = true
+    newMesh.frustumCulled = true
+
+    this.scene.add(newMesh)
+    chunk.mesh = newMesh
+    chunk.lod = targetLOD
   }
 
   _disposeChunk(idx) {
