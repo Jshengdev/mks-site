@@ -11,6 +11,7 @@ import GrassChunkManager from './GrassChunkManager.js'
 import FireflySystem from './FireflySystem.js'
 import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
+import AtmosphereController from './AtmosphereController.js'
 
 // Content section t-values on the spline (must match ContentOverlay)
 const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
@@ -86,6 +87,15 @@ export default class MeadowEngine {
       this.config.postFX
     )
 
+    // Atmosphere controller — scroll-driven keyframe interpolation
+    this.atmosphere = new AtmosphereController(
+      this.sceneSetup,
+      this.grassManager,
+      this.fireflies,
+      this.cloudShadows,
+      this.postProcessing
+    )
+
     // Resize handler
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -116,6 +126,9 @@ export default class MeadowEngine {
     this.grassManager.update(camPos, animElapsed, this.cameraRig.getCurrentT())
     this.fireflies.update(animElapsed)
     this.flowers.update(animElapsed)
+
+    // Drive atmospheric mood from scroll position
+    this.atmosphere.update(this.scrollEngine.progress)
 
     // Update content section visibility
     this._updateContentVisibility()
@@ -165,6 +178,7 @@ export default class MeadowEngine {
       fireflies: this.fireflies,
       flowers: this.flowers,
       cloudShadows: this.cloudShadows,
+      atmosphere: this.atmosphere,
       cameraRig: this.cameraRig,
       scrollEngine: this.scrollEngine,
       tier: this.tier,

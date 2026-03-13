@@ -28,8 +28,8 @@ export default class CloudShadows {
   }
 
   update(elapsed) {
-    // Glacial cloud drift (from James-Smyth: iTime / 20000)
-    this.texture.offset.x = elapsed * 0.00005
-    this.texture.offset.y = elapsed * 0.0001
+    const speed = this._driftSpeed || 0.00005
+    this.texture.offset.x = elapsed * speed
+    this.texture.offset.y = elapsed * (speed * 2)
   }
 }

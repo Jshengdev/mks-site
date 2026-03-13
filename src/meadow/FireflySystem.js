@@ -13,6 +13,7 @@ export default class FireflySystem {
         uTime: { value: 0 },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 80 },
+        uBrightness: { value: 1.0 },
       },
       vertexShader,
       fragmentShader,
