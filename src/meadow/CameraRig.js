@@ -11,6 +11,10 @@ export default class CameraRig {
     this.currentT = 0
     this.targetT = 0
     this.lerpFactor = 0.05 // heavy damping (floaty contemplativeness)
+    this.baseFov = camera.fov
+    this.currentFov = camera.fov
+    this.fovMaxBoost = 8   // max FOV increase during fast scroll
+    this.fovLerpBack = 0.04 // speed of return to base FOV
 
     // S-curve control points (world space, Z is forward into the meadow)
     // Y values are offsets above terrain — actual Y computed dynamically
@@ -25,7 +29,7 @@ export default class CameraRig {
     ])
   }
 
-  update(scrollProgress) {
+  update(scrollProgress, scrollVelocity = 0) {
     this.targetT = scrollProgress
     this.currentT += (this.targetT - this.currentT) * this.lerpFactor
 
@@ -37,6 +41,13 @@ export default class CameraRig {
 
     this.camera.position.copy(pos)
     this.camera.lookAt(lookTarget)
+
+    // FOV speed effect — widens during fast scrolling, lerps back to base
+    const speed = Math.abs(scrollVelocity)
+    const targetFov = this.baseFov + Math.min(speed * 4, this.fovMaxBoost)
+    this.currentFov += (targetFov - this.currentFov) * this.fovLerpBack
+    this.camera.fov = this.currentFov
+    this.camera.updateProjectionMatrix()
   }
 
   getPosition() {

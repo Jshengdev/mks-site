@@ -11,7 +11,7 @@ import { GodraysPass } from 'three-good-godrays'
  * @param {THREE.Scene} scene
  * @param {THREE.PerspectiveCamera} camera
  * @param {THREE.DirectionalLight} sunLight
- * @param {THREE.Vector3} sunPosition — unused but kept for API symmetry
+ * @param {THREE.Vector3} sunPosition
  * @param {'full'|'reduced'|'css'} tier
  * @returns {{ pass: GodraysPass, dispose: () => void } | null}
  */

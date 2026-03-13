@@ -3,12 +3,14 @@ import * as THREE from 'three'
 import { Sky } from 'three/examples/jsm/objects/Sky.js'
 
 // Color constants from spacejack/terra world.ts
-const FOG_COLOR = new THREE.Color(0.74, 0.77, 0.91)
-const LIGHT_COLOR = new THREE.Color(1.0, 1.0, 0.99)
+// Warm golden haze fog (BotW Hyrule Field atmosphere)
+const FOG_COLOR = new THREE.Color(0.85, 0.78, 0.55)
+// Golden hour sunlight — warm amber with slight green retention
+const LIGHT_COLOR = new THREE.Color(1.0, 0.92, 0.75)
 
 export function setupScene(scene) {
   // Fog (3-zone handled by shaders, this is base fog)
-  scene.fog = new THREE.FogExp2(FOG_COLOR, 0.008)
+  scene.fog = new THREE.FogExp2(FOG_COLOR, 0.003)
   // Do NOT set scene.background — Sky dome handles it
 
   // Sky dome (Preetham atmospheric model)
@@ -18,14 +20,14 @@ export function setupScene(scene) {
 
   const sunPosition = new THREE.Vector3()
   const phi = THREE.MathUtils.degToRad(90 - 12) // 12° elevation = golden hour
-  const theta = THREE.MathUtils.degToRad(180)
+  const theta = THREE.MathUtils.degToRad(240)    // 240° = right side, off-camera
   sunPosition.setFromSphericalCoords(1, phi, theta)
 
   const skyUniforms = sky.material.uniforms
-  skyUniforms['turbidity'].value = 8
-  skyUniforms['rayleigh'].value = 2.5
-  skyUniforms['mieCoefficient'].value = 0.005
-  skyUniforms['mieDirectionalG'].value = 0.8
+  skyUniforms['turbidity'].value = 10
+  skyUniforms['rayleigh'].value = 1.5
+  skyUniforms['mieCoefficient'].value = 0.008
+  skyUniforms['mieDirectionalG'].value = 0.9
   skyUniforms['sunPosition'].value.copy(sunPosition)
 
   // Directional light (golden hour angle)
@@ -34,7 +36,7 @@ export function setupScene(scene) {
   scene.add(sunLight)
 
   // Ambient light (subtle fill)
-  const ambient = new THREE.AmbientLight(0xffffff, 0.3)
+  const ambient = new THREE.AmbientLight(0xffffff, 0.15)
   scene.add(ambient)
 
   return { sky, sunLight, sunPosition }

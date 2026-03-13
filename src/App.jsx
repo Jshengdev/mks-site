@@ -3,6 +3,7 @@ import MeadowEngine from './meadow/MeadowEngine.js'
 import ContentOverlay from './content/ContentOverlay.jsx'
 import MiniPlayer from './MiniPlayer.jsx'
 import MoonlightCursor from './MoonlightCursor.jsx'
+import DevTuner from './DevTuner.jsx'
 import useScrollAudio from './useScrollAudio.js'
 
 function App() {
@@ -13,6 +14,8 @@ function App() {
   useEffect(() => {
     if (!canvasRef.current) return
     engineRef.current = new MeadowEngine(canvasRef.current)
+    // Expose for Playwright automation scripts
+    window.__MEADOW_ENGINE__ = engineRef.current
     if (engineRef.current.tier === 3) {
       setIsTier3(true)
     }
@@ -59,6 +62,7 @@ function App() {
       {/* Surviving components */}
       <MiniPlayer />
       <MoonlightCursor />
+      <DevTuner engineRef={engineRef} />
     </>
   )
 }

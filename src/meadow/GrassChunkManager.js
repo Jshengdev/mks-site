@@ -12,10 +12,11 @@ const DISPOSE_DIST = CHUNK_SIZE * 1.5
 const FADE_DURATION = 0.5    // seconds
 const LOD_HYSTERESIS = 2     // dead-zone to prevent flip-flopping at boundary
 
-// Colors from spacejack/terra
-const BASE_COLOR = new THREE.Color(0.45, 0.46, 0.19)
-const TIP_COLOR = new THREE.Color(0.77, 0.76, 0.59)
-const SUN_COLOR = new THREE.Color(1.0, 1.0, 0.99)
+// BotW/Ghibli-inspired meadow greens (richer than spacejack/terra defaults)
+// BotW Hyrule Field greens — deep emerald base, vivid spring green tips
+const BASE_COLOR = new THREE.Color(0.05, 0.18, 0.02)
+const TIP_COLOR = new THREE.Color(0.22, 0.50, 0.10)
+const SUN_COLOR = new THREE.Color(1.0, 0.92, 0.75)
 const SUN_DIR = new THREE.Vector3(0.0, 0.21, -1.0).normalize() // ~12° elevation
 
 export default class GrassChunkManager {
@@ -41,9 +42,9 @@ export default class GrassChunkManager {
         uTipColor: { value: TIP_COLOR },
         uSunDirection: { value: SUN_DIR },
         uSunColor: { value: SUN_COLOR },
-        uAmbientStrength: { value: 0.7 },
-        uTranslucencyStrength: { value: 1.5 },
-        uFogFade: { value: 0.005 },
+        uAmbientStrength: { value: 0.35 },
+        uTranslucencyStrength: { value: 2.0 },
+        uFogFade: { value: 0.0015 },
         uCloudTexture: { value: cloudTexture },
       },
       side: THREE.DoubleSide,

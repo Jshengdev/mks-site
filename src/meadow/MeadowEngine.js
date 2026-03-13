@@ -12,6 +12,9 @@ import FireflySystem from './FireflySystem.js'
 import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
 
+// Content section t-values on the spline (must match ContentOverlay)
+const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
+
 export default class MeadowEngine {
   constructor(canvas) {
     this.canvas = canvas
@@ -25,8 +28,9 @@ export default class MeadowEngine {
     // Shaders output linear values; renderer handles gamma
     // ACES tonemapping applied by post-processing or renderer fallback
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
-    this.renderer.toneMappingExposure = 1.0
+    // Tonemapping handled by pmndrs ToneMappingEffect in PostProcessingStack
+    // (pmndrs EffectComposer bypasses renderer.toneMapping)
+    this.renderer.toneMapping = THREE.NoToneMapping
 
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(
@@ -59,6 +63,9 @@ export default class MeadowEngine {
     // Content section DOM elements (set by setContentSections)
     this._contentSections = []
 
+    // Pre-compute content section world positions for DOF focus tracking
+    this._sectionPositions = SECTION_T_VALUES.map(t => this.cameraRig.curve.getPoint(t))
+
     // Clock for delta time
     this.clock = new THREE.Clock()
 
@@ -72,9 +79,11 @@ export default class MeadowEngine {
     this.fireflies = new FireflySystem(this.scene, 500)
     this.flowers = new FlowerInstances(this.scene, this.cameraRig, 800)
 
+    // PostProcessingStack now receives sunLight for god rays
     this.postProcessing = new PostProcessingStack(
       this.renderer, this.scene, this.camera,
-      this.sceneSetup.sunPosition, this.config.postFX
+      this.sceneSetup.sunLight, this.sceneSetup.sunPosition,
+      this.config.postFX
     )
 
     // Resize handler
@@ -98,8 +107,8 @@ export default class MeadowEngine {
     const elapsed = this.clock.getElapsedTime()
     const animElapsed = this.reducedMotion ? 0 : elapsed
 
-    // Update camera from scroll
-    this.cameraRig.update(this.scrollEngine.progress)
+    // Update camera from scroll (pass velocity for FOV speed effect)
+    this.cameraRig.update(this.scrollEngine.progress, this.scrollEngine.velocity)
 
     // Update subsystems
     const camPos = this.cameraRig.getPosition()
@@ -111,8 +120,8 @@ export default class MeadowEngine {
     // Update content section visibility
     this._updateContentVisibility()
 
-    // Render via post-processing
-    this.postProcessing.update(this.scrollEngine.velocity)
+    // Render via post-processing (pass camPos + section positions for DOF)
+    this.postProcessing.update(this.scrollEngine.velocity, camPos, this._sectionPositions)
     this.postProcessing.render(delta)
 
     requestAnimationFrame(this._tick)
@@ -142,6 +151,25 @@ export default class MeadowEngine {
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(w, h)
     this.postProcessing.setSize(w, h)
+  }
+
+  // Expose subsystem references for DevTuner
+  getDevAPI() {
+    return {
+      renderer: this.renderer,
+      scene: this.scene,
+      camera: this.camera,
+      sceneSetup: this.sceneSetup,
+      postProcessing: this.postProcessing,
+      grassManager: this.grassManager,
+      fireflies: this.fireflies,
+      flowers: this.flowers,
+      cloudShadows: this.cloudShadows,
+      cameraRig: this.cameraRig,
+      scrollEngine: this.scrollEngine,
+      tier: this.tier,
+      config: this.config,
+    }
   }
 
   destroy() {

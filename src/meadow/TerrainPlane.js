@@ -1,8 +1,8 @@
 // src/meadow/TerrainPlane.js
 import * as THREE from 'three'
 
-// Grass base color from spacejack/terra
-const TERRAIN_COLOR = new THREE.Color(0.45, 0.46, 0.19)
+// Dark earth beneath grass (BotW ground tone — not black, dark olive)
+const TERRAIN_COLOR = new THREE.Color(0.16, 0.18, 0.07)
 
 export function createTerrain(scene) {
   const geometry = new THREE.PlaneGeometry(400, 400, 128, 128)

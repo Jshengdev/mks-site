@@ -12,9 +12,9 @@ export function createFogDepthEffect() {
     uniforms: new Map([
       ['uNearEnd', new THREE.Uniform(0.15)],
       ['uMidEnd', new THREE.Uniform(0.6)],
-      ['uFogStrength', new THREE.Uniform(0.4)],
-      ['uMidColor', new THREE.Uniform(new THREE.Vector3(1.0, 0.95, 0.7))],
-      ['uFarColor', new THREE.Uniform(new THREE.Vector3(0.35, 0.5, 0.9))],
+      ['uFogStrength', new THREE.Uniform(0.06)],
+      ['uMidColor', new THREE.Uniform(new THREE.Vector3(1.0, 0.88, 0.55))],
+      ['uFarColor', new THREE.Uniform(new THREE.Vector3(0.55, 0.55, 0.65))],
       ['uDesaturation', new THREE.Uniform(0.6)],
     ]),
   })

@@ -34,7 +34,8 @@ vec3 applyFog(vec3 rgb, vec3 rayDir, vec3 sunDir) {
     * (1.0 - exp(-dist * rd * uFogFade)) / rd;
   float sunAmount = max(dot(rayDir, sunDir), 0.0);
   // Near-sun haze warm, far-sun haze cool (from al-ro)
-  vec3 fogColor = mix(vec3(0.35, 0.5, 0.9), vec3(1.0, 1.0, 0.75), pow(sunAmount, 16.0));
+  // BotW warm golden haze: amber near-sun, soft warm blue far-sun
+  vec3 fogColor = mix(vec3(0.45, 0.50, 0.65), vec3(1.0, 0.90, 0.60), pow(sunAmount, 8.0));
   return mix(rgb, fogColor, clamp(fogAmount, 0.0, 1.0));
 }
 
@@ -80,7 +81,8 @@ void main() {
     + diffuseTranslucency + forwardTranslucency) * shadowFactor;
 
   // Root shadow (from al-ro: darken towards base)
-  col = mix(0.35 * uBaseColor, col, smoothstep(0.0, 0.3, vElevation));
+  // Root shadow — darken toward base (from al-ro)
+  col = mix(0.4 * uBaseColor, col, smoothstep(0.0, 0.35, vElevation));
 
   // Fog (iquilez height-dependent, from al-ro)
   vec3 rayDir = normalize(vPosition - cameraPosition);

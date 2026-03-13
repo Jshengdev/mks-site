@@ -5,15 +5,16 @@
  * content section clearing as the camera moves along the spline.
  * Tier 1 only — too expensive for Tier 2/3.
  *
+ * focusDistance and focusRange are in WORLD UNITS (not normalized 0-1).
  * Returns an Effect (not a Pass) — add to an EffectPass, not composer.addPass().
  */
 
 import { DepthOfFieldEffect } from 'postprocessing'
 
 const DEFAULTS = {
-  focusDistance: 0.0,   // normalized 0-1 (0 = near plane, 1 = far plane)
-  focusRange: 0.05,     // range around focus that stays sharp
-  bokehScale: 3.0,      // blur intensity
+  focusDistance: 15.0,  // world units — initial focus distance
+  focusRange: 8.0,      // world units — transition zone (±8 units from focus stays sharp)
+  bokehScale: 3.0,      // blur disc size
   resolutionScale: 0.5, // half-res for performance
   lerpSpeed: 0.05,
   fallbackFocus: 50,    // world-unit fallback when no sections nearby
@@ -33,7 +34,7 @@ export function createDOF(camera) {
     resolutionScale: DEFAULTS.resolutionScale,
   })
 
-  let currentFocus = 0.02
+  let currentFocus = DEFAULTS.focusDistance
   const lerpSpeed = DEFAULTS.lerpSpeed
 
   /**
@@ -49,10 +50,9 @@ export function createDOF(camera) {
       if (d < nearest) nearest = d
     }
 
-    // Convert world distance to normalized focus distance (0-1)
-    const normalized = nearest / camera.far
-    currentFocus += (normalized - currentFocus) * lerpSpeed
-    effect.cocMaterial.uniforms.focusDistance.value = currentFocus
+    // Lerp toward nearest section distance (world units)
+    currentFocus += (nearest - currentFocus) * lerpSpeed
+    effect.cocMaterial.focusDistance = currentFocus
   }
 
   function dispose() {
