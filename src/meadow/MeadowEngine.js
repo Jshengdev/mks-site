@@ -12,6 +12,9 @@ import FireflySystem from './FireflySystem.js'
 import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
 import AtmosphereController from './AtmosphereController.js'
+import MusicTrigger from './MusicTrigger.js'
+import ScoreSheetCloth from './ScoreSheetCloth.js'
+import ArtistFigure from './ArtistFigure.js'
 
 // Content section t-values on the spline (must match ContentOverlay)
 const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
@@ -96,6 +99,21 @@ export default class MeadowEngine {
       this.postProcessing
     )
 
+    // Music trigger — BotW discovery moment at scroll threshold
+    // TODO: Replace with actual MKS audio file path
+    this.musicTrigger = new MusicTrigger(this.postProcessing, {
+      threshold: 0.35,
+      audioSrc: null, // Set to audio file URL when available
+    })
+
+    // Score sheet cloth — wind-driven sheets tumbling through meadow
+    this.scoreSheets = new ScoreSheetCloth(this.scene, 3)
+
+    // Artist figure — 2D cutout billboard at far end of meadow
+    this.artistFigure = new ArtistFigure(this.scene)
+    // TODO: Load actual MKS photo when available:
+    // this.artistFigure.loadTexture('/assets/mks-cutout.png')
+
     // Resize handler
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -129,6 +147,16 @@ export default class MeadowEngine {
 
     // Drive atmospheric mood from scroll position
     this.atmosphere.update(this.scrollEngine.progress)
+
+    // Music trigger (pass delta for pulse animation)
+    this.musicTrigger.update(this.scrollEngine.progress, delta)
+
+    // Score sheets + artist figure
+    this.scoreSheets.update(animElapsed)
+    this.scoreSheets.setWindStrength(
+      this.atmosphere.current.grassWindSpeed / 1.5  // normalize to ~0-1.3
+    )
+    this.artistFigure.update(camPos)
 
     // Update content section visibility
     this._updateContentVisibility()
@@ -179,6 +207,9 @@ export default class MeadowEngine {
       flowers: this.flowers,
       cloudShadows: this.cloudShadows,
       atmosphere: this.atmosphere,
+      musicTrigger: this.musicTrigger,
+      scoreSheets: this.scoreSheets,
+      artistFigure: this.artistFigure,
       cameraRig: this.cameraRig,
       scrollEngine: this.scrollEngine,
       tier: this.tier,
@@ -193,6 +224,9 @@ export default class MeadowEngine {
     this.flowers?.dispose()
     this.fireflies?.dispose()
     this.postProcessing?.dispose()
+    this.musicTrigger?.dispose()
+    this.scoreSheets?.dispose()
+    this.artistFigure?.dispose()
     this.cloudShadows = null
     this.renderer.dispose()
   }
