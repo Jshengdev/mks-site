@@ -15,6 +15,7 @@ import AtmosphereController from './AtmosphereController.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
+import PortalHint from './PortalHint.js'
 
 // Content section t-values on the spline (must match ContentOverlay)
 const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
@@ -114,6 +115,9 @@ export default class MeadowEngine {
     // TODO: Load actual MKS photo when available:
     // this.artistFigure.loadTexture('/assets/mks-cutout.png')
 
+    // Portal hints — shimmering spots teasing future worlds
+    this.portals = new PortalHint(this.scene, this.camera)
+
     // Resize handler
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -157,6 +161,7 @@ export default class MeadowEngine {
       this.atmosphere.current.grassWindSpeed / 1.5  // normalize to ~0-1.3
     )
     this.artistFigure.update(camPos)
+    this.portals.update(animElapsed)
 
     // Update content section visibility
     this._updateContentVisibility()
@@ -210,6 +215,7 @@ export default class MeadowEngine {
       musicTrigger: this.musicTrigger,
       scoreSheets: this.scoreSheets,
       artistFigure: this.artistFigure,
+      portals: this.portals,
       cameraRig: this.cameraRig,
       scrollEngine: this.scrollEngine,
       tier: this.tier,
@@ -227,6 +233,7 @@ export default class MeadowEngine {
     this.musicTrigger?.dispose()
     this.scoreSheets?.dispose()
     this.artistFigure?.dispose()
+    this.portals?.dispose()
     this.cloudShadows = null
     this.renderer.dispose()
   }

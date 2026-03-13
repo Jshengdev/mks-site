@@ -51,3 +51,41 @@
   border-radius: 12px;
   padding: 2.5rem;
 }
+
+/* ─── Gallery Typography ─── */
+.content-overlay .artist-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #c8d4e8;
+  line-height: 1.1;
+}
+
+.content-overlay .section-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  letter-spacing: 0.08em;
+  color: #c8d4e8;
+  margin-bottom: 1rem;
+}
+
+.content-overlay .body-text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  line-height: 1.7;
+  color: #90a0a0;
+  max-width: 42ch;
+}
+
+.content-overlay .subtitle {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  color: #5a6a6a;
+  letter-spacing: 0.04em;
+}
