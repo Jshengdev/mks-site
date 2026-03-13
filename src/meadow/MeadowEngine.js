@@ -16,6 +16,9 @@ import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
 import PortalHint from './PortalHint.js'
+import DustMotes from './DustMotes.js'
+import GodRayPass from './GodRayPass.js'
+import AudioReactive from './AudioReactive.js'
 
 // Content section t-values on the spline (must match ContentOverlay)
 const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
@@ -118,6 +121,22 @@ export default class MeadowEngine {
     // Portal hints — shimmering spots teasing future worlds
     this.portals = new PortalHint(this.scene, this.camera)
 
+    // Dust motes — floating particles catching sunlight
+    this.dustMotes = new DustMotes(this.scene, 300)
+
+    // God rays — screen-space radial blur (GPU Gems 3)
+    this.godRayPass = new GodRayPass(
+      this.renderer, this.scene, this.camera,
+      this.sceneSetup.sunPosition
+    )
+
+    // Audio reactive — FFT analysis for future music-driven effects
+    this.audioReactive = new AudioReactive()
+
+    // Wire optional subsystems into AtmosphereController
+    this.atmosphere.dustMotes = this.dustMotes
+    this.atmosphere.godRayPass = this.godRayPass
+
     // Resize handler
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -162,6 +181,8 @@ export default class MeadowEngine {
     )
     this.artistFigure.update(camPos)
     this.portals.update(animElapsed)
+    this.dustMotes.update(animElapsed)
+    this.audioReactive.update(delta)
 
     // Update content section visibility
     this._updateContentVisibility()
@@ -197,6 +218,7 @@ export default class MeadowEngine {
     this.camera.updateProjectionMatrix()
     this.renderer.setSize(w, h)
     this.postProcessing.setSize(w, h)
+    this.godRayPass.setSize(w, h)
   }
 
   // Expose subsystem references for DevTuner
@@ -216,6 +238,9 @@ export default class MeadowEngine {
       scoreSheets: this.scoreSheets,
       artistFigure: this.artistFigure,
       portals: this.portals,
+      dustMotes: this.dustMotes,
+      godRayPass: this.godRayPass,
+      audioReactive: this.audioReactive,
       cameraRig: this.cameraRig,
       scrollEngine: this.scrollEngine,
       tier: this.tier,
@@ -234,6 +259,9 @@ export default class MeadowEngine {
     this.scoreSheets?.dispose()
     this.artistFigure?.dispose()
     this.portals?.dispose()
+    this.dustMotes?.dispose()
+    this.godRayPass?.dispose()
+    this.audioReactive?.dispose()
     this.cloudShadows = null
     this.renderer.dispose()
   }

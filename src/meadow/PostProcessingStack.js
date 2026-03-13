@@ -4,21 +4,19 @@ import {
   EffectPass,
   RenderPass,
   BloomEffect,
-  ChromaticAberrationEffect,
   VignetteEffect,
-  NoiseEffect,
   ToneMappingEffect,
   ToneMappingMode,
-  BlendFunction,
   KernelSize,
 } from 'postprocessing'
 import * as THREE from 'three'
-// import { createShadowGodrays } from './ShadowGodrays.js'  // disabled, see TODO above
 import { createFogDepthEffect } from './FogDepthPass.js'
 import { createColorGradeEffect } from './ColorGradeEffect.js'
 import { createSSAO } from './SSAOSetup.js'
-import { createLensFlareEffect } from './LensFlareEffect.js'
 import { createDOF } from './DOFSetup.js'
+import { FilmGrainEffect } from './FilmGrainEffect.js'
+import { RadialCAEffect } from './RadialCAEffect.js'
+import { MotionBlurEffect } from './MotionBlurEffect.js'
 
 export default class PostProcessingStack {
   constructor(renderer, scene, camera, sunLight, sunPosition, tier) {
@@ -32,10 +30,7 @@ export default class PostProcessingStack {
     const isReduced = tier === 'reduced'
     const isFull = tier === 'full' || tier === undefined
 
-    // ─── God Rays (DISABLED — needs terrain/grass castShadow + receiveShadow) ───
-    // The GodraysPass renders a sun occlusion disc that appears dark
-    // without proper shadow map setup on scene geometry.
-    // TODO: Enable once terrain.receiveShadow and grass.castShadow are wired
+    // God rays now handled by standalone GodRayPass in MeadowEngine
     this.godrays = null
 
     // ─── SSAO (NormalPass + SSAOEffect via pmndrs) ───
@@ -64,15 +59,13 @@ export default class PostProcessingStack {
     // SEUS-style Color Grade
     this.colorGrade = createColorGradeEffect()
 
-    // Lens Flare (DISABLED — creates dark disc artifact when sun is near screen edge)
-    // The user wants the sun off-camera with only golden rays visible,
-    // so lens flare is unnecessary. Re-enable if sun moves back on-screen.
     this.lensFlare = null
 
-    // Chromatic Aberration
-    this.ca = new ChromaticAberrationEffect({
-      offset: new THREE.Vector2(0.001, 0.001),
-    })
+    // Radial Chromatic Aberration (stolen from filmic-gl — replaces pmndrs CA)
+    this.ca = new RadialCAEffect({ distortion: 0.5 })
+
+    // Motion Blur — camera-only (stolen from realism-effects)
+    this.motionBlur = new MotionBlurEffect()
 
     // Vignette
     this.vignette = new VignetteEffect({ darkness: 0.5, offset: 0.3 })
@@ -81,26 +74,19 @@ export default class PostProcessingStack {
     this.dof = isFull ? createDOF(camera) : null
 
     // Film Grain — MUST be last (DOF must not blur grain)
-    this.grain = new NoiseEffect({
-      blendFunction: BlendFunction.OVERLAY,
-      premultiply: true,
-    })
-    this.grain.blendMode.opacity.value = 0.03
+    // 2-layer hash noise with luminance suppression (stolen from glsl-film-grain + filmic-gl)
+    this.grain = new FilmGrainEffect({ grainIntensity: 0.06 })
 
-    // Build effects array — order matters:
-    // 1. SSAO (needs linear HDR depth/normals)
-    // 2. Bloom (needs HDR to detect bright areas)
-    // 3. Tonemapping (HDR → display 0-1) — MUST come before color grade
-    // 4. FogDepth, ColorGrade (expect 0-1 display values)
-    // 5. CA, Vignette, DOF (display-space effects)
-    // 6. Grain MUST be last (DOF must not blur grain)
+    // Build effects array — order from LAYERS-INDEX post-processing stack:
+    // SSAO → Bloom → Motion Blur → ToneMapping → FogDepth → ColorGrade
+    // → Radial CA → Vignette → DOF → Film Grain (always last)
     const effects = [
       this.ssao.effect,
       this.bloom,
+      this.motionBlur,
       this.toneMapping,
       this.fogDepth.effect,
       this.colorGrade.effect,
-      ...(this.lensFlare ? [this.lensFlare.effect] : []),
       this.ca,
       this.vignette,
       ...(this.dof ? [this.dof.effect] : []),
@@ -115,12 +101,9 @@ export default class PostProcessingStack {
   update(scrollVelocity, cameraPos, sectionPositions) {
     if (!this.ca) return
 
-    const caIntensity = Math.min(0.005, Math.abs(scrollVelocity) * 0.001)
-    this.ca.offset.set(caIntensity, caIntensity)
-
-    if (this.lensFlare) {
-      this.lensFlare.update(this._camera)
-    }
+    // Radial CA intensity scales with scroll velocity
+    const caIntensity = Math.min(1.0, 0.3 + Math.abs(scrollVelocity) * 0.2)
+    this.ca.uniforms.get('uDistortion').value = caIntensity
 
     if (this.dof && cameraPos && sectionPositions) {
       this.dof.updateFocus(cameraPos, sectionPositions)
@@ -136,11 +119,9 @@ export default class PostProcessingStack {
   }
 
   dispose() {
-    this.godrays?.dispose()
     this.ssao?.dispose()
     this.fogDepth?.dispose()
     this.colorGrade?.dispose()
-    this.lensFlare?.dispose()
     this.dof?.dispose()
     this.composer.dispose()
   }

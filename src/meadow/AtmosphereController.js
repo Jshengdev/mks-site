@@ -52,6 +52,8 @@ const KEYFRAMES = [
     colorGradeWarmth: 0.08,
     vignetteDarkness: 0.7,
     grainOpacity: 0.04,
+    dustMoteBrightness: 0.0,
+    godRayIntensity: 0.0,
   },
   {
     t: 0.25, // AWAKENING — light arriving
@@ -86,6 +88,8 @@ const KEYFRAMES = [
     colorGradeWarmth: 0.10,
     vignetteDarkness: 0.55,
     grainOpacity: 0.035,
+    dustMoteBrightness: 0.3,
+    godRayIntensity: 0.2,
   },
   {
     t: 0.50, // ALIVE — peak beauty, golden hour
@@ -120,6 +124,8 @@ const KEYFRAMES = [
     colorGradeWarmth: 0.14,
     vignetteDarkness: 0.4,
     grainOpacity: 0.03,
+    dustMoteBrightness: 0.8,
+    godRayIntensity: 0.6,
   },
   {
     t: 0.75, // DEEPENING — peak emotional intensity
@@ -154,6 +160,8 @@ const KEYFRAMES = [
     colorGradeWarmth: 0.18,
     vignetteDarkness: 0.35,
     grainOpacity: 0.025,
+    dustMoteBrightness: 1.0,
+    godRayIntensity: 0.8,
   },
   {
     t: 1.0, // QUIETING — resolution
@@ -188,6 +196,8 @@ const KEYFRAMES = [
     colorGradeWarmth: 0.12,
     vignetteDarkness: 0.5,
     grainOpacity: 0.035,
+    dustMoteBrightness: 0.5,
+    godRayIntensity: 0.3,
   },
 ]
 
@@ -204,6 +214,9 @@ export default class AtmosphereController {
     this.fireflies = fireflies
     this.cloudShadows = cloudShadows
     this.postProcessing = postProcessing
+    // Optional subsystems — set after construction by MeadowEngine
+    this.dustMotes = null
+    this.godRayPass = null
     this.keyframes = KEYFRAMES
     this.current = {}
 
@@ -318,7 +331,8 @@ export default class AtmosphereController {
     pp.bloom.intensity = c.bloomIntensity
     pp.bloom.luminancePass.fullscreenMaterial.threshold = c.bloomThreshold
     pp.vignette.darkness = c.vignetteDarkness
-    pp.grain.blendMode.opacity.value = c.grainOpacity
+    // FilmGrainEffect uses uGrainIntensity uniform (not blendMode opacity)
+    pp.grain.uniforms.get('uGrainIntensity').value = c.grainOpacity
 
     // Fog depth effect
     const fogU = pp.fogDepth.effect.uniforms
@@ -331,6 +345,18 @@ export default class AtmosphereController {
     cgU.get('uContrast').value = c.colorGradeContrast
     cgU.get('uVibrance').value = c.colorGradeVibrance
     cgU.get('uSplitIntensity').value = c.colorGradeWarmth
+
+    // ─── Dust motes ───
+    if (this.dustMotes) {
+      this.dustMotes.material.uniforms.uBrightness.value = c.dustMoteBrightness
+      this.dustMotes.points.visible = c.dustMoteBrightness > 0.01
+    }
+
+    // ─── God rays ───
+    if (this.godRayPass) {
+      this.godRayPass.intensity = c.godRayIntensity
+      this.godRayPass.updateSunPosition(this._sunPos)
+    }
   }
 
   // Expose for DevTuner
