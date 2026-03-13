@@ -76,8 +76,13 @@ void main() {
   vec3 cloudSample = texture2D(uCloudTexture, vCloudUV).rgb;
   float shadowFactor = mix(0.7, 1.0, cloudSample.r);
 
-  // Combine all lighting
-  vec3 col = (0.3 * skyLight * baseColor + ambient + diffuse
+  // Specular — tight highlight on blade tips (al-ro: power 100)
+  vec3 halfDir = normalize(lightDir + viewDir);
+  float spec = pow(max(dot(normal, halfDir), 0.0), 100.0);
+  vec3 specular = spec * uSunColor * 0.3 * vElevation; // tips only
+
+  // Combine all lighting (5-component al-ro model)
+  vec3 col = (0.3 * skyLight * baseColor + ambient + diffuse + specular
     + diffuseTranslucency + forwardTranslucency) * shadowFactor;
 
   // Root shadow (from al-ro: darken towards base)

@@ -16,6 +16,16 @@ export default class CameraRig {
     this.fovMaxBoost = 8   // max FOV increase during fast scroll
     this.fovLerpBack = 0.04 // speed of return to base FOV
 
+    // Mouse parallax — ThreeDOF "Eyes" layer (stolen from L14 NYT pattern)
+    this._mouseTarget = { x: 0, y: 0 }
+    this._mouseCurrent = { x: 0, y: 0 }
+    this._panFactor = Math.PI / 20  // ~9 degrees max (from L14)
+    this._onMouseMove = (e) => {
+      this._mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1
+      this._mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1
+    }
+    window.addEventListener('mousemove', this._onMouseMove)
+
     // S-curve control points (world space, Z is forward into the meadow)
     // Y values are offsets above terrain — actual Y computed dynamically
     this.curve = new THREE.CatmullRomCurve3([
@@ -41,6 +51,12 @@ export default class CameraRig {
 
     this.camera.position.copy(pos)
     this.camera.lookAt(lookTarget)
+
+    // Mouse parallax offset (damped lerp, stolen from L14)
+    this._mouseCurrent.x += (this._mouseTarget.x - this._mouseCurrent.x) * 0.05
+    this._mouseCurrent.y += (this._mouseTarget.y - this._mouseCurrent.y) * 0.05
+    this.camera.rotation.y += this._mouseCurrent.x * this._panFactor
+    this.camera.rotation.x += this._mouseCurrent.y * this._panFactor * 0.5
 
     // FOV speed effect — widens during fast scrolling, lerps back to base
     const speed = Math.abs(scrollVelocity)
