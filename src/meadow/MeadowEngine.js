@@ -19,6 +19,8 @@ import PortalHint from './PortalHint.js'
 import DustMotes from './DustMotes.js'
 import GodRayPass from './GodRayPass.js'
 import AudioReactive from './AudioReactive.js'
+import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
+import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
 
 // Content section t-values on the spline (must match ContentOverlay)
 const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
@@ -115,8 +117,14 @@ export default class MeadowEngine {
 
     // Artist figure — 2D cutout billboard at far end of meadow
     this.artistFigure = new ArtistFigure(this.scene)
-    // TODO: Load actual MKS photo when available:
-    // this.artistFigure.loadTexture('/assets/mks-cutout.png')
+
+    // Load real textures for score sheets and artist figure
+    const textureLoader = new THREE.TextureLoader()
+    textureLoader.load(scoreSheetUrl, (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace
+      this.scoreSheets.setTexture(tex)
+    })
+    this.artistFigure.loadTexture(mksPortraitUrl)
 
     // Portal hints — shimmering spots teasing future worlds
     this.portals = new PortalHint(this.scene, this.camera)
