@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { SECTION_T_VALUES } from '../meadow/constants.js'
 import LandingContent from './LandingContent.jsx'
 import MusicContent from './MusicContent.jsx'
 import AboutContent from './AboutContent.jsx'
@@ -6,13 +7,8 @@ import StoreContent from './StoreContent.jsx'
 import FooterContent from './FooterContent.jsx'
 import './content-overlay.css'
 
-const SECTIONS = [
-  { t: 0.075, Component: LandingContent },
-  { t: 0.275, Component: MusicContent },
-  { t: 0.475, Component: AboutContent },
-  { t: 0.725, Component: StoreContent },
-  { t: 0.925, Component: FooterContent },
-]
+const SECTION_COMPONENTS = [LandingContent, MusicContent, AboutContent, StoreContent, FooterContent]
+const SECTIONS = SECTION_T_VALUES.map((t, i) => ({ t, Component: SECTION_COMPONENTS[i] }))
 
 export default function ContentOverlay({ onSectionsReady }) {
   const containerRef = useRef(null)

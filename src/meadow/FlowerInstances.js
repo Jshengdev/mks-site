@@ -5,8 +5,7 @@ import { getTerrainHeight } from './TerrainPlane.js'
 import flowerVertexShader from './shaders/flower.vert.glsl?raw'
 import flowerFragmentShader from './shaders/flower.frag.glsl?raw'
 
-// Content section t-values where clearings should be
-const CLEARING_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
+import { SECTION_T_VALUES } from './constants.js'
 const CLEARING_RADIUS = 8 // world units around clearing center
 
 // BotW-inspired flower colors (6 types)
@@ -80,7 +79,7 @@ export default class FlowerInstances {
   }
 
   _inClearing(x, z, cameraRig) {
-    for (const t of CLEARING_T_VALUES) {
+    for (const t of SECTION_T_VALUES) {
       const clearingPos = cameraRig.curve.getPoint(t)
       const dx = x - clearingPos.x
       const dz = z - clearingPos.z

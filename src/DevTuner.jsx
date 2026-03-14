@@ -103,14 +103,8 @@ function buildParamGroups(api) {
         {
           key: 'ambientIntensity', label: 'Ambient Intensity',
           min: 0, max: 2, step: 0.05,
-          get: () => {
-            const amb = scene.children.find(c => c.isAmbientLight)
-            return amb?.intensity ?? 0.3
-          },
-          set: v => {
-            const amb = scene.children.find(c => c.isAmbientLight)
-            if (amb) amb.intensity = v
-          },
+          get: () => sceneSetup?.ambientLight?.intensity ?? 0.3,
+          set: v => { if (sceneSetup?.ambientLight) sceneSetup.ambientLight.intensity = v },
         },
       ],
     },
@@ -190,78 +184,41 @@ function buildParamGroups(api) {
           key: 'grassWindSpeed', label: 'Wind Speed',
           min: 0, max: 5, step: 0.1,
           get: () => grassManager.material.uniforms.uSpeed.value,
-          set: v => {
-            grassManager.material.uniforms.uSpeed.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uSpeed.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uSpeed', v),
         },
         {
           key: 'grassBladeWidth', label: 'Blade Width',
           min: 0.01, max: 0.2, step: 0.005,
           get: () => grassManager.material.uniforms.uHalfWidth.value,
-          set: v => {
-            grassManager.material.uniforms.uHalfWidth.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uHalfWidth.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uHalfWidth', v),
         },
         {
           key: 'grassAmbient', label: 'Ambient Strength',
           min: 0, max: 2, step: 0.05,
           get: () => grassManager.material.uniforms.uAmbientStrength.value,
-          set: v => {
-            grassManager.material.uniforms.uAmbientStrength.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uAmbientStrength.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uAmbientStrength', v),
         },
         {
           key: 'grassTranslucency', label: 'Translucency',
           min: 0, max: 4, step: 0.1,
           get: () => grassManager.material.uniforms.uTranslucencyStrength.value,
-          set: v => {
-            grassManager.material.uniforms.uTranslucencyStrength.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uTranslucencyStrength.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uTranslucencyStrength', v),
         },
         {
           key: 'grassFogFade', label: 'Fog Fade',
           min: 0, max: 0.02, step: 0.0005,
           get: () => grassManager.material.uniforms.uFogFade.value,
-          set: v => {
-            grassManager.material.uniforms.uFogFade.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uFogFade.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uFogFade', v),
         },
         {
           key: 'grassBaseColor', label: 'Base Color', type: 'color',
           get: () => '#' + grassManager.material.uniforms.uBaseColor.value.getHexString(),
-          set: v => {
-            const c = new THREE.Color(v)
-            grassManager.material.uniforms.uBaseColor.value.copy(c)
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uBaseColor.value.copy(c)
-            }
-          },
+          set: v => grassManager.setUniform('uBaseColor', new THREE.Color(v)),
         },
         {
           key: 'grassTipColor', label: 'Tip Color', type: 'color',
           get: () => '#' + grassManager.material.uniforms.uTipColor.value.getHexString(),
-          set: v => {
-            const c = new THREE.Color(v)
-            grassManager.material.uniforms.uTipColor.value.copy(c)
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uTipColor.value.copy(c)
-            }
-          },
+          set: v => grassManager.setUniform('uTipColor', new THREE.Color(v)),
         },
       ],
     },
@@ -568,23 +525,13 @@ function buildParamGroups(api) {
           key: 'cursorRadius', label: 'Grass Push Radius',
           min: 1, max: 10, step: 0.5,
           get: () => grassManager.material.uniforms.uCursorRadius.value,
-          set: v => {
-            grassManager.material.uniforms.uCursorRadius.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uCursorRadius.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uCursorRadius', v),
         },
         {
           key: 'cursorStrength', label: 'Grass Brush Strength',
           min: 0, max: 4, step: 0.1,
           get: () => grassManager.material.uniforms.uCursorStrength.value,
-          set: v => {
-            grassManager.material.uniforms.uCursorStrength.value = v
-            for (const [, chunk] of grassManager.chunks) {
-              chunk.material.uniforms.uCursorStrength.value = v
-            }
-          },
+          set: v => grassManager.setUniform('uCursorStrength', v),
         },
       ],
     },

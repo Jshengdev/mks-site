@@ -39,5 +39,5 @@ export function setupScene(scene) {
   const ambient = new THREE.AmbientLight(0xffffff, 0.15)
   scene.add(ambient)
 
-  return { sky, sunLight, sunPosition }
+  return { sky, sunLight, sunPosition, ambientLight: ambient }
 }

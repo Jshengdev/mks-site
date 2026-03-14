@@ -21,14 +21,14 @@ A scroll-driven cinematic website for composer **Michael Kim-Sheng**. The entire
 - **React 19** + **Vite 7** — no Next.js, no SSR, pure SPA
 - **Three.js** (vanilla, NOT React Three Fiber) — all 3D rendering
 - **Lenis** — smooth scroll, exposes progress (0→1) + velocity
-- **pmndrs/postprocessing** — bloom, chromatic aberration, vignette, film grain
+- **pmndrs/postprocessing** — bloom, chromatic aberration, vignette, film grain, SSAO, DOF, motion blur
 - **Raw GLSL shaders** — adapted from GitHub reference repos (Nitash-Biswas, al-ro, James-Smyth, Alex-DG, daniel-ilett)
 - **Vanilla CSS** — no Tailwind, no CSS-in-JS
 - **Web Audio API** — AnalyserNode for MiniPlayer visualizer
 
 ### Key Dependencies
 ```
-three, lenis, postprocessing, three-good-godrays (installed but godrays disabled pending shadow setup)
+three, lenis, postprocessing
 ```
 
 ## Architecture
@@ -36,31 +36,54 @@ three, lenis, postprocessing, three-good-godrays (installed but godrays disabled
 ```
 src/
   App.jsx                    — Canvas mount + ContentOverlay + MiniPlayer + MoonlightCursor
-  App.css                    — Legacy styles (mostly unused now)
   index.css                  — Global reset + Lenis CSS
   useScrollAudio.js          — Hook: ramps audio volume from Lenis scroll progress
+  DevTuner.jsx + .css        — Live parameter panel (backtick to toggle, freeze/live atmosphere)
 
   meadow/                    — Three.js engine (vanilla, class-based)
+    constants.js             — Shared constants (SECTION_T_VALUES)
     MeadowEngine.js          — Top-level orchestrator, render loop, resize, subsystem wiring
     ScrollEngine.js          — Lenis wrapper, exposes progress + velocity
     CameraRig.js             — CatmullRomCurve3 S-curve spline + damped lerp + terrain follow
     TierDetection.js         — Performance tier detection (1=desktop, 2=laptop, 3=mobile)
     MeadowScene.js           — Sky dome (Preetham), fog, directional + ambient light
-    TerrainPlane.js          — 400×400 PlaneGeometry with sin/cos rolling hills
+    TerrainPlane.js          — 400x400 PlaneGeometry with sin/cos rolling hills
     CloudShadows.js          — Multiply-blended shadow plane with glacial UV drift
     GrassGeometry.js         — Blade mesh generator (7-segment high LOD, 1-segment low)
-    GrassChunkManager.js     — Chunk pool (20×20 units), activate/dispose/fade-in
-    FlowerInstances.js       — 6 color types × ~133 each, clearing avoidance, toon shader
+    GrassChunkManager.js     — Chunk pool (20x20 units), activate/dispose/fade-in, LOD swap
+    FlowerInstances.js       — 6 color types x ~133 each, clearing avoidance, toon shader
     FireflySystem.js         — 500 Points with additive blending, vertical bob
-    PostProcessingStack.js   — EffectComposer: bloom, CA, vignette, grain
+    AtmosphereController.js  — 5-keyframe scroll-driven interpolation (sky, grass, fog, post-FX)
+    CursorInteraction.js     — Mouse-to-world raycast (y=0 plane), lerped worldPos + smoothed velocity for grass wind
+    PostProcessingStack.js   — EffectComposer: bloom, CA, vignette, grain, SSAO, DOF, fog, color grade
+    GodRayPass.js            — Screen-space radial blur (GPU Gems 3), half-res FBO
+    ScoreSheetCloth.js       — Wind-driven score sheets tumbling through meadow
+    ClothSolver.js           — Verlet integration cloth physics (used by ScoreSheetCloth)
+    ArtistFigure.js          — 2D cutout billboard at far end of meadow
+    PortalHint.js            — Shimmering spots teasing future worlds
+    DustMotes.js             — Floating particles catching sunlight
+    MusicTrigger.js          — BotW discovery moment at scroll threshold
+    AudioReactive.js         — FFT analysis for music-driven effects
 
     shaders/
-      grass.vert.glsl        — 4-layer wind (Nitash-Biswas deform), billboard, fake normals
+      grass.vert.glsl        — 4-layer wind + cursor wind brush, billboard, fake normals
       grass.frag.glsl        — Translucent lighting (al-ro), iquilez fog, cloud shadows
       firefly.vert.glsl      — Point particle vertical bob (Alex-DG)
       firefly.frag.glsl      — Inverse-distance radial glow, warm amber
       flower.vert.glsl       — Gentle sway + instanceMatrix
       flower.frag.glsl       — 3-band toon diffuse + rim light (daniel-ilett)
+      dust.vert/frag.glsl    — Dust mote particles
+      portal.vert/frag.glsl  — Shimmer portal effect
+      score-sheet.vert/frag  — Cloth rendering
+      god-ray-blur.frag.glsl — Radial blur pass
+      color-grade.frag.glsl  — SEUS-style lift/gamma/gain/split-tone
+      fog-depth.frag.glsl    — 3-zone depth fog
+      motion-blur.frag.glsl  — Velocity-based motion blur
+
+    effects/ (custom pmndrs Effect subclasses, all in meadow/ currently)
+      FilmGrainEffect.js, RadialCAEffect.js, MotionBlurEffect.js,
+      KuwaharaEffect.js, GodRayCompositeEffect.js, ColorGradeEffect.js,
+      FogDepthPass.js, SSAOSetup.js, DOFSetup.js
 
   content/                   — React DOM overlays (opacity driven by MeadowEngine, not CSS)
     ContentOverlay.jsx       — Container, registers section DOM refs with engine
@@ -71,12 +94,13 @@ src/
     FooterContent.jsx        — Copyright
     content-overlay.css      — Fixed overlay styles, glass-card
 
-  MiniPlayer.jsx             — Surviving component from old site
-  MiniPlayer.css
-  MoonlightCursor.jsx        — Surviving component from old site
+  MiniPlayer.jsx + .css      — Audio player (surviving component from old site)
+  MoonlightCursor.jsx        — Custom cursor effect
 
   assets/
     textures/cloud.jpg       — Perlin FBM noise texture (from al-ro)
+    textures/score-sheet.jpg — Score sheet texture
+    textures/mks-portrait.jpg — Artist portrait
 
 docs/
   superpowers/specs/         — Design specification
@@ -88,9 +112,10 @@ docs/
 ### How the Render Loop Works
 1. Lenis updates `scrollEngine.progress` (0→1)
 2. CameraRig lerps camera position along CatmullRom spline, offset by terrain height
-3. Subsystems update: cloud shadows drift, grass wind animates, fireflies bob, flowers sway
-4. Content sections: MeadowEngine reads `data-section-t` attrs, sets DOM opacity via smoothstep
-5. PostProcessingStack renders via EffectComposer (bloom, CA, vignette, grain)
+3. AtmosphereController interpolates 5 keyframes (STILLNESS→AWAKENING→ALIVE→DEEPENING→QUIETING), pushes to all subsystems (skipped when `paused` flag set by DevTuner)
+4. Subsystems update: cloud shadows drift, grass wind animates, fireflies bob, flowers sway, cloth physics, cursor wind
+5. GodRayPass renders occlusion to half-res FBO
+6. PostProcessingStack renders via EffectComposer (bloom, CA, vignette, grain, SSAO, DOF, fog, color grade, kuwahara, god ray composite)
 
 ### Content Visibility Formula
 ```
@@ -102,9 +127,21 @@ pointerEvents = opacity > 0.1 ? 'auto' : 'none'
 ### Performance Tiers
 | Tier | Criteria | Grass | FX |
 |------|----------|-------|-----|
-| 1 (Desktop) | >1366px, >4 cores, maxTex>4096 | 100K (6 chunks) | Full |
-| 2 (Laptop) | 769-1366px or ≤4 cores | 30K (4 chunks) | Reduced |
+| 1 (Desktop) | >1366px, >4 cores, maxTex>4096 | 60K (6 chunks) | Full |
+| 2 (Laptop) | 769-1366px or ≤4 cores | 18K (4 chunks) | Reduced |
 | 3 (Mobile) | ≤768px or no WebGL2 | 0 | Static fallback |
+
+## DevTuner
+
+Toggle with backtick (`). **Freeze/Live button** pauses AtmosphereController so slider changes stick. `data-lenis-prevent` on the scroll area prevents Lenis from hijacking scroll inside the panel.
+
+When AtmosphereController is NOT frozen, it overwrites all subsystem values every frame from keyframe interpolation. This is by design — the scroll drives the atmosphere. Freeze to tune individual values.
+
+### DevTuner Wiring Gotchas
+- **Exposure** goes to `colorGrade.uniforms.uExposure` (pre-grade multiplier), NOT `renderer.toneMappingExposure` (which does nothing when toneMapping=NoToneMapping)
+- **FOV** must set `cameraRig.baseFov` + `cameraRig.currentFov`, NOT `camera.fov` (CameraRig overwrites camera.fov every frame)
+- **Firefly/Dust brightness** must also toggle `points.visible` — atmosphere sets visible=false at STILLNESS
+- **SSAO radius** — use `effect.radius` getter/setter, not `ssaoMaterial.uniforms.radius.value` (pmndrs API varies by version)
 
 ## Design First Principles
 
@@ -179,47 +216,112 @@ Plan: `docs/superpowers/plans/2026-03-12-webgl-meadow.md`
 
 ## What's Built vs. What's Next
 
-### Built (Meadow Phase 1) ✓
-- Full Three.js meadow engine with 7 subsystems wired
-- 100K instanced grass with 4-layer wind shaders
+### Built (Meadow Phase 1 + Phase 2A) ✓
+- Full Three.js meadow engine with 17 subsystems wired
+- 60K instanced grass (thinner blades, sparser) with 4-layer wind + cursor wind brush
 - Procedural terrain with rolling hills
 - Sky dome (Preetham model) with golden hour lighting
 - Cloud shadow plane with glacial drift
 - 800 instanced flowers with toon shading
 - 500 firefly particles with additive blending
-- Post-processing: bloom, chromatic aberration, vignette, film grain
+- Post-processing: bloom, CA, vignette, grain, SSAO, DOF, 3-zone fog, color grade (SEUS), motion blur, kuwahara painterly, god ray composite
+- GodRayPass — screen-space radial blur (GPU Gems 3)
+- AtmosphereController — 5-keyframe scroll-driven interpolation with 38 params each
+- Cursor interaction — mouse→world raycast, lerped worldPos (smooth grass push), smoothed velocity
+- Score sheet cloth — Verlet physics, wind-driven
+- Artist figure — 2D billboard at far end
+- Portal hints — shimmering spots for future worlds
+- Dust motes — floating particles
+- Music trigger — BotW discovery moment
+- Audio reactive — FFT analysis
 - Content overlay with 5 sections (DOM-driven opacity from scroll)
 - Lenis smooth scroll → CameraRig spline path
-- Performance tiers (3 levels)
+- Performance tiers (3 levels) with LOD switching
 - Camera terrain-following (prevents clipping into hills)
+- DevTuner — live parameter panel with freeze mode, Lenis-safe scrolling, exposure/FOV/firefly brightness/dust size controls all properly wired
 - MiniPlayer + MoonlightCursor preserved
 
+### Stripped (decided against / needs redo)
+- **GhibliClouds** — toon-shaded hemisphere dome. Removed: looked like flat blobs, not Ghibli. Needs reference implementation from a real repo if attempted again.
+- **CursorCreatures** — butterflies (PNG texture) + cursor fireflies. Removed: butterflies looked terrible as textured planes. User wants simple 3D geometry butterfly with wing flap, no textures. Fireflies were too aggressive. Needs complete rethink.
+
 ### Next Phase: Polish & Content
-- **God rays** — needs shadow map setup (sunLight.castShadow, renderer.shadowMap.enabled)
-- **LUT color grading** — create BotW golden hour .cube LUT, add LUT3DEffect
-- **DOF** — BokehPass, focus distance tracks camera-to-content distance
-- **Custom fog pass** — 3-zone depth shader (near sharp, mid golden haze, far desaturated)
-- **Flower .glb models** — replace procedural geometry with stylized GLTF models
+- **3D butterflies** — simple geometry (no texture), flapping wings, flying away from screen. Find a GitHub repo with good wing-flap math.
+- **Cursor fireflies** — revisit with subtler approach, sparser, fewer
+- **Stylized sky** — Preetham model is too realistic. Needs more golden hour / stylized feel.
+- **Clouds** — need a completely different approach. Reference a real implementation.
 - **Real content** — migrate actual album art, bio text, products into content sections
 - **Nav component** — minimal fixed top nav
 - **Tier 3 fallback** — static screenshot as background image
 - **prefers-reduced-motion** — freeze camera lerp, jump directly to target
-- **LOD switching** — use lowGeo for grass beyond 15 world units
 - **Contact page** — decide if it lives in the meadow or separate
 - **Audio integration** — scroll-driven ambient meadow sounds
 
 ### Known Issues
-- GodraysPass disabled (needs shadow map infrastructure)
 - Flower geometry is procedural (cylinder+sphere), not stylized .glb models
 - Content sections are placeholder text
-- No LOD switching on grass (always uses high-detail geometry)
-- `BLADES_PER_CHUNK` constant unused (actual count derived from tier config)
+- God rays render the full scene twice per frame (occlusion pass + normal), doubling draw calls when enabled
+
+## Refactor Plan
+
+### Completed (Tier 1) ✓
+1. ~~Extract shared `SECTION_T_VALUES`~~ → `src/meadow/constants.js`, imported by MeadowEngine, FlowerInstances, ContentOverlay
+2. ~~`GrassChunkManager.setUniform(key, value)`~~ → propagates to base material + all chunk clones. Used in AtmosphereController and DevTuner.
+3. ~~`PostProcessingStack.setGodRayTexture(tex, intensity)`~~ → god ray wiring moved out of `_tick()`
+4. ~~Return ambient light from `setupScene()`~~ → `sceneSetup.ambientLight` replaces fragile `scene.children.find()`
+
+### Tier 2: Do Soon (moderate effort, reduces maintenance pain)
+
+5. **Move effect files into `meadow/effects/`** — 10 effect files only imported by PostProcessingStack. Grouping reduces cognitive load. *Claude can do autonomously.*
+
+6. **DevTuner param builder cleanup** — `buildParamGroups()` still ~500 lines but grass setters are now 1-line each (via setUniform). Consider subsystems exposing `getDevParams()`. *Claude can do autonomously, human should review param organization.*
+
+### Tier 3: Consider Later (larger refactor, needs taste)
+
+7. **Per-parameter atmosphere locking** — freeze is all-or-nothing. Per-param locking would let tuned values survive scroll changes. *Human taste: is the complexity worth it?*
+
+8. **Audio-reactive composition** — `_tick()` mutates bloom/CA additively on atmosphere values. Fragile. Should use multiplier or layer system. *Human taste: decide the musical interaction model.*
+
+9. **Subsystem lifecycle audit** — systematic audit of all `addEventListener` / `new THREE.*` for clean teardown. *Claude can do autonomously.*
+
+### Where Human Taste Is Critical
+
+| Step | What Needs Human Input |
+|------|----------------------|
+| **Any visual feature** (butterflies, clouds, sky) | How it looks, feels, what reference to chase |
+| **Atmosphere keyframe values** | The emotional arc (cold→warm→peak→exhale) is artistic |
+| **Post-FX intensity curves** | Bloom, grain, vignette darkness at each scroll position |
+| **Content layout** | What goes in each clearing, how text interacts with meadow |
+| **Audio integration** | What sounds play, when, how they interact with visuals |
+| **DevTuner param ranges** | What min/max makes sense for each slider |
+
+### Where Claude Can Act Autonomously
+
+| Task | Why It's Safe |
+|------|--------------|
+| Dead code removal | No ambiguity — unused = delete |
+| Allocation optimization | Module-level reusable vectors follow established pattern |
+| Method extraction | Pure mechanical refactor, no taste needed |
+| Constant extraction | No behavior change |
+| Dispose/cleanup methods | Preventing leaks, following existing patterns |
+| Build verification | Objective pass/fail |
+
+## Context Preservation
+
+If a session runs out of context, the next session should:
+
+1. **Read this CLAUDE.md first** — it's the complete project state
+2. **Check `git log --oneline -20`** — see what was done recently
+3. **Check `git diff --stat`** — see uncommitted work
+4. **Read `docs/superpowers/specs/2026-03-12-webgl-meadow-design.md`** — the design spec
+5. **Run `npx vite build`** — verify the build is clean before starting
+
+The codebase is now clean enough that reading MeadowEngine.js + AtmosphereController.js + this file gives a complete picture of the system.
 
 ---
 
 ## Learnings Log
 
-- 2026-03-12: The old site (LandingSection, FlowerField, Overlays, FlowerVisual) files still exist but are no longer imported — App.jsx was rewritten to mount MeadowEngine
 - 2026-03-12: `three-good-godrays` exports `GodraysPass` (a Pass), not `GodRaysEffect` (an Effect). It needs a DirectionalLight with castShadow=true, not a Mesh. Params use `raymarchSteps` not `samples`.
 - 2026-03-12: `BufferGeometryUtils` must be imported from `three/examples/jsm/utils/BufferGeometryUtils.js`, not from `THREE.BufferGeometryUtils` (doesn't exist on the THREE namespace)
 - 2026-03-12: When cloning ShaderMaterial for per-instance uniforms, cloned materials get independent uniform objects. Must iterate all clones to update shared uniforms like `uTime`.
@@ -232,3 +334,19 @@ Plan: `docs/superpowers/plans/2026-03-12-webgl-meadow.md`
 - 2026-03-12: tmux workers launched from Claude Code fail with "nested session" error. Fix: `unset CLAUDECODE && claude --dangerously-skip-permissions`
 - 2026-03-12: tmux correction files (CORRECTIONS.md) may not be read by workers if they've already started. Send corrections early or pre-merge fix.
 - 2026-03-13: User wants all shader code stolen from real GitHub repos, never written from scratch. Sources matter — verify they contain real creative techniques, not generic AI-generated examples.
+- 2026-03-13: GhibliClouds (hemisphere dome + FBM toon shader) produced flat blobs. Don't attempt procedural clouds without a real reference implementation.
+- 2026-03-13: Textured plane butterflies look terrible. User explicitly wants simple 3D geometry with wing flap, no textures. Don't try PNG-based approaches.
+- 2026-03-13: AtmosphereController overwrites all subsystem values every frame. DevTuner changes won't stick unless atmosphere is paused (freeze mode). This is the root cause of "sliders don't work."
+- 2026-03-13: Lenis hijacks scroll events globally. Use `data-lenis-prevent` attribute on elements that need independent scrolling (DevTuner panel).
+- 2026-03-13: Always avoid per-frame allocations (`new THREE.Vector3()` etc). Use module-level reusable objects prefixed with underscore (`const _lookTarget = new THREE.Vector3()`).
+- 2026-03-13: When iterating a Map and deleting entries, snapshot keys first (`[...map.keys()]`) to avoid mutation-during-iteration bugs.
+- 2026-03-13: Old site files (LandingSection, FlowerField, Overlays, FlowerVisual, App.css, noise.js, flowers.js) were deleted — they were never imported by the current App.jsx.
+- 2026-03-13: PostProcessingStack.dispose() was only cleaning up 5 of 12 effects. Always dispose ALL effects/passes in cleanup methods.
+- 2026-03-13: TerrainPlane had duplicated height formula in createTerrain and getTerrainHeight. Single-source the formula by calling getTerrainHeight from createTerrain.
+- 2026-03-13: User wants to use DevTuner to dial in visual values before committing to them in code. The workflow is: freeze atmosphere → tune sliders → export JSON → apply values to keyframes. Human taste step.
+- 2026-03-14: `renderer.toneMappingExposure` does NOTHING when `renderer.toneMapping = NoToneMapping`. Since we use pmndrs ToneMappingEffect in the post-processing pipeline, exposure must be a uniform in the color grade shader (`uExposure`).
+- 2026-03-14: CameraRig.update() sets `camera.fov = this.currentFov` every frame (for scroll-velocity FOV boost). DevTuner must set `cameraRig.baseFov` (not `camera.fov`) or the value gets instantly overwritten.
+- 2026-03-14: Cursor grass push was jittery because worldPos snapped to raycast hit every frame. Fixed with `worldPos.lerp(hitPoint, 0.12)` + velocity smoothing. Reset `_initialized` flag on mouseleave so re-entry doesn't lerp from stale position.
+- 2026-03-14: Score sheets were invisible because they were at Y:4.5-8.5m (camera is ~1.5m above terrain). Lowered to Y:2.0-4.5m and enlarged (1.8x1.3) to be visible.
+- 2026-03-14: pmndrs SSAOEffect property access varies by version. Use `effect.radius` getter/setter rather than digging into `ssaoMaterial.uniforms.radius.value`. Add try/catch with fallback for robustness.
+- 2026-03-14: User's first DevTuner tuning session (JSON export at scroll ~0.48). Key taste: wants more golden/desaturated colors, liked cloud shadows, wants smoother grass push, FOV should go more extreme. Effects need to be visually obvious or user can't tell they exist.

@@ -243,10 +243,9 @@ export default class AtmosphereController {
     // Reusable THREE objects for sun position calc
     this._sunPos = new THREE.Vector3()
 
-    // Cache ambient light reference to avoid per-frame scene traversal
-    const scene = this.sceneSetup.sky.parent
-    this._ambientLight = scene?.children.find(c => c.isAmbientLight) ?? null
-    this._scene = scene
+    // Direct references (no per-frame scene traversal)
+    this._ambientLight = this.sceneSetup.ambientLight ?? null
+    this._scene = this.sceneSetup.sky?.parent
   }
 
   update(scrollProgress) {
@@ -311,19 +310,16 @@ export default class AtmosphereController {
       this._scene.fog.density = c.fogDensity
     }
 
-    // ─── Grass (iterate all chunk materials + base template) ───
-    const grassUniforms = [this.grassManager.material.uniforms]
-    for (const [, chunk] of this.grassManager.chunks) {
-      grassUniforms.push(chunk.material.uniforms)
-    }
-    for (const u of grassUniforms) {
-      u.uBaseColor.value.setRGB(...c.grassBaseColor)
-      u.uTipColor.value.setRGB(...c.grassTipColor)
-      u.uSpeed.value = c.grassWindSpeed
-      u.uAmbientStrength.value = c.grassAmbientStrength
-      u.uTranslucencyStrength.value = c.grassTranslucency
-      u.uFogFade.value = c.grassFogFade
-    }
+    // ─── Grass (uses setUniform to propagate to base + all chunk clones) ───
+    const gm = this.grassManager
+    gm.material.uniforms.uBaseColor.value.setRGB(...c.grassBaseColor)
+    gm.material.uniforms.uTipColor.value.setRGB(...c.grassTipColor)
+    gm.setUniform('uBaseColor', gm.material.uniforms.uBaseColor.value)
+    gm.setUniform('uTipColor', gm.material.uniforms.uTipColor.value)
+    gm.setUniform('uSpeed', c.grassWindSpeed)
+    gm.setUniform('uAmbientStrength', c.grassAmbientStrength)
+    gm.setUniform('uTranslucencyStrength', c.grassTranslucency)
+    gm.setUniform('uFogFade', c.grassFogFade)
 
     // ─── Cloud shadows ───
     this.cloudShadows.material.opacity = c.cloudShadowOpacity

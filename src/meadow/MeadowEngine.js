@@ -19,11 +19,9 @@ import DustMotes from './DustMotes.js'
 import GodRayPass from './GodRayPass.js'
 import AudioReactive from './AudioReactive.js'
 import CursorInteraction from './CursorInteraction.js'
+import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
-
-// Content section t-values on the spline (must match ContentOverlay)
-const SECTION_T_VALUES = [0.075, 0.275, 0.475, 0.725, 0.925]
 
 export default class MeadowEngine {
   constructor(canvas) {
@@ -159,10 +157,7 @@ export default class MeadowEngine {
     this._updateContentVisibility()
 
     // God rays must render before post-processing composites them
-    const godRayUniforms = this.postProcessing.godRayComposite.uniforms
-    const godRayTex = this.godRayPass.render()
-    godRayUniforms.get('tGodRays').value = godRayTex
-    godRayUniforms.get('uIntensity').value = godRayTex ? this.godRayPass.intensity : 0
+    this.postProcessing.setGodRayTexture(this.godRayPass.render(), this.godRayPass.intensity)
 
     this.postProcessing.update(this.scrollEngine.velocity, camPos, this._sectionPositions)
 

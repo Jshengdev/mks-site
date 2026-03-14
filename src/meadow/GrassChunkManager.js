@@ -155,6 +155,19 @@ export default class GrassChunkManager {
     this.chunks.delete(idx)
   }
 
+  // Set a uniform on the base material + all active chunk clones
+  setUniform(key, value) {
+    const baseU = this.material.uniforms[key]
+    if (!baseU) return
+    if (value && typeof value === 'object' && value.copy) {
+      baseU.value.copy(value)
+      for (const [, chunk] of this.chunks) chunk.material.uniforms[key].value.copy(value)
+    } else {
+      baseU.value = value
+      for (const [, chunk] of this.chunks) chunk.material.uniforms[key].value = value
+    }
+  }
+
   // Update cursor position + velocity for grass wind brush effect
   updateCursor(worldPos, strength, velocity) {
     for (const [, chunk] of this.chunks) {

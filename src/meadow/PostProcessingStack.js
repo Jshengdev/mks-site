@@ -81,6 +81,11 @@ export default class PostProcessingStack {
     this.composer.addPass(this.effectPass)
   }
 
+  setGodRayTexture(texture, intensity) {
+    this.godRayComposite.uniforms.get('tGodRays').value = texture
+    this.godRayComposite.uniforms.get('uIntensity').value = texture ? intensity : 0
+  }
+
   update(scrollVelocity, cameraPos, sectionPositions) {
     if (!this.ca) return
 
