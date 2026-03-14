@@ -7,6 +7,12 @@ uniform float uSpeed;
 uniform float uHalfWidth;
 uniform float uChunkFade;  // 0→1 for chunk fade-in
 
+// Cursor wind (Unseen Studio-inspired grass interaction)
+uniform vec3 uCursorPos;       // world-space cursor position
+uniform float uCursorRadius;   // effect radius in world units
+uniform float uCursorStrength; // wave force multiplier
+uniform vec2 uCursorVelocity;  // cursor movement direction (normalized-ish)
+
 varying float vElevation;
 varying float vSideGradient;
 varying vec3 vNormal;
@@ -27,8 +33,8 @@ mat3 rotationY(float angle) {
 }
 
 float bezier(float t, float p1) {
-  float invT = 1.0 - t;
-  return invT * invT * 0.0 + 2.0 * invT * t * p1 + t * t * 1.0;
+  // Quadratic Bezier with control points (0, p1, 1)
+  return 2.0 * (1.0 - t) * t * p1 + t * t;
 }
 
 vec4 permute(vec4 x) { return mod(((x * 34.0) + 1.0) * x, 289.0); }
@@ -113,6 +119,28 @@ void main() {
   offsetY.y *= uChunkFade;
 
   vec4 worldPosition = instanceMatrix * vec4(p, 1.0);
+
+  // ─── Layer 5: Cursor wind brush (Unseen Studio-inspired) ───
+  // Directional wave that follows cursor movement — brushing, not pushing
+  vec2 toCursor = worldPosition.xz - uCursorPos.xz;
+  float cursorDist = length(toCursor);
+  float cursorInfluence = 1.0 - smoothstep(0.0, uCursorRadius, cursorDist);
+  if (cursorInfluence > 0.001) {
+    float heightFactor = position.y;  // linear — gentle, not squared
+    // Directional bend: grass sways in cursor's movement direction
+    float velLen = length(uCursorVelocity);
+    vec2 windDir = velLen > 0.01 ? uCursorVelocity / velLen : vec2(0.0);
+    // Wave ripple emanating from cursor (grass waves, not pushes)
+    float wave = sin(cursorDist * 2.5 - uTime * 5.0) * 0.4 + 0.6;
+    float bendAmount = cursorInfluence * uCursorStrength * heightFactor * wave;
+    worldPosition.x += windDir.x * bendAmount * 0.6;
+    worldPosition.z += windDir.y * bendAmount * 0.6;
+    // Gentle sway perpendicular to movement (natural brush feel)
+    float perpSway = sin(cursorDist * 4.0 + uTime * 3.0) * cursorInfluence * heightFactor * 0.15;
+    worldPosition.x += -windDir.y * perpSway;
+    worldPosition.z += windDir.x * perpSway;
+  }
+
   vec4 viewPosition = viewMatrix * worldPosition;
   gl_Position = projectionMatrix * viewPosition;
 

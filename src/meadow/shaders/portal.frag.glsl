@@ -3,7 +3,6 @@ uniform vec3 uColor;
 uniform float uOpacity;
 
 varying vec2 vUv;
-varying float vWorldY;
 
 // Simple hash noise
 float hash(vec2 p) {

@@ -3,6 +3,7 @@
 // Operates on post-tonemapped display values (0-1 sRGB)
 
 // Cone overlap (SEUS Renewed final.fsh)
+uniform float uExposure;         // 1.0 — pre-grade exposure multiplier
 uniform float uContrast;         // 0.2 — S-curve blend strength
 uniform vec3 uLift;              // vec3(0.02, 0.01, 0.0) — shadow push
 uniform vec3 uGamma;             // vec3(1.0, 0.98, 0.95) — midtone shift
@@ -29,7 +30,7 @@ const mat3 coneOverlapInv = mat3(
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
     // Color grade expects tonemapped display values (0-1).
     // Clamp as safety net in case upstream tonemapping is misconfigured.
-    vec3 color = clamp(inputColor.rgb, 0.0, 1.0);
+    vec3 color = clamp(inputColor.rgb * uExposure, 0.0, 1.0);
 
     // 1. Cone overlap — warm channel bleed (SEUS signature)
     color = coneOverlap * color;
@@ -51,7 +52,6 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     // 5. Vibrance — luminance-aware saturation (BSL ColorSaturation)
     float mn = min(color.r, min(color.g, color.b));
     float mx = max(color.r, max(color.g, color.b));
-    const float grayVibrance = 1.0;
     float grayV = (color.r + color.g + color.b) / 3.0;
     float sat = (1.0 - (mx - mn)) * (1.0 - mx) * grayV * 5.0;
     vec3 lightness = vec3((mn + mx) * 0.5);

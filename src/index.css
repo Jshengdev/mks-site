@@ -11,6 +11,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: none !important;
 }
 
 html {
@@ -31,9 +32,6 @@ body {
   min-height: 100%;
   overflow-x: hidden;
   overscroll-behavior: none;
-}
-
-body {
   font-family: 'PT Serif', serif;
   background: #000;
   color: #fff;
@@ -48,8 +46,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-*, *::before, *::after {
-  cursor: none !important;
 }

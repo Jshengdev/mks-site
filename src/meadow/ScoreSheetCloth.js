@@ -19,8 +19,8 @@ export default class ScoreSheetCloth {
 
     for (let i = 0; i < count; i++) {
       // 8x6 grid cloth
-      const solver = new ClothSolver(1.2, 0.85, 8, 6)
-      const geometry = new THREE.PlaneGeometry(1.2, 0.85, 8, 6)
+      const solver = new ClothSolver(1.8, 1.3, 8, 6)
+      const geometry = new THREE.PlaneGeometry(1.8, 1.3, 8, 6)
       const material = new THREE.MeshStandardMaterial({
         map: placeholder,
         side: THREE.DoubleSide,
@@ -31,11 +31,11 @@ export default class ScoreSheetCloth {
       })
 
       const mesh = new THREE.Mesh(geometry, material)
-      // Airborne — "liberated into the vastness" — high Y, spread along path
+      // Airborne — "liberated into the vastness" — visible from camera path
       mesh.position.set(
-        (Math.random() - 0.5) * 16,
-        4.5 + Math.random() * 4.0,   // 4.5-8.5m — flying through the sky
-        -20 - i * 30
+        (Math.random() - 0.5) * 10,
+        2.0 + Math.random() * 2.5,   // 2.0-4.5m — above grass, visible from cam (~1.5m)
+        -15 - i * 25
       )
       mesh.rotation.y = Math.random() * Math.PI * 2
 
@@ -47,7 +47,7 @@ export default class ScoreSheetCloth {
       }
 
       scene.add(mesh)
-      this.sheets.push({ mesh, solver, drift, geometry })
+      this.sheets.push({ mesh, solver, drift })
     }
   }
 
@@ -60,11 +60,11 @@ export default class ScoreSheetCloth {
 
   update(elapsed) {
     const dt = 1 / 60
-    for (const { mesh, solver, drift, geometry } of this.sheets) {
+    for (const { mesh, solver, drift } of this.sheets) {
       const t = elapsed + drift.phaseOffset
       solver.setWind(this._windStrength, elapsed)
       solver.step(dt)
-      solver.updateGeometry(geometry)
+      solver.updateGeometry(mesh.geometry)
       // Wider lateral drift + more vertical bob = truly airborne
       mesh.position.x = drift.baseX + Math.sin(t * 0.3) * 1.2 * this._windStrength
       mesh.position.y = drift.baseY + Math.sin(t * drift.driftSpeed) * 0.8

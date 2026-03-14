@@ -4,22 +4,18 @@
 import * as THREE from 'three'
 import { getTerrainHeight } from './TerrainPlane.js'
 
+const _lookTarget = new THREE.Vector3()
+
 export default class ArtistFigure {
   constructor(scene) {
-    this.scene = scene
-    this.mesh = null
+    this._scene = scene
 
     // Position at the far end of the camera spline path
     // The spline ends at approximately z = -160, so place the figure at z = -145
     // (visible from the Deepening zone onward, you scroll toward him)
-    this.worldPos = new THREE.Vector3(2, 0, -145)
-    this.worldPos.y = getTerrainHeight(this.worldPos.x, this.worldPos.z)
+    const worldPos = new THREE.Vector3(2, 0, -145)
+    worldPos.y = getTerrainHeight(worldPos.x, worldPos.z)
 
-    // Create a placeholder until the real photo is loaded
-    this._createPlaceholder()
-  }
-
-  _createPlaceholder() {
     // Tall, narrow plane — roughly human proportions
     const geometry = new THREE.PlaneGeometry(1.2, 2.4)
     // Shift geometry origin to bottom center (feet on ground)
@@ -34,11 +30,10 @@ export default class ArtistFigure {
     })
 
     this.mesh = new THREE.Mesh(geometry, material)
-    this.mesh.position.copy(this.worldPos)
-    this.scene.add(this.mesh)
+    this.mesh.position.copy(worldPos)
+    scene.add(this.mesh)
   }
 
-  // Load the artist photo texture (alpha-masked cutout PNG)
   loadTexture(url) {
     const loader = new THREE.TextureLoader()
     loader.load(url, (texture) => {
@@ -50,21 +45,18 @@ export default class ArtistFigure {
   }
 
   update(cameraPosition) {
-    if (!this.mesh) return
     // Billboard: always face the camera (Y-axis only — don't tilt)
-    const lookTarget = new THREE.Vector3(
+    _lookTarget.set(
       cameraPosition.x,
       this.mesh.position.y + 1.2, // look at mid-height
       cameraPosition.z
     )
-    this.mesh.lookAt(lookTarget)
+    this.mesh.lookAt(_lookTarget)
   }
 
   dispose() {
-    if (this.mesh) {
-      this.scene.remove(this.mesh)
-      this.mesh.geometry.dispose()
-      this.mesh.material.dispose()
-    }
+    this._scene.remove(this.mesh)
+    this.mesh.geometry.dispose()
+    this.mesh.material.dispose()
   }
 }

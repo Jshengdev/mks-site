@@ -19,7 +19,7 @@ export function detectTier(renderer) {
 }
 
 export const TIER_CONFIG = {
-  1: { grassCount: 100000, grassChunks: 6, postFX: 'full' },
-  2: { grassCount: 30000, grassChunks: 4, postFX: 'reduced' },
+  1: { grassCount: 60000, grassChunks: 6, postFX: 'full' },
+  2: { grassCount: 18000, grassChunks: 4, postFX: 'reduced' },
   3: { grassCount: 0, grassChunks: 0, postFX: 'css' },
 }

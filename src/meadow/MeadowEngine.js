@@ -1,5 +1,4 @@
 // MeadowEngine — Top-level orchestrator for the 3D meadow
-// Creates renderer, scene, camera. Wires scroll → camera → content visibility.
 import * as THREE from 'three'
 import ScrollEngine from './ScrollEngine.js'
 import CameraRig from './CameraRig.js'
@@ -19,6 +18,7 @@ import PortalHint from './PortalHint.js'
 import DustMotes from './DustMotes.js'
 import GodRayPass from './GodRayPass.js'
 import AudioReactive from './AudioReactive.js'
+import CursorInteraction from './CursorInteraction.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
 
@@ -35,11 +35,8 @@ export default class MeadowEngine {
     })
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(window.innerWidth, window.innerHeight)
-    // Shaders output linear values; renderer handles gamma
-    // ACES tonemapping applied by post-processing or renderer fallback
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
-    // Tonemapping handled by pmndrs ToneMappingEffect in PostProcessingStack
-    // (pmndrs EffectComposer bypasses renderer.toneMapping)
+    // Tonemapping handled by ToneMappingEffect in PostProcessingStack
     this.renderer.toneMapping = THREE.NoToneMapping
 
     this.scene = new THREE.Scene()
@@ -50,42 +47,26 @@ export default class MeadowEngine {
       2000
     )
 
-    // Detect performance tier
     this.tier = detectTier(this.renderer)
     this.config = TIER_CONFIG[this.tier]
 
-    // Tier 3: no WebGL, bail early
     if (this.tier === 3) {
       this.renderer.dispose()
       canvas.style.display = 'none'
       return
     }
 
-    // Check reduced motion preference
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    // Scroll engine (Lenis)
     this.scrollEngine = new ScrollEngine()
-
-    // Camera rig (spline path)
     this.cameraRig = new CameraRig(this.camera)
-
-    // Content section DOM elements (set by setContentSections)
     this._contentSections = []
-
-    // Pre-compute content section world positions for DOF focus tracking
     this._sectionPositions = SECTION_T_VALUES.map(t => this.cameraRig.curve.getPoint(t))
-
-    // Clock for delta time
     this.clock = new THREE.Clock()
 
-    // ─── Wire subsystems ───
     this.sceneSetup = setupScene(this.scene)
     this.terrain = createTerrain(this.scene)
     this.cloudShadows = new CloudShadows(this.scene)
-
-    const cloudTexture = this.cloudShadows.texture
-    this.grassManager = new GrassChunkManager(this.scene, this.config, cloudTexture)
+    this.grassManager = new GrassChunkManager(this.scene, this.config, this.cloudShadows.texture)
     this.fireflies = new FireflySystem(this.scene, 500)
     this.flowers = new FlowerInstances(this.scene, this.cameraRig, 800)
 
@@ -94,7 +75,6 @@ export default class MeadowEngine {
       this.config.postFX
     )
 
-    // Atmosphere controller — scroll-driven keyframe interpolation
     this.atmosphere = new AtmosphereController(
       this.sceneSetup,
       this.grassManager,
@@ -103,20 +83,14 @@ export default class MeadowEngine {
       this.postProcessing
     )
 
-    // Music trigger — BotW discovery moment at scroll threshold
-    // TODO: Replace with actual MKS audio file path
     this.musicTrigger = new MusicTrigger(this.postProcessing, {
       threshold: 0.35,
-      audioSrc: null, // Set to audio file URL when available
+      audioSrc: null,
     })
 
-    // Score sheet cloth — wind-driven sheets tumbling through meadow
     this.scoreSheets = new ScoreSheetCloth(this.scene, 3)
-
-    // Artist figure — 2D cutout billboard at far end of meadow
     this.artistFigure = new ArtistFigure(this.scene)
 
-    // Load real textures for score sheets and artist figure
     const textureLoader = new THREE.TextureLoader()
     textureLoader.load(scoreSheetUrl, (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace
@@ -124,35 +98,26 @@ export default class MeadowEngine {
     })
     this.artistFigure.loadTexture(mksPortraitUrl)
 
-    // Portal hints — shimmering spots teasing future worlds
     this.portals = new PortalHint(this.scene, this.camera)
-
-    // Dust motes — floating particles catching sunlight
     this.dustMotes = new DustMotes(this.scene, 300)
-
-    // God rays — screen-space radial blur (GPU Gems 3)
     this.godRayPass = new GodRayPass(
       this.renderer, this.scene, this.camera,
       this.sceneSetup.sunPosition
     )
 
-    // Audio reactive — FFT analysis for future music-driven effects
+    this.cursorInteraction = new CursorInteraction()
     this.audioReactive = new AudioReactive()
 
-    // Wire optional subsystems into AtmosphereController
     this.atmosphere.dustMotes = this.dustMotes
     this.atmosphere.godRayPass = this.godRayPass
 
-    // Resize handler
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
 
-    // Start render loop
     this._tick = this._tick.bind(this)
     this._tick()
   }
 
-  // Called by React to register content section DOM elements
   setContentSections(elements) {
     this._contentSections = elements
   }
@@ -162,37 +127,50 @@ export default class MeadowEngine {
     const elapsed = this.clock.getElapsedTime()
     const animElapsed = this.reducedMotion ? 0 : elapsed
 
-    // Update camera from scroll (pass velocity for FOV speed effect)
     this.cameraRig.update(this.scrollEngine.progress, this.scrollEngine.velocity)
-
-    // Update subsystems
     const camPos = this.cameraRig.getPosition()
     this.cloudShadows.update(animElapsed)
-    this.grassManager.update(camPos, animElapsed, this.cameraRig.getCurrentT())
+    this.grassManager.update(camPos, animElapsed)
     this.fireflies.update(animElapsed)
     this.flowers.update(animElapsed)
 
-    // Drive atmospheric mood from scroll position
-    this.atmosphere.update(this.scrollEngine.progress)
+    if (!this.atmosphere.paused) {
+      this.atmosphere.update(this.scrollEngine.progress)
+    }
 
-    // Music trigger (pass delta for pulse animation)
     this.musicTrigger.update(this.scrollEngine.progress, delta)
-
-    // Score sheets + artist figure
     this.scoreSheets.update(animElapsed)
-    this.scoreSheets.setWindStrength(
-      this.atmosphere.current.grassWindSpeed / 1.5  // normalize to ~0-1.3
-    )
+    this.scoreSheets.setWindStrength(this.atmosphere.current.grassWindSpeed / 1.5)
     this.artistFigure.update(camPos)
     this.portals.update(animElapsed)
     this.dustMotes.update(animElapsed)
+
+    this.cursorInteraction.update(this.camera, delta)
+    const brushStrength = this.cursorInteraction.isOnGround
+      ? Math.min(this.cursorInteraction.speed * 0.5, 4.0)
+      : 0
+    this.grassManager.updateCursor(
+      this.cursorInteraction.worldPos,
+      brushStrength,
+      this.cursorInteraction.velocity
+    )
     this.audioReactive.update(delta)
 
-    // Update content section visibility
     this._updateContentVisibility()
 
-    // Render via post-processing (pass camPos + section positions for DOF)
+    // God rays must render before post-processing composites them
+    const godRayUniforms = this.postProcessing.godRayComposite.uniforms
+    const godRayTex = this.godRayPass.render()
+    godRayUniforms.get('tGodRays').value = godRayTex
+    godRayUniforms.get('uIntensity').value = godRayTex ? this.godRayPass.intensity : 0
+
     this.postProcessing.update(this.scrollEngine.velocity, camPos, this._sectionPositions)
+
+    if (this.audioReactive.analyser) {
+      this.postProcessing.bloom.intensity += this.audioReactive.bass * 0.3
+      this.postProcessing.ca.uniforms.get('uDistortion').value += this.audioReactive.mid * 0.15
+    }
+
     this.postProcessing.render(delta)
 
     requestAnimationFrame(this._tick)
@@ -225,7 +203,6 @@ export default class MeadowEngine {
     this.godRayPass.setSize(w, h)
   }
 
-  // Expose subsystem references for DevTuner
   getDevAPI() {
     return {
       renderer: this.renderer,
@@ -245,6 +222,7 @@ export default class MeadowEngine {
       dustMotes: this.dustMotes,
       godRayPass: this.godRayPass,
       audioReactive: this.audioReactive,
+      cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
       scrollEngine: this.scrollEngine,
       tier: this.tier,
@@ -266,7 +244,9 @@ export default class MeadowEngine {
     this.dustMotes?.dispose()
     this.godRayPass?.dispose()
     this.audioReactive?.dispose()
-    this.cloudShadows = null
+    this.cursorInteraction?.dispose()
+    this.cameraRig?.dispose()
+    this.cloudShadows?.dispose()
     this.renderer.dispose()
   }
 }

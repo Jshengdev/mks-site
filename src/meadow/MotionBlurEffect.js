@@ -53,7 +53,7 @@ export class MotionBlurEffect extends Effect {
     })
     this._prevViewProj = new THREE.Matrix4()
     this._currViewProj = new THREE.Matrix4()
-    this._frameCount = 0
+    this._hasPrevFrame = false
   }
 
   update(renderer, inputBuffer, deltaTime) {
@@ -66,20 +66,20 @@ export class MotionBlurEffect extends Effect {
     // Compute current view-projection
     this._currViewProj.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse)
 
-    // Inverse for world reconstruction — write directly into uniform matrix
+    // Inverse for world reconstruction
     this.uniforms.get('uCurrViewProjInv').value.copy(this._currViewProj).invert()
 
     // Cache for next frame
     this._prevViewProj.copy(this._currViewProj)
 
     // Frame-speed normalization (stolen from L10: (1/100) / deltaTime)
-    const frameSpeed = Math.min((1 / 100) / Math.max(deltaTime, 0.001), 3.0)
-    this.uniforms.get('uVelocityScale').value = frameSpeed * 0.5
-
-    // Skip first frame (no previous matrix yet)
-    this._frameCount++
-    if (this._frameCount < 2) {
+    // Zero on first frame since there's no previous matrix yet
+    if (this._hasPrevFrame) {
+      const frameSpeed = Math.min((1 / 100) / Math.max(deltaTime, 0.001), 3.0)
+      this.uniforms.get('uVelocityScale').value = frameSpeed * 0.5
+    } else {
       this.uniforms.get('uVelocityScale').value = 0.0
+      this._hasPrevFrame = true
     }
   }
 }

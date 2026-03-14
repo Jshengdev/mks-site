@@ -1,29 +1,16 @@
-/**
- * DOFSetup.js — Depth of Field with DepthOfFieldEffect (pmndrs/postprocessing)
- *
- * Creates a DepthOfFieldEffect that dynamically focuses on the nearest
- * content section clearing as the camera moves along the spline.
- * Tier 1 only — too expensive for Tier 2/3.
- *
- * focusDistance and focusRange are in WORLD UNITS (not normalized 0-1).
- * Returns an Effect (not a Pass) — add to an EffectPass, not composer.addPass().
- */
-
+// DOFSetup — Depth of Field via pmndrs/postprocessing (Tier 1 only)
+// Racks focus toward nearest content section clearing as camera moves
 import { DepthOfFieldEffect } from 'postprocessing'
 
 const DEFAULTS = {
-  focusDistance: 15.0,  // world units — initial focus distance
-  focusRange: 8.0,      // world units — transition zone (±8 units from focus stays sharp)
-  bokehScale: 3.0,      // blur disc size
-  resolutionScale: 0.5, // half-res for performance
+  focusDistance: 15.0,
+  focusRange: 8.0,
+  bokehScale: 3.0,
+  resolutionScale: 0.5,
   lerpSpeed: 0.05,
-  fallbackFocus: 50,    // world-unit fallback when no sections nearby
+  fallbackFocus: 50,
 }
 
-/**
- * @param {THREE.Camera} camera
- * @returns {{ effect: DepthOfFieldEffect, updateFocus: Function, dispose: Function } | null}
- */
 export function createDOF(camera) {
   if (!camera) return null
 
@@ -35,29 +22,21 @@ export function createDOF(camera) {
   })
 
   let currentFocus = DEFAULTS.focusDistance
-  const lerpSpeed = DEFAULTS.lerpSpeed
 
-  /**
-   * Call each frame to smoothly rack focus toward the nearest content section.
-   * @param {THREE.Vector3} cameraPos - current camera world position
-   * @param {THREE.Vector3[]} sectionPositions - world positions of content clearings
-   */
   function updateFocus(cameraPos, sectionPositions) {
     let nearest = DEFAULTS.fallbackFocus
-
     for (const pos of sectionPositions) {
       const d = cameraPos.distanceTo(pos)
       if (d < nearest) nearest = d
     }
 
-    // Lerp toward nearest section distance (world units)
-    currentFocus += (nearest - currentFocus) * lerpSpeed
+    currentFocus += (nearest - currentFocus) * DEFAULTS.lerpSpeed
     effect.cocMaterial.focusDistance = currentFocus
   }
 
-  function dispose() {
-    effect.dispose()
+  return {
+    effect,
+    updateFocus,
+    dispose() { effect.dispose() },
   }
-
-  return { effect, updateFocus, dispose }
 }

@@ -9,22 +9,31 @@
   backdrop-filter: blur(12px);
   border-left: 1px solid #2a2a2a;
   z-index: 9000;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   font-family: 'DM Sans', -apple-system, sans-serif;
   color: #c8d4e8;
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  scrollbar-width: thin;
-  scrollbar-color: #2a2a2a transparent;
 }
 
 .dev-tuner.open {
   transform: translateX(0);
 }
 
-.dev-tuner::-webkit-scrollbar { width: 4px; }
-.dev-tuner::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
+/* Scrollable content area */
+.dt-scroll-area {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
+
+.dt-scroll-area::-webkit-scrollbar { width: 4px; }
+.dt-scroll-area::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
 /* Toggle button */
 .dev-tuner-toggle {
@@ -62,10 +71,8 @@
 .dt-header {
   padding: 16px 20px 12px;
   border-bottom: 1px solid #2a2a2a;
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   background: rgba(10, 10, 10, 0.95);
-  z-index: 1;
 }
 
 .dt-header h2 {
@@ -75,11 +82,6 @@
   text-transform: uppercase;
   color: #90a0a0;
   margin: 0 0 8px;
-}
-
-.dt-actions {
-  display: flex;
-  gap: 6px;
 }
 
 .dt-btn {
@@ -97,6 +99,14 @@
 .dt-btn:hover { border-color: #3a3a3a; color: #c8d4e8; }
 .dt-btn-export { border-color: #8a8440; color: #d4c968; }
 .dt-btn-export:hover { background: rgba(212, 201, 104, 0.08); }
+
+/* Freeze toggle */
+.dt-freeze { width: 100%; margin-top: 8px; padding: 6px 10px; text-align: center; }
+.dt-freeze.active {
+  border-color: #5a8a88;
+  color: #7abab8;
+  background: rgba(74, 106, 104, 0.15);
+}
 
 /* Panel sections */
 .dt-panel {
@@ -132,7 +142,6 @@
 }
 
 .dt-badge-live { background: rgba(74, 106, 104, 0.2); color: #5a8a88; border: 1px solid rgba(74, 106, 104, 0.3); }
-.dt-badge-pending { background: rgba(90, 106, 106, 0.15); color: #5a6a6a; border: 1px solid rgba(90, 106, 106, 0.2); }
 
 .dt-chevron {
   font-size: 10px;
@@ -261,21 +270,6 @@
   cursor: pointer;
 }
 
-/* Select row */
-.dt-param select {
-  background: #141414;
-  border: 1px solid #2a2a2a;
-  color: #c8d4e8;
-  padding: 3px 6px;
-  border-radius: 3px;
-  font-family: inherit;
-  font-size: 10px;
-  cursor: pointer;
-  outline: none;
-}
-
-.dt-param select:focus { border-color: #4a6a68; }
-
 /* JSON overlay */
 .dt-json-overlay {
   position: fixed;
@@ -327,6 +321,28 @@
   gap: 8px;
   margin-top: 12px;
   justify-content: flex-end;
+}
+
+/* Footer — sticky at bottom */
+.dt-footer {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  padding: 12px 20px;
+  border-top: 1px solid #2a2a2a;
+  background: rgba(10, 10, 10, 0.95);
+  justify-content: flex-end;
+}
+
+.dt-btn-save {
+  border-color: #4a6a68;
+  color: #5a8a88;
+  font-weight: 600;
+}
+
+.dt-btn-save:hover {
+  background: rgba(74, 106, 104, 0.12);
+  color: #7abab8;
 }
 
 /* Toast */

@@ -3,6 +3,11 @@
 // Stolen from cloth-simulation + three-simplecloth extractions
 import * as THREE from 'three'
 
+const STIFFNESS = 0.4       // paper stiffer than cloth (extraction: 0.3-0.5)
+const DAMPENING = 0.90      // more energy loss for paper (extraction: 0.88-0.93)
+const GRAVITY = new THREE.Vector3(0, -0.4, 0)  // light gravity — paper floats, not falls
+const CONSTRAINT_ITERATIONS = 15
+
 export class ClothSolver {
   constructor(width, height, segW, segH) {
     this.width = width
@@ -11,9 +16,6 @@ export class ClothSolver {
     this.segH = segH
     this.particles = []
     this.constraints = []
-    this.stiffness = 0.4     // paper stiffer than cloth (extraction: 0.3-0.5)
-    this.dampening = 0.90    // more energy loss for paper (extraction: 0.88-0.93)
-    this.gravity = new THREE.Vector3(0, -0.4, 0)  // light gravity — paper floats, not falls
     this.wind = new THREE.Vector3()
 
     // Reusable scratch vectors — avoids allocations in step() hot path
@@ -86,21 +88,21 @@ export class ClothSolver {
     for (const p of this.particles) {
       if (p.pinned) continue
       temp.copy(p.pos)
-      vel.copy(p.pos).sub(p.prev).multiplyScalar(this.dampening)
+      vel.copy(p.pos).sub(p.prev).multiplyScalar(DAMPENING)
       p.pos.add(vel)
-      p.pos.addScaledVector(this.gravity, dtSq)
+      p.pos.addScaledVector(GRAVITY, dtSq)
       p.pos.addScaledVector(this.wind, dtSq)
       p.prev.copy(temp)
     }
-    // Jakobsen constraint solving — 15 iterations for paper
-    for (let iter = 0; iter < 15; iter++) {
+    // Jakobsen constraint solving
+    for (let iter = 0; iter < CONSTRAINT_ITERATIONS; iter++) {
       for (const c of this.constraints) {
         const pa = this.particles[c.a]
         const pb = this.particles[c.b]
         delta.copy(pb.pos).sub(pa.pos)
         const dist = delta.length()
         if (dist === 0) continue
-        const diff = (dist - c.restLen) / dist * this.stiffness
+        const diff = (dist - c.restLen) / dist * STIFFNESS
         delta.multiplyScalar(diff * 0.5)
         if (!pa.pinned) pa.pos.add(delta)
         if (!pb.pinned) pb.pos.sub(delta)

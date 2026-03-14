@@ -1,43 +1,46 @@
 // src/meadow/AudioReactive.js
 // FFT frequency-to-shader coupling + beat detection
 // Stolen from L17 + interactive-particles-music-visualizer
+
+const FFT_SIZE = 2048
+const SMOOTHING = 0.7
+const PEAK_SENSITIVITY = 1.1
+const BEAT_COOLDOWN_MS = 0.2
+const HISTORY_LENGTH = 30
+
 export default class AudioReactive {
   constructor() {
     this.audioCtx = null
     this.analyser = null
-    this.source = null
     this.dataArray = null
     this.bass = 0
     this.mid = 0
     this.high = 0
     this.beat = false
-    this._beatHistory = new Array(30).fill(0)
+    this._beatHistory = new Array(HISTORY_LENGTH).fill(0)
     this._historyIdx = 0
     this._beatCooldown = 0
-    this.peakSensitivity = 1.1
-    this.fftSize = 2048
-    this.smoothing = 0.7
   }
 
   connectElement(audioElement) {
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-    this.analyser = this.audioCtx.createAnalyser()
-    this.analyser.fftSize = this.fftSize
-    this.analyser.smoothingTimeConstant = this.smoothing
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
-    this.source = this.audioCtx.createMediaElementSource(audioElement)
-    this.source.connect(this.analyser)
+    this._initAnalyser()
+    const source = this.audioCtx.createMediaElementSource(audioElement)
+    source.connect(this.analyser)
     this.analyser.connect(this.audioCtx.destination)
   }
 
   connectSource(audioCtx, sourceNode) {
     this.audioCtx = audioCtx
-    this.analyser = audioCtx.createAnalyser()
-    this.analyser.fftSize = this.fftSize
-    this.analyser.smoothingTimeConstant = this.smoothing
-    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
+    this._initAnalyser()
     sourceNode.connect(this.analyser)
-    this.source = sourceNode
+  }
+
+  _initAnalyser() {
+    this.analyser = this.audioCtx.createAnalyser()
+    this.analyser.fftSize = FFT_SIZE
+    this.analyser.smoothingTimeConstant = SMOOTHING
+    this.dataArray = new Uint8Array(this.analyser.frequencyBinCount)
   }
 
   update(deltaTime) {
@@ -46,26 +49,26 @@ export default class AudioReactive {
     const sr = this.audioCtx.sampleRate
 
     // Band extraction (stolen from L17: bin = freq * fftSize / sampleRate)
-    this.bass = this._avgBand(0, Math.round(250 * this.fftSize / sr))
+    this.bass = this._avgBand(0, Math.round(250 * FFT_SIZE / sr))
     this.mid = this._avgBand(
-      Math.round(150 * this.fftSize / sr),
-      Math.round(2000 * this.fftSize / sr)
+      Math.round(150 * FFT_SIZE / sr),
+      Math.round(2000 * FFT_SIZE / sr)
     )
     this.high = this._avgBand(
-      Math.round(2000 * this.fftSize / sr),
-      Math.round(6000 * this.fftSize / sr)
+      Math.round(2000 * FFT_SIZE / sr),
+      Math.round(6000 * FFT_SIZE / sr)
     )
 
     // Beat detection (stolen from L17: adaptive peak)
     const energy = this.bass
     this._beatHistory[this._historyIdx] = energy
-    this._historyIdx = (this._historyIdx + 1) % 30
-    const avg = this._beatHistory.reduce((a, b) => a + b) / 30
+    this._historyIdx = (this._historyIdx + 1) % HISTORY_LENGTH
+    const avg = this._beatHistory.reduce((a, b) => a + b) / HISTORY_LENGTH
     this._beatCooldown = Math.max(0, this._beatCooldown - deltaTime)
 
-    if (energy > avg * this.peakSensitivity && this._beatCooldown <= 0) {
+    if (energy > avg * PEAK_SENSITIVITY && this._beatCooldown <= 0) {
       this.beat = true
-      this._beatCooldown = 0.2 // 200ms from L17
+      this._beatCooldown = BEAT_COOLDOWN_MS
     } else {
       this.beat = false
     }
@@ -77,10 +80,6 @@ export default class AudioReactive {
     let sum = 0
     for (let i = start; i < len; i++) sum += this.dataArray[i]
     return sum / (end - start) / 256
-  }
-
-  getUniforms() {
-    return { uBass: this.bass, uMid: this.mid, uHigh: this.high, uBeat: this.beat ? 1.0 : 0.0 }
   }
 
   dispose() {

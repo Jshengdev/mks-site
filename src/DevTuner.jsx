@@ -9,17 +9,31 @@ import './DevTuner.css'
 function buildParamGroups(api) {
   if (!api) return []
 
-  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, flowers, cloudShadows, cameraRig } = api
+  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets } = api
   const sky = sceneSetup?.sky
   const sunLight = sceneSetup?.sunLight
-  const godrays = postProcessing.godrays
   const fogDepth = postProcessing.fogDepth
   const colorGrade = postProcessing.colorGrade
   const ssao = postProcessing.ssao
-  const lensFlare = postProcessing.lensFlare
   const dof = postProcessing.dof
 
   return [
+    {
+      id: 'navigation',
+      title: 'Navigation',
+      badge: 'live',
+      params: [
+        {
+          key: 'scrollPosition', label: 'Scroll Position',
+          min: 0, max: 1, step: 0.001,
+          get: () => scrollEngine.progress,
+          set: v => {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight
+            scrollEngine.lenis.scrollTo(v * totalHeight, { immediate: true })
+          },
+        },
+      ],
+    },
     {
       id: 'renderer',
       title: 'Renderer',
@@ -27,9 +41,9 @@ function buildParamGroups(api) {
       params: [
         {
           key: 'toneMappingExposure', label: 'Exposure',
-          min: 0.05, max: 5, step: 0.05,
-          get: () => renderer.toneMappingExposure,
-          set: v => { renderer.toneMappingExposure = v },
+          min: 0.1, max: 3, step: 0.05,
+          get: () => colorGrade?.uniforms.get('uExposure')?.value ?? 1,
+          set: v => { if (colorGrade) colorGrade.uniforms.get('uExposure').value = v },
         },
       ],
     },
@@ -142,10 +156,10 @@ function buildParamGroups(api) {
           set: v => { if (postProcessing.bloom?.luminanceMaterial) postProcessing.bloom.luminanceMaterial.smoothing = v },
         },
         {
-          key: 'caOffset', label: 'Chromatic Aberration',
-          min: 0, max: 0.01, step: 0.0001,
-          get: () => postProcessing.ca?.offset?.x,
-          set: v => { if (postProcessing.ca) postProcessing.ca.offset.set(v, v) },
+          key: 'caDistortion', label: 'Radial CA',
+          min: 0, max: 2.0, step: 0.05,
+          get: () => postProcessing.ca?.uniforms?.get('uDistortion')?.value,
+          set: v => { if (postProcessing.ca) postProcessing.ca.uniforms.get('uDistortion').value = v },
         },
         {
           key: 'vignetteDarkness', label: 'Vignette Darkness',
@@ -160,10 +174,10 @@ function buildParamGroups(api) {
           set: v => { if (postProcessing.vignette) postProcessing.vignette.offset = v },
         },
         {
-          key: 'grainOpacity', label: 'Film Grain',
+          key: 'grainIntensity', label: 'Film Grain',
           min: 0, max: 0.2, step: 0.005,
-          get: () => postProcessing.grain?.blendMode?.opacity?.value,
-          set: v => { if (postProcessing.grain) postProcessing.grain.blendMode.opacity.value = v },
+          get: () => postProcessing.grain?.uniforms?.get('uGrainIntensity')?.value,
+          set: v => { if (postProcessing.grain) postProcessing.grain.uniforms.get('uGrainIntensity').value = v },
         },
       ],
     },
@@ -257,8 +271,17 @@ function buildParamGroups(api) {
       badge: 'live',
       params: [
         {
+          key: 'fireflyBrightness', label: 'Brightness',
+          min: 0, max: 2, step: 0.05,
+          get: () => fireflies.material.uniforms.uBrightness.value,
+          set: v => {
+            fireflies.material.uniforms.uBrightness.value = v
+            fireflies.points.visible = v > 0.01
+          },
+        },
+        {
           key: 'fireflySize', label: 'Size',
-          min: 10, max: 200, step: 5,
+          min: 10, max: 300, step: 5,
           get: () => fireflies.material.uniforms.uSize.value,
           set: v => { fireflies.material.uniforms.uSize.value = v },
         },
@@ -284,9 +307,9 @@ function buildParamGroups(api) {
       params: [
         {
           key: 'cameraFov', label: 'FOV',
-          min: 20, max: 90, step: 1,
-          get: () => api.camera.fov,
-          set: v => { api.camera.fov = v; api.camera.updateProjectionMatrix() },
+          min: 10, max: 120, step: 1,
+          get: () => cameraRig.baseFov,
+          set: v => { cameraRig.baseFov = v; cameraRig.currentFov = v },
         },
         {
           key: 'cameraLerp', label: 'Damping (Lerp)',
@@ -296,40 +319,41 @@ function buildParamGroups(api) {
         },
       ],
     },
-    // ─── Phase 2A: God Rays ───
-    ...(godrays ? [{
+    // ─── God Rays (GPU Gems 3 radial blur) ───
+    ...(godRayPass ? [{
       id: 'godrays',
       title: 'God Rays',
       badge: 'live',
       params: [
         {
-          key: 'godraysMaxDensity', label: 'Max Density',
-          min: 0, max: 1.5, step: 0.05,
-          get: () => godrays.pass.maxDensity,
-          set: v => { godrays.pass.maxDensity = v },
+          key: 'godrayIntensity', label: 'Intensity',
+          min: 0, max: 2.0, step: 0.05,
+          get: () => godRayPass.intensity,
+          set: v => { godRayPass.intensity = v },
         },
         {
-          key: 'godraysDensity', label: 'Density',
+          key: 'godrayDensity', label: 'Density',
+          min: 0.1, max: 2.0, step: 0.05,
+          get: () => godRayPass._density,
+          set: v => { godRayPass._density = v; godRayPass._blurMat.uniforms.uDensity.value = v },
+        },
+        {
+          key: 'godrayWeight', label: 'Weight',
           min: 0.001, max: 0.05, step: 0.001,
-          get: () => godrays.pass.density,
-          set: v => { godrays.pass.density = v },
+          get: () => godRayPass._weight,
+          set: v => { godRayPass._weight = v; godRayPass._blurMat.uniforms.uWeight.value = v },
         },
         {
-          key: 'godraysDistAtten', label: 'Distance Attenuation',
-          min: 0, max: 5, step: 0.1,
-          get: () => godrays.pass.distanceAttenuation,
-          set: v => { godrays.pass.distanceAttenuation = v },
+          key: 'godrayDecay', label: 'Decay',
+          min: 0.9, max: 1.0, step: 0.005,
+          get: () => godRayPass._decay,
+          set: v => { godRayPass._decay = v; godRayPass._blurMat.uniforms.uDecay.value = v },
         },
         {
-          key: 'godraysRayColor', label: 'Ray Color', type: 'color',
-          get: () => godrays.pass.color ? '#' + godrays.pass.color.getHexString() : '#fff2cc',
-          set: v => { if (godrays.pass.color) godrays.pass.color.set(v) },
-        },
-        {
-          key: 'shadowBias', label: 'Shadow Bias',
-          min: -0.01, max: 0.01, step: 0.0005,
-          get: () => sunLight?.shadow?.bias,
-          set: v => { if (sunLight?.shadow) sunLight.shadow.bias = v },
+          key: 'godrayExposure', label: 'Exposure',
+          min: 0.1, max: 3.0, step: 0.1,
+          get: () => godRayPass._exposure,
+          set: v => { godRayPass._exposure = v; godRayPass._blurMat.uniforms.uExposure.value = v },
         },
       ],
     }] : []),
@@ -460,8 +484,15 @@ function buildParamGroups(api) {
         {
           key: 'ssaoRadius', label: 'AO Radius',
           min: 0.01, max: 0.15, step: 0.005,
-          get: () => ssao.effect.ssaoMaterial?.uniforms?.radius?.value,
-          set: v => { if (ssao.effect.ssaoMaterial) ssao.effect.ssaoMaterial.uniforms.radius.value = v },
+          get: () => {
+            try { return ssao.effect.radius ?? ssao.effect.ssaoMaterial?.uniforms?.radius?.value } catch { return 0.05 }
+          },
+          set: v => {
+            try {
+              if ('radius' in ssao.effect) ssao.effect.radius = v
+              else if (ssao.effect.ssaoMaterial) ssao.effect.ssaoMaterial.uniforms.radius.value = v
+            } catch { /* ignore */ }
+          },
         },
         {
           key: 'ssaoIntensity', label: 'Intensity',
@@ -472,32 +503,106 @@ function buildParamGroups(api) {
         {
           key: 'ssaoLumInfluence', label: 'Luminance Influence',
           min: 0, max: 1, step: 0.05,
-          get: () => ssao.effect.ssaoMaterial?.uniforms?.luminanceInfluence?.value,
-          set: v => { if (ssao.effect.ssaoMaterial) ssao.effect.ssaoMaterial.uniforms.luminanceInfluence.value = v },
+          get: () => {
+            try { return ssao.effect.luminanceInfluence ?? ssao.effect.ssaoMaterial?.uniforms?.luminanceInfluence?.value } catch { return 0.7 }
+          },
+          set: v => {
+            try {
+              if ('luminanceInfluence' in ssao.effect) ssao.effect.luminanceInfluence = v
+              else if (ssao.effect.ssaoMaterial) ssao.effect.ssaoMaterial.uniforms.luminanceInfluence.value = v
+            } catch { /* ignore */ }
+          },
         },
       ],
     }] : []),
-    // ─── Phase 2B: Lens Flare ───
-    ...(lensFlare ? [{
-      id: 'lensFlare',
-      title: 'Lens Flare',
+    // ─── Kuwahara Painterly ───
+    ...(postProcessing.kuwahara ? [{
+      id: 'kuwahara',
+      title: 'Kuwahara Painterly',
       badge: 'live',
       params: [
         {
-          key: 'flareIntensity', label: 'Intensity',
-          min: 0, max: 1, step: 0.01,
-          get: () => lensFlare.uniforms.get('uIntensity')?.value,
-          set: v => { lensFlare.uniforms.get('uIntensity').value = v },
+          key: 'kuwaharaStrength', label: 'Strength',
+          min: 0, max: 1.0, step: 0.05,
+          get: () => postProcessing.kuwahara.uniforms.get('uStrength')?.value,
+          set: v => { postProcessing.kuwahara.uniforms.get('uStrength').value = v },
         },
         {
-          key: 'flareGhostSpacing', label: 'Ghost Spacing',
-          min: 0.1, max: 1.0, step: 0.05,
-          get: () => lensFlare.uniforms.get('uGhostSpacing')?.value,
-          set: v => { lensFlare.uniforms.get('uGhostSpacing').value = v },
+          key: 'kuwaharaKernel', label: 'Kernel Size',
+          min: 1, max: 8, step: 1,
+          get: () => postProcessing.kuwahara.uniforms.get('uKernelSize')?.value,
+          set: v => { postProcessing.kuwahara.uniforms.get('uKernelSize').value = v },
         },
       ],
     }] : []),
-    // ─── Phase 2A: Depth of Field ───
+    // ─── Dust Motes ───
+    ...(dustMotes ? [{
+      id: 'dustMotes',
+      title: 'Dust Motes',
+      badge: 'live',
+      params: [
+        {
+          key: 'dustBrightness', label: 'Brightness',
+          min: 0, max: 2.0, step: 0.05,
+          get: () => dustMotes.material.uniforms.uBrightness?.value,
+          set: v => {
+            dustMotes.material.uniforms.uBrightness.value = v
+            dustMotes.points.visible = v > 0.01
+          },
+        },
+        {
+          key: 'dustSize', label: 'Size',
+          min: 5, max: 100, step: 1,
+          get: () => dustMotes.material.uniforms.uSize?.value,
+          set: v => { dustMotes.material.uniforms.uSize.value = v },
+        },
+      ],
+    }] : []),
+    // ─── Cursor Interaction ───
+    {
+      id: 'cursor',
+      title: 'Cursor Interaction',
+      badge: 'live',
+      params: [
+        {
+          key: 'cursorRadius', label: 'Grass Push Radius',
+          min: 1, max: 10, step: 0.5,
+          get: () => grassManager.material.uniforms.uCursorRadius.value,
+          set: v => {
+            grassManager.material.uniforms.uCursorRadius.value = v
+            for (const [, chunk] of grassManager.chunks) {
+              chunk.material.uniforms.uCursorRadius.value = v
+            }
+          },
+        },
+        {
+          key: 'cursorStrength', label: 'Grass Brush Strength',
+          min: 0, max: 4, step: 0.1,
+          get: () => grassManager.material.uniforms.uCursorStrength.value,
+          set: v => {
+            grassManager.material.uniforms.uCursorStrength.value = v
+            for (const [, chunk] of grassManager.chunks) {
+              chunk.material.uniforms.uCursorStrength.value = v
+            }
+          },
+        },
+      ],
+    },
+    // ─── Score Sheets ───
+    ...(scoreSheets ? [{
+      id: 'scoreSheets',
+      title: 'Score Sheets',
+      badge: 'live',
+      params: [
+        {
+          key: 'sheetWind', label: 'Wind Strength',
+          min: 0, max: 3.0, step: 0.1,
+          get: () => scoreSheets._windStrength,
+          set: v => { scoreSheets._windStrength = v },
+        },
+      ],
+    }] : []),
+    // ─── Depth of Field ───
     ...(dof ? [{
       id: 'dof',
       title: 'Depth of Field',
@@ -550,7 +655,9 @@ export default function DevTuner({ engineRef }) {
   const [values, setValues] = useState({})
   const [showJson, setShowJson] = useState(false)
   const [toast, setToast] = useState('')
+  const [frozen, setFrozen] = useState(false)
   const groupsRef = useRef([])
+  const atmosphereRef = useRef(null)
   const rafRef = useRef(null)
 
   // Build param groups when engine is ready
@@ -559,6 +666,7 @@ export default function DevTuner({ engineRef }) {
       const engine = engineRef.current
       if (!engine || engine.tier === 3) return
       const api = engine.getDevAPI()
+      atmosphereRef.current = api.atmosphere
       groupsRef.current = buildParamGroups(api)
       // Initialize values
       const initial = {}
@@ -632,6 +740,14 @@ export default function DevTuner({ engineRef }) {
     setCollapsed(prev => ({ ...prev, [id]: !prev[id] }))
   }, [])
 
+  const toggleFreeze = useCallback(() => {
+    setFrozen(prev => {
+      const next = !prev
+      if (atmosphereRef.current) atmosphereRef.current.paused = next
+      return next
+    })
+  }, [])
+
   const showToast = useCallback((msg) => {
     setToast(msg)
     setTimeout(() => setToast(''), 2000)
@@ -655,6 +771,20 @@ export default function DevTuner({ engineRef }) {
 
   const handleExport = useCallback(() => setShowJson(true), [])
 
+  const downloadJson = useCallback((toastMsg) => {
+    const blob = new Blob([JSON.stringify(gatherJson(), null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `mks-tuner-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    showToast(toastMsg)
+  }, [gatherJson, showToast])
+
+  const handleSave = useCallback(() => {
+    downloadJson('Settings saved')
+  }, [downloadJson])
+
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(JSON.stringify(gatherJson(), null, 2))
     showToast('Copied to clipboard')
@@ -662,15 +792,9 @@ export default function DevTuner({ engineRef }) {
   }, [gatherJson, showToast])
 
   const handleDownload = useCallback(() => {
-    const blob = new Blob([JSON.stringify(gatherJson(), null, 2)], { type: 'application/json' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `mks-tuner-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(a.href)
-    showToast('Downloaded')
+    downloadJson('Downloaded')
     setShowJson(false)
-  }, [gatherJson, showToast])
+  }, [downloadJson])
 
   const handleLoadJson = useCallback(() => {
     const input = document.createElement('input')
@@ -723,46 +847,68 @@ export default function DevTuner({ engineRef }) {
       <div className={`dev-tuner${open ? ' open' : ''}`}>
         <div className="dt-header">
           <h2>Dev Tuner</h2>
-          <div className="dt-actions">
-            <button className="dt-btn" onClick={handleLoadJson}>Load</button>
-            <button className="dt-btn dt-btn-export" onClick={handleExport}>Export</button>
-          </div>
+          <button
+            className={`dt-btn dt-freeze${frozen ? ' active' : ''}`}
+            onClick={toggleFreeze}
+            title="Freeze scroll-driven atmosphere so slider changes stick"
+          >
+            {frozen ? '\u2744 Frozen' : '\u25B6 Live'}
+          </button>
         </div>
 
-        {groupsRef.current.map(group => (
-          <div key={group.id} className={`dt-panel${collapsed[group.id] ? ' collapsed' : ''}`}>
-            <div className="dt-panel-header" onClick={() => toggleCollapse(group.id)}>
-              <span className="dt-panel-title">{group.title}</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {group.action && (
-                  <button
-                    className="dt-btn"
-                    onClick={(e) => { e.stopPropagation(); group.action.handler() }}
-                    style={{ padding: '2px 8px', fontSize: '10px' }}
-                  >
-                    {group.action.label}
-                  </button>
-                )}
-                <span className={`dt-panel-badge dt-badge-${group.badge}`}>{group.badge}</span>
-                <span className="dt-chevron">{'\u25BC'}</span>
-              </span>
-            </div>
-            <div className="dt-panel-body">
-              {group.params.map(p => {
-                if (p.type === 'color') {
-                  const v = values[p.key] || '#000000'
+        <div className="dt-scroll-area" data-lenis-prevent>
+          {groupsRef.current.map(group => (
+            <div key={group.id} className={`dt-panel${collapsed[group.id] ? ' collapsed' : ''}`}>
+              <div className="dt-panel-header" onClick={() => toggleCollapse(group.id)}>
+                <span className="dt-panel-title">{group.title}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className={`dt-panel-badge dt-badge-${group.badge}`}>{group.badge}</span>
+                  <span className="dt-chevron">{'\u25BC'}</span>
+                </span>
+              </div>
+              <div className="dt-panel-body">
+                {group.params.map(p => {
+                  if (p.type === 'color') {
+                    const v = values[p.key] || '#000000'
+                    return (
+                      <div key={p.key} className="dt-param-color">
+                        <span className="dt-param-name">{p.label}</span>
+                        <div className="dt-swatch" style={{ background: v }}>
+                          <input
+                            type="color"
+                            value={v}
+                            onChange={e => handleChange(p, e.target.value)}
+                            disabled={locks[p.key]}
+                          />
+                        </div>
+                        <span className="dt-value">{v}</span>
+                        <button
+                          className={`dt-lock${locks[p.key] ? ' locked' : ''}`}
+                          onClick={() => toggleLock(p.key)}
+                        >
+                          {locks[p.key] ? '\u{1F512}' : '\u{1F513}'}
+                        </button>
+                      </div>
+                    )
+                  }
+
+                  const v = values[p.key]
                   return (
-                    <div key={p.key} className="dt-param-color">
-                      <span className="dt-param-name">{p.label}</span>
-                      <div className="dt-swatch" style={{ background: v }}>
+                    <div key={p.key} className="dt-param">
+                      <div className="dt-param-slider">
+                        <span className="dt-param-name">{p.label}</span>
                         <input
-                          type="color"
-                          value={v}
+                          type="range"
+                          min={p.min}
+                          max={p.max}
+                          step={p.step}
+                          value={v ?? p.min}
+                          className={locks[p.key] ? 'locked' : ''}
                           onChange={e => handleChange(p, e.target.value)}
                           disabled={locks[p.key]}
                         />
                       </div>
-                      <span className="dt-value">{v}</span>
+                      <span className="dt-value">{formatValue(v, p.step)}</span>
                       <button
                         className={`dt-lock${locks[p.key] ? ' locked' : ''}`}
                         onClick={() => toggleLock(p.key)}
@@ -771,37 +917,17 @@ export default function DevTuner({ engineRef }) {
                       </button>
                     </div>
                   )
-                }
-
-                const v = values[p.key]
-                return (
-                  <div key={p.key} className="dt-param">
-                    <div className="dt-param-slider">
-                      <span className="dt-param-name">{p.label}</span>
-                      <input
-                        type="range"
-                        min={p.min}
-                        max={p.max}
-                        step={p.step}
-                        value={v ?? p.min}
-                        className={locks[p.key] ? 'locked' : ''}
-                        onChange={e => handleChange(p, e.target.value)}
-                        disabled={locks[p.key]}
-                      />
-                    </div>
-                    <span className="dt-value">{formatValue(v, p.step)}</span>
-                    <button
-                      className={`dt-lock${locks[p.key] ? ' locked' : ''}`}
-                      onClick={() => toggleLock(p.key)}
-                    >
-                      {locks[p.key] ? '\u{1F512}' : '\u{1F513}'}
-                    </button>
-                  </div>
-                )
-              })}
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        <div className="dt-footer">
+          <button className="dt-btn" onClick={handleLoadJson}>Load</button>
+          <button className="dt-btn" onClick={handleExport}>Export</button>
+          <button className="dt-btn dt-btn-save" onClick={handleSave}>Save</button>
+        </div>
       </div>
 
       {showJson && (

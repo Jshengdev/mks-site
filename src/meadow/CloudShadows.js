@@ -2,8 +2,12 @@
 import * as THREE from 'three'
 import cloudTextureUrl from '../assets/textures/cloud.jpg'
 
+const DEFAULT_DRIFT_SPEED = 0.00005
+
 export default class CloudShadows {
   constructor(scene) {
+    this._driftSpeed = DEFAULT_DRIFT_SPEED
+
     const loader = new THREE.TextureLoader()
     this.texture = loader.load(cloudTextureUrl)
     this.texture.wrapS = THREE.RepeatWrapping
@@ -22,14 +26,19 @@ export default class CloudShadows {
     })
 
     this.mesh = new THREE.Mesh(geometry, this.material)
-    this.mesh.position.y = 3.0 // just above grass tips
+    this.mesh.position.y = 3.0
     this.mesh.renderOrder = -1
     scene.add(this.mesh)
   }
 
   update(elapsed) {
-    const speed = this._driftSpeed || 0.00005
-    this.texture.offset.x = elapsed * speed
-    this.texture.offset.y = elapsed * (speed * 2)
+    this.texture.offset.x = elapsed * this._driftSpeed
+    this.texture.offset.y = elapsed * this._driftSpeed * 2
+  }
+
+  dispose() {
+    this.mesh.geometry.dispose()
+    this.material.dispose()
+    this.texture.dispose()
   }
 }

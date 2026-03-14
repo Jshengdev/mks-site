@@ -43,20 +43,6 @@ void main() {
 }
 `
 
-const COMPOSITE_FRAG = `
-uniform sampler2D tScene;
-uniform sampler2D tGodRays;
-uniform float uIntensity;
-
-varying vec2 vUv;
-
-void main() {
-  vec3 scene = texture2D(tScene, vUv).rgb;
-  vec3 rays = texture2D(tGodRays, vUv).rgb;
-  gl_FragColor = vec4(scene + rays * uIntensity, 1.0);
-}
-`
-
 export default class GodRayPass {
   constructor(renderer, scene, camera, sunWorldPosition) {
     this.renderer = renderer
@@ -65,24 +51,19 @@ export default class GodRayPass {
     this.enabled = true
     this.intensity = 0.6
 
-    // Magic values from glsl-godrays extraction
+    // Magic values from glsl-godrays extraction (exposed for DevTuner)
     this._density = 1.0
     this._weight = 0.01
-    this._decay = 0.97   // warm falloff
+    this._decay = 0.97
     this._exposure = 1.0
 
-    const w = renderer.domElement.width
-    const h = renderer.domElement.height
+    const halfW = renderer.domElement.width >> 1
+    const halfH = renderer.domElement.height >> 1
+    const rtOptions = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter }
 
-    // Half-res FBOs (from extraction: fboScale = 0.5, 75% fill-rate savings)
-    this._occlusionRT = new THREE.WebGLRenderTarget(w >> 1, h >> 1, {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-    })
-    this._godRayRT = new THREE.WebGLRenderTarget(w >> 1, h >> 1, {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-    })
+    // Half-res FBOs (fboScale = 0.5, 75% fill-rate savings)
+    this._occlusionRT = new THREE.WebGLRenderTarget(halfW, halfH, rtOptions)
+    this._godRayRT = new THREE.WebGLRenderTarget(halfW, halfH, rtOptions)
 
     // Sun disk for occlusion pass
     this._sunMesh = new THREE.Mesh(
@@ -91,10 +72,9 @@ export default class GodRayPass {
     )
     this._sunMesh.position.copy(sunWorldPosition).multiplyScalar(400)
 
-    // Black override material
     this._blackMat = new THREE.MeshBasicMaterial({ color: 0x000000 })
 
-    // Fullscreen quad scene
+    // Fullscreen quad for radial blur pass
     this._quadGeo = new THREE.PlaneGeometry(2, 2)
     this._blurMat = new THREE.ShaderMaterial({
       vertexShader: FULLSCREEN_VERT,
@@ -102,15 +82,14 @@ export default class GodRayPass {
       uniforms: {
         tOcclusion: { value: this._occlusionRT.texture },
         uSunScreenPos: { value: new THREE.Vector2(0.5, 0.5) },
-        uDensity: { value: this._density },
-        uWeight: { value: this._weight },
-        uDecay: { value: this._decay },
-        uExposure: { value: this._exposure },
+        uDensity: { value: 1.0 },
+        uWeight: { value: 0.01 },
+        uDecay: { value: 0.97 },
+        uExposure: { value: 1.0 },
       },
     })
-    this._blurQuad = new THREE.Mesh(this._quadGeo, this._blurMat)
     this._quadScene = new THREE.Scene()
-    this._quadScene.add(this._blurQuad)
+    this._quadScene.add(new THREE.Mesh(this._quadGeo, this._blurMat))
     this._quadCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
 
     this._screenPos = new THREE.Vector3()

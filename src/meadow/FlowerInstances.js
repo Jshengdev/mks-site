@@ -32,10 +32,13 @@ export default class FlowerInstances {
     const headGeo = new THREE.SphereGeometry(0.08, 6, 4)
     headGeo.translate(0, 0.42, 0)
 
-    // Merge into single geometry
+    // Merge into single geometry, dispose source geometries
     const merged = mergeGeometries([stemGeo, headGeo])
+    stemGeo.dispose()
+    headGeo.dispose()
 
     const flowersPerType = Math.floor(count / FLOWER_COLORS.length)
+    const dummy = new THREE.Object3D()
 
     for (let t = 0; t < FLOWER_COLORS.length; t++) {
       const material = new THREE.ShaderMaterial({
@@ -50,9 +53,7 @@ export default class FlowerInstances {
         side: THREE.DoubleSide,
       })
 
-      const mesh = new THREE.InstancedMesh(merged || stemGeo, material, flowersPerType)
-
-      const dummy = new THREE.Object3D()
+      const mesh = new THREE.InstancedMesh(merged, material, flowersPerType)
       let placed = 0
 
       for (let i = 0; i < flowersPerType * 3 && placed < flowersPerType; i++) {
@@ -86,12 +87,6 @@ export default class FlowerInstances {
       if (dx * dx + dz * dz < CLEARING_RADIUS * CLEARING_RADIUS) return true
     }
     return false
-  }
-
-  _mergeGeos(a, b) {
-    // Fallback merge if BufferGeometryUtils not available
-    // For now, just use the stem
-    return a
   }
 
   update(elapsed) {

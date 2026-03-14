@@ -27,12 +27,12 @@ function lerpArrayInto(out, a, b, t) {
 const KEYFRAMES = [
   {
     t: 0.0, // STILLNESS — cold world, sacred anticipation, held breath
-    sunElevation: 1,       // barely above horizon — pre-dawn steel
+    sunElevation: 2,       // slightly above horizon — hints of color
     sunAzimuth: 250,       // far from artist direction
-    turbidity: 16,         // heavy atmosphere, muted world
-    rayleigh: 2.5,         // strong scattering = deep blue void
-    mieCoefficient: 0.012,
-    mieDirectionalG: 0.97,
+    turbidity: 12,         // slightly cleaner for more color in sky
+    rayleigh: 3.0,         // stronger scattering = richer blue
+    mieCoefficient: 0.015, // more glow around sun
+    mieDirectionalG: 0.95,
     fogColor: [0.12, 0.18, 0.28],  // steel-teal fog — the cold world
     fogDensity: 0.018,     // thick — everything hidden
     sunLightColor: [0.45, 0.50, 0.65],  // cool blue-steel moonlight
@@ -101,12 +101,12 @@ const KEYFRAMES = [
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
-    sunElevation: 14,
+    sunElevation: 12,
     sunAzimuth: 235,       // rotating toward artist
-    turbidity: 10,
-    rayleigh: 1.5,
-    mieCoefficient: 0.008,
-    mieDirectionalG: 0.88,
+    turbidity: 8,          // cleaner sky = more saturated golden hour
+    rayleigh: 1.2,
+    mieCoefficient: 0.012, // stronger sun halo
+    mieDirectionalG: 0.92, // tighter, more dramatic sun glow
     fogColor: [0.85, 0.75, 0.50],  // golden haze
     fogDensity: 0.003,
     sunLightColor: [1.0, 0.90, 0.70],  // warm golden — earned
@@ -141,10 +141,10 @@ const KEYFRAMES = [
     // "A source of light hidden behind something massive, whose rays fan out"
     sunElevation: 3,       // sun dropping = long shadows, dramatic rays
     sunAzimuth: 200,       // rotated behind artist figure (z=-145, x=2)
-    turbidity: 14,
-    rayleigh: 2.2,
-    mieCoefficient: 0.015, // max Mie = amber haze explosion
-    mieDirectionalG: 0.97,
+    turbidity: 12,         // slightly cleaner for richer colors
+    rayleigh: 2.5,
+    mieCoefficient: 0.020, // max Mie = dramatic amber haze
+    mieDirectionalG: 0.96,
     fogColor: [0.95, 0.68, 0.30],  // deep amber — "the threshold"
     fogDensity: 0.005,
     sunLightColor: [1.0, 0.78, 0.45],  // deep amber-gold
@@ -229,6 +229,8 @@ export default class AtmosphereController {
     // Optional subsystems — set after construction by MeadowEngine
     this.dustMotes = null
     this.godRayPass = null
+    // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
+    this.paused = false
     this.keyframes = KEYFRAMES
     this.current = {}
 
@@ -309,9 +311,12 @@ export default class AtmosphereController {
       this._scene.fog.density = c.fogDensity
     }
 
-    // ─── Grass (iterate all chunk materials) ───
+    // ─── Grass (iterate all chunk materials + base template) ───
+    const grassUniforms = [this.grassManager.material.uniforms]
     for (const [, chunk] of this.grassManager.chunks) {
-      const u = chunk.material.uniforms
+      grassUniforms.push(chunk.material.uniforms)
+    }
+    for (const u of grassUniforms) {
       u.uBaseColor.value.setRGB(...c.grassBaseColor)
       u.uTipColor.value.setRGB(...c.grassTipColor)
       u.uSpeed.value = c.grassWindSpeed
@@ -319,14 +324,6 @@ export default class AtmosphereController {
       u.uTranslucencyStrength.value = c.grassTranslucency
       u.uFogFade.value = c.grassFogFade
     }
-    // Also update the base material template (for newly created chunks)
-    const baseMat = this.grassManager.material
-    baseMat.uniforms.uBaseColor.value.setRGB(...c.grassBaseColor)
-    baseMat.uniforms.uTipColor.value.setRGB(...c.grassTipColor)
-    baseMat.uniforms.uSpeed.value = c.grassWindSpeed
-    baseMat.uniforms.uAmbientStrength.value = c.grassAmbientStrength
-    baseMat.uniforms.uTranslucencyStrength.value = c.grassTranslucency
-    baseMat.uniforms.uFogFade.value = c.grassFogFade
 
     // ─── Cloud shadows ───
     this.cloudShadows.material.opacity = c.cloudShadowOpacity
@@ -373,6 +370,7 @@ export default class AtmosphereController {
     if (pp.kuwahara) {
       pp.kuwahara.uniforms.get('uStrength').value = c.kuwaharaStrength
     }
+
   }
 
   // Expose for DevTuner

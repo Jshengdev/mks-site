@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import fragmentShader from './shaders/color-grade.frag.glsl?raw'
 
 const DEFAULTS = {
+  exposure: 1.0,
   contrast: 0.10,
   lift: new THREE.Vector3(0.003, 0.002, 0.0),
   gamma: new THREE.Vector3(1.03, 1.01, 0.98),
@@ -20,6 +21,7 @@ export function createColorGradeEffect() {
   const effect = new Effect('ColorGrade', fragmentShader, {
     blendFunction: BlendFunction.NORMAL,
     uniforms: new Map([
+      ['uExposure', new THREE.Uniform(DEFAULTS.exposure)],
       ['uContrast', new THREE.Uniform(DEFAULTS.contrast)],
       ['uLift', new THREE.Uniform(DEFAULTS.lift.clone())],
       ['uGamma', new THREE.Uniform(DEFAULTS.gamma.clone())],

@@ -85,7 +85,6 @@ void main() {
   vec3 col = (0.3 * skyLight * baseColor + ambient + diffuse + specular
     + diffuseTranslucency + forwardTranslucency) * shadowFactor;
 
-  // Root shadow (from al-ro: darken towards base)
   // Root shadow — darken toward base (from al-ro)
   col = mix(0.4 * uBaseColor, col, smoothstep(0.0, 0.35, vElevation));
 

@@ -23,13 +23,14 @@ const PORTAL_CONFIGS = [
   },
 ]
 
+const _mouse = new THREE.Vector2()
+
 export default class PortalHint {
   constructor(scene, camera) {
     this.scene = scene
     this.camera = camera
     this.portals = []
     this.raycaster = new THREE.Raycaster()
-    this._mouse = new THREE.Vector2()
 
     for (const config of PORTAL_CONFIGS) {
       const geometry = new THREE.PlaneGeometry(2, 4)
@@ -78,9 +79,9 @@ export default class PortalHint {
   }
 
   _onClick(event) {
-    this._mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-    this._mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-    this.raycaster.setFromCamera(this._mouse, this.camera)
+    _mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+    _mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
+    this.raycaster.setFromCamera(_mouse, this.camera)
 
     const meshes = this.portals.map(p => p.mesh)
     const hits = this.raycaster.intersectObjects(meshes)

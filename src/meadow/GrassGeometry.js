@@ -2,9 +2,12 @@
 // Blade geometry generator — adapted from Nitash-Biswas/grass-shader-glsl
 import * as THREE from 'three'
 
-const HALF_WIDTH = 0.06
+const HALF_WIDTH = 0.035
 const HEIGHT = 1.0
-const TAPER = 0.005
+const TAPER = 0.003
+
+// Reusable Object3D for instance matrix computation (avoids per-call allocation)
+const _dummy = new THREE.Object3D()
 
 /**
  * Creates a tapered triangle strip blade geometry.
@@ -49,7 +52,6 @@ export function createBladeGeometry(segments) {
  * @returns {Float32Array} Instance matrices (count × 16)
  */
 export function generateInstanceMatrices(count, chunkSize, offsetX, offsetZ, getHeight) {
-  const dummy = new THREE.Object3D()
   const matrices = new Float32Array(count * 16)
 
   for (let i = 0; i < count; i++) {
@@ -57,11 +59,11 @@ export function generateInstanceMatrices(count, chunkSize, offsetX, offsetZ, get
     const z = offsetZ + (Math.random() - 0.5) * chunkSize
     const y = getHeight(x, z)
 
-    dummy.position.set(x, y, z)
-    dummy.rotation.y = Math.random() * Math.PI * 2
-    dummy.scale.setScalar(0.8 + Math.random() * 0.4) // height variety
-    dummy.updateMatrix()
-    dummy.matrix.toArray(matrices, i * 16)
+    _dummy.position.set(x, y, z)
+    _dummy.rotation.y = Math.random() * Math.PI * 2
+    _dummy.scale.setScalar(0.8 + Math.random() * 0.4)
+    _dummy.updateMatrix()
+    _dummy.matrix.toArray(matrices, i * 16)
   }
 
   return matrices

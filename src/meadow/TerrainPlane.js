@@ -4,6 +4,12 @@ import * as THREE from 'three'
 // Dark earth beneath grass (BotW ground tone — not black, dark olive)
 const TERRAIN_COLOR = new THREE.Color(0.16, 0.18, 0.07)
 
+// Returns terrain height at world position (for placing objects)
+export function getTerrainHeight(x, z) {
+  return Math.sin(x * 0.02) * Math.cos(z * 0.015) * 2.0
+    + Math.sin(x * 0.05 + z * 0.03) * 0.5
+}
+
 export function createTerrain(scene) {
   const geometry = new THREE.PlaneGeometry(400, 400, 128, 128)
   geometry.rotateX(-Math.PI / 2)
@@ -11,12 +17,7 @@ export function createTerrain(scene) {
   // Gentle rolling hills via vertex displacement
   const pos = geometry.attributes.position
   for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i)
-    const z = pos.getZ(i)
-    // Low-frequency rolling hills
-    const y = Math.sin(x * 0.02) * Math.cos(z * 0.015) * 2.0
-      + Math.sin(x * 0.05 + z * 0.03) * 0.5
-    pos.setY(i, y)
+    pos.setY(i, getTerrainHeight(pos.getX(i), pos.getZ(i)))
   }
   geometry.computeVertexNormals()
 
@@ -30,10 +31,4 @@ export function createTerrain(scene) {
   scene.add(mesh)
 
   return mesh
-}
-
-// Returns terrain height at world position (for placing objects)
-export function getTerrainHeight(x, z) {
-  return Math.sin(x * 0.02) * Math.cos(z * 0.015) * 2.0
-    + Math.sin(x * 0.05 + z * 0.03) * 0.5
 }

@@ -6,9 +6,6 @@ import grassVertexShader from './shaders/grass.vert.glsl?raw'
 import grassFragmentShader from './shaders/grass.frag.glsl?raw'
 
 const CHUNK_SIZE = 20        // world units per chunk side
-const BLADES_PER_CHUNK = 20000
-const ACTIVATE_DIST = CHUNK_SIZE * 3
-const DISPOSE_DIST = CHUNK_SIZE * 1.5
 const FADE_DURATION = 0.5    // seconds
 const LOD_HYSTERESIS = 2     // dead-zone to prevent flip-flopping at boundary
 
@@ -36,7 +33,7 @@ export default class GrassChunkManager {
       uniforms: {
         uTime: { value: 0 },
         uSpeed: { value: 1.5 },
-        uHalfWidth: { value: 0.06 },
+        uHalfWidth: { value: 0.035 },
         uChunkFade: { value: 1.0 },
         uBaseColor: { value: BASE_COLOR },
         uTipColor: { value: TIP_COLOR },
@@ -46,6 +43,11 @@ export default class GrassChunkManager {
         uTranslucencyStrength: { value: 2.0 },
         uFogFade: { value: 0.0015 },
         uCloudTexture: { value: cloudTexture },
+        // Cursor wind push
+        uCursorPos: { value: new THREE.Vector3(0, -100, 0) },
+        uCursorRadius: { value: 4.0 },
+        uCursorStrength: { value: 1.2 },
+        uCursorVelocity: { value: new THREE.Vector2(0, 0) },
       },
       side: THREE.DoubleSide,
     })
@@ -55,12 +57,7 @@ export default class GrassChunkManager {
     this.LOD_THRESHOLD = 15
   }
 
-  update(cameraPos, elapsed, splineT) {
-    // Update time on ALL chunk materials (cloned materials have their own uTime)
-    for (const [, chunk] of this.chunks) {
-      chunk.material.uniforms.uTime.value = elapsed
-    }
-
+  update(cameraPos, elapsed) {
     // Determine which chunk indices should be active
     const camChunkZ = Math.floor(-cameraPos.z / CHUNK_SIZE)
     const activeRange = new Set()
@@ -75,48 +72,43 @@ export default class GrassChunkManager {
       }
     }
 
-    // Dispose old chunks
-    for (const [idx, chunk] of this.chunks) {
+    // Dispose chunks outside active range (collect keys first to avoid mutating during iteration)
+    for (const idx of [...this.chunks.keys()]) {
       if (!activeRange.has(idx)) {
         this._disposeChunk(idx)
       }
     }
 
-    // LOD switching with hysteresis
+    // Per-chunk updates: time, LOD switching, fade-in
     for (const [idx, chunk] of this.chunks) {
+      chunk.material.uniforms.uTime.value = elapsed
+
+      // LOD switching with hysteresis
       const chunkCenterZ = -idx * CHUNK_SIZE - CHUNK_SIZE / 2
       const dist = Math.abs(cameraPos.z - chunkCenterZ)
-
-      const shouldBeHigh = dist < this.LOD_THRESHOLD
-      const shouldBeLow = dist > this.LOD_THRESHOLD + LOD_HYSTERESIS
-
-      if (shouldBeHigh && chunk.lod === 'low') {
+      if (dist < this.LOD_THRESHOLD && chunk.lod === 'low') {
         this._swapLOD(idx, 'high')
-      } else if (shouldBeLow && chunk.lod === 'high') {
+      } else if (dist > this.LOD_THRESHOLD + LOD_HYSTERESIS && chunk.lod === 'high') {
         this._swapLOD(idx, 'low')
       }
-    }
 
-    // Update fade-in for new chunks
-    for (const [idx, chunk] of this.chunks) {
-      const age = elapsed - chunk.fadeStart
-      const fade = Math.min(1.0, age / FADE_DURATION)
+      // Fade-in
+      const fade = Math.min(1.0, (elapsed - chunk.fadeStart) / FADE_DURATION)
       chunk.material.uniforms.uChunkFade.value = fade
     }
   }
 
   _createChunk(idx, elapsed, cameraPos) {
     const offsetZ = -idx * CHUNK_SIZE
-    const offsetX = 0
 
     // Generate instance matrices (stored for LOD swap reuse)
     const matrices = generateInstanceMatrices(
-      this.bladesPerChunk, CHUNK_SIZE, offsetX, offsetZ, getTerrainHeight
+      this.bladesPerChunk, CHUNK_SIZE, 0, offsetZ, getTerrainHeight
     )
 
     // Determine initial LOD based on camera distance
-    const chunkCenterZ = -idx * CHUNK_SIZE - CHUNK_SIZE / 2
-    const dist = cameraPos ? Math.abs(cameraPos.z - chunkCenterZ) : 0
+    const chunkCenterZ = offsetZ - CHUNK_SIZE / 2
+    const dist = Math.abs(cameraPos.z - chunkCenterZ)
     const lod = dist < this.LOD_THRESHOLD ? 'high' : 'low'
     const geo = lod === 'high' ? this.highGeo : this.lowGeo
 
@@ -163,8 +155,17 @@ export default class GrassChunkManager {
     this.chunks.delete(idx)
   }
 
+  // Update cursor position + velocity for grass wind brush effect
+  updateCursor(worldPos, strength, velocity) {
+    for (const [, chunk] of this.chunks) {
+      chunk.material.uniforms.uCursorPos.value.copy(worldPos)
+      chunk.material.uniforms.uCursorStrength.value = strength
+      chunk.material.uniforms.uCursorVelocity.value.copy(velocity)
+    }
+  }
+
   dispose() {
-    for (const [idx] of this.chunks) {
+    for (const idx of [...this.chunks.keys()]) {
       this._disposeChunk(idx)
     }
     this.highGeo.dispose()
