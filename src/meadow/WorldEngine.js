@@ -16,6 +16,9 @@ import AtmosphereController, { MEADOW_KEYFRAMES } from './AtmosphereController.j
 import { NIGHT_MEADOW_KEYFRAMES } from './NightMeadowKeyframes.js'
 import { OCEAN_CLIFF_KEYFRAMES } from './OceanCliffKeyframes.js'
 import StylizedOcean from './StylizedOcean.js'
+import RainSystem from './RainSystem.js'
+import LightningSystem from './LightningSystem.js'
+import { STORM_FIELD_KEYFRAMES } from './StormFieldKeyframes.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
@@ -81,6 +84,7 @@ function staticAtmosphereFromConfig(env) {
     godRayIntensity: postFX.godRays?.enabled ? 0.5 : 0.0,
     kuwaharaStrength: postFX.kuwahara?.enabled ? (postFX.kuwahara.radius ?? 4) / 10 : 0.0,
     starBrightness: env.sky?.stars?.enabled ? 1.0 : 0.0,
+    rainBrightness: particles.rain?.enabled ? 0.7 : 0.0,
   }
 
   return [
@@ -185,6 +189,7 @@ export default class WorldEngine {
       'golden-meadow': MEADOW_KEYFRAMES,
       'night-meadow': NIGHT_MEADOW_KEYFRAMES,
       'ocean-cliff': OCEAN_CLIFF_KEYFRAMES,
+      'storm-field': STORM_FIELD_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
@@ -252,6 +257,20 @@ export default class WorldEngine {
       )
     }
 
+    // ─── Rain (conditional — storm field) ───
+    this.rain = null
+    if (envConfig.particles?.rain?.enabled) {
+      this.rain = new RainSystem(this.scene, envConfig.particles.rain)
+    }
+
+    // ─── Lightning (conditional — storm field) ───
+    this.lightning = null
+    if (envConfig.sky?.lightning?.enabled) {
+      this.lightning = new LightningSystem(
+        this.sceneSetup, this.postProcessing, envConfig.sky.lightning
+      )
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -262,6 +281,7 @@ export default class WorldEngine {
     this.atmosphere.dustMotes = this.dustMotes
     this.atmosphere.godRayPass = this.godRayPass
     this.atmosphere.starField = this.starField
+    this.atmosphere.rain = this.rain
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -301,6 +321,8 @@ export default class WorldEngine {
     this.portals?.update(animElapsed)
     this.dustMotes?.update(animElapsed)
     this.starField?.update(animElapsed)
+    this.rain?.update(animElapsed)
+    this.lightning?.update(animElapsed, delta)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -380,6 +402,8 @@ export default class WorldEngine {
       dustMotes: this.dustMotes,
       godRayPass: this.godRayPass,
       starField: this.starField,
+      rain: this.rain,
+      lightning: this.lightning,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -406,6 +430,8 @@ export default class WorldEngine {
     this.godRayPass?.dispose()
     this.starField?.dispose()
     this.ocean?.dispose()
+    this.rain?.dispose()
+    this.lightning?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()

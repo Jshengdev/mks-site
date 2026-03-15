@@ -9,6 +9,7 @@
 export const OCEAN_CLIFF_KEYFRAMES = [
   {
     t: 0.0, // ARRIVAL — approaching the cliff edge, fog obscures the view
+    rainBrightness: 0.0,
     starBrightness: 0.3,   // dusk stars emerging
     sunElevation: -3,      // just below horizon
     sunAzimuth: 260,       // setting position
@@ -47,6 +48,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
   },
   {
     t: 0.25, // RECOGNITION — the ocean comes into view, vastness registers
+    rainBrightness: 0.0,
     starBrightness: 0.5,
     sunElevation: -5,
     sunAzimuth: 255,
@@ -85,6 +87,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
   },
   {
     t: 0.50, // CONTEMPLATION — beside the figure, looking at the horizon together
+    rainBrightness: 0.0,
     starBrightness: 0.7,
     sunElevation: -6,
     sunAzimuth: 250,
@@ -123,6 +126,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
   },
   {
     t: 0.75, // UNDERSTANDING — the goodbye becomes real, beauty in the sadness
+    rainBrightness: 0.0,
     starBrightness: 0.8,
     sunElevation: -8,      // deeper into night
     sunAzimuth: 245,
@@ -161,6 +165,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
   },
   {
     t: 1.0, // RELEASE — letting go, the horizon dissolves into darkness
+    rainBrightness: 0.0,
     starBrightness: 0.6,
     sunElevation: -10,
     sunAzimuth: 240,
