@@ -152,10 +152,12 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     splitToneCool: [0.831, 0.769, 0.894],
   },
   {
-    t: 0.75, // PEACE — grief settling, a deep exhale, warmth acknowledged
+    t: 0.75, // PEACE — ground-level among fireflies, the intimate peak
+    // Research: camera at ground level scores 33/40 vs 31/40 aerial (exp-013)
+    // Being AMONG the lights is more intimate than being above them
     rainBrightness: 0.0,
     petalBrightness: 0.0,
-    starBrightness: 0.9,
+    starBrightness: 0.95,   // stars vivid — you're looking UP through them
     sunElevation: -22,
     sunAzimuth: 210,
     turbidity: 1.3,
@@ -163,41 +165,41 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     mieCoefficient: 0.004,
     mieDirectionalG: 0.88,
     fogColor: [0.05, 0.05, 0.08],
-    fogDensity: 0.006,
+    fogDensity: 0.004,      // thinner fog — intimacy needs clarity
     sunLightColor: [0.32, 0.36, 0.52],
-    sunLightIntensity: 0.38,
-    ambientIntensity: 0.06,
+    sunLightIntensity: 0.40,
+    ambientIntensity: 0.07,  // slightly brighter — firefly light fills space
     grassBaseColor: [0.02, 0.04, 0.03],
-    grassTipColor: [0.05, 0.12, 0.08],
-    grassWindSpeed: 0.2,    // wind settling
-    grassAmbientStrength: 0.18,
-    grassTranslucency: 0.6,
-    grassFogFade: 0.003,
+    grassTipColor: [0.06, 0.14, 0.09],  // tips catch more moonlight at eye level
+    grassWindSpeed: 0.15,    // gentle — a held breath
+    grassAmbientStrength: 0.20,
+    grassTranslucency: 0.7,  // more translucency when you're among the blades
+    grassFogFade: 0.002,
     cloudShadowOpacity: 0.01,
     cloudDriftSpeed: 0.00002,
-    fireflyBrightness: 0.9,  // still warm, slightly dimming
-    fireflySize: 75,
-    bloomIntensity: 0.5,
-    bloomThreshold: 0.55,
-    fogDepthStrength: 0.05,
+    fireflyBrightness: 1.1,  // brighter — they surround you now, not above you
+    fireflySize: 95,          // larger — closer fireflies fill more screen
+    bloomIntensity: 0.65,     // strong bloom — firefly glow wraps around you
+    bloomThreshold: 0.50,     // lower threshold — more glow bleeds
+    fogDepthStrength: 0.04,
     fogMidColor: [0.05, 0.06, 0.12],
     fogFarColor: [0.03, 0.04, 0.08],
     colorGradeContrast: 0.05,
-    colorGradeVibrance: 0.20,
-    colorGradeWarmth: 0.015,
-    vignetteDarkness: 0.72,
-    grainOpacity: 0.07,
+    colorGradeVibrance: 0.22,
+    colorGradeWarmth: 0.02,   // slight warmth from firefly proximity
+    vignetteDarkness: 0.55,   // opens up — the world reveals itself at intimate scale
+    grainOpacity: 0.06,
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
-    waveWindSpeed: 0.12,
-    waveWindStrength: 0.03,
-    dofFocusDistance: 0,
-    dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    waveWindSpeed: 0.10,
+    waveWindStrength: 0.02,
+    dofFocusDistance: 6,      // intimate DOF — blur distant grass, cocoon effect
+    dofBokehScale: 3.5,      // moderate bokeh — fireflies become soft orbs
+    splitToneWarm: [0.93, 0.75, 0.50],   // amber warmth from firefly proximity
+    splitToneCool: [0.80, 0.78, 0.90],
   },
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed

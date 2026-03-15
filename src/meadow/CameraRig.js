@@ -59,10 +59,14 @@ export default class CameraRig {
     this.currentT += (this.targetT - this.currentT) * this.lerpFactor
 
     this.curve.getPoint(this.currentT, this._cachedPos)
-    this._cachedPos.y = this._getTerrainHeight(this._cachedPos.x, this._cachedPos.z) + this.heightOffset
+    // Spline Y is additive offset on top of terrain + heightOffset
+    // Control points with Y=0 behave as before; Y=-0.7 brings camera closer to ground
+    const splineYOffset = this._cachedPos.y
+    this._cachedPos.y = this._getTerrainHeight(this._cachedPos.x, this._cachedPos.z) + this.heightOffset + splineYOffset
 
     this.curve.getPoint(Math.min(this.currentT + 0.01, 1.0), this._lookTarget)
-    this._lookTarget.y = this._getTerrainHeight(this._lookTarget.x, this._lookTarget.z) + this.heightOffset
+    const lookYOffset = this._lookTarget.y
+    this._lookTarget.y = this._getTerrainHeight(this._lookTarget.x, this._lookTarget.z) + this.heightOffset + lookYOffset
 
     this.camera.position.copy(this._cachedPos)
     this.camera.lookAt(this._lookTarget)

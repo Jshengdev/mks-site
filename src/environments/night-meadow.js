@@ -106,11 +106,11 @@ export default {
     dampingFactor: 1.5,
     fov: 50,
     controlPoints: [
-      [0, 0, 0],
-      [2, 0, -20],
-      [-1, 0, -40],
-      [3, 0, -60],
-      [0, 0, -80],
+      [0, 0, 0],        // SILENCE — standing height, entering
+      [2, 0, -20],      // REMEMBRANCE — normal height, observing
+      [-1, 0, -40],     // GRIEF — normal height, peak emotion
+      [3, -0.7, -60],   // PEACE — ground-level among fireflies (research: +4 pts)
+      [0, -0.3, -80],   // ACCEPTANCE — easing back up, but still intimate
     ],
   },
 

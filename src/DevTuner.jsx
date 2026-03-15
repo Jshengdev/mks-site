@@ -220,6 +220,36 @@ function buildParamGroups(api) {
           get: () => '#' + grassManager.material.uniforms.uTipColor.value.getHexString(),
           set: v => grassManager.setUniform('uTipColor', new THREE.Color(v)),
         },
+        {
+          key: 'waveWindSpeed', label: 'Wave Wind Speed',
+          min: 0, max: 3, step: 0.05,
+          get: () => grassManager.material.uniforms.uWaveWindSpeed?.value ?? 0,
+          set: v => grassManager.setUniform('uWaveWindSpeed', v),
+        },
+        {
+          key: 'waveWindStrength', label: 'Wave Wind Strength',
+          min: 0, max: 1, step: 0.01,
+          get: () => grassManager.material.uniforms.uWaveWindStrength?.value ?? 0,
+          set: v => grassManager.setUniform('uWaveWindStrength', v),
+        },
+        {
+          key: 'waveWindDirX', label: 'Wave Wind Dir X',
+          min: -1, max: 1, step: 0.05,
+          get: () => grassManager.material.uniforms.uWaveWindDir?.value?.x ?? 0.707,
+          set: v => {
+            const dir = grassManager.material.uniforms.uWaveWindDir?.value
+            if (dir) { dir.x = v; grassManager.setUniform('uWaveWindDir', dir) }
+          },
+        },
+        {
+          key: 'waveWindDirY', label: 'Wave Wind Dir Y',
+          min: -1, max: 1, step: 0.05,
+          get: () => grassManager.material.uniforms.uWaveWindDir?.value?.y ?? 0.707,
+          set: v => {
+            const dir = grassManager.material.uniforms.uWaveWindDir?.value
+            if (dir) { dir.y = v; grassManager.setUniform('uWaveWindDir', dir) }
+          },
+        },
       ],
     },
     {
@@ -273,6 +303,12 @@ function buildParamGroups(api) {
           min: 0.01, max: 0.3, step: 0.005,
           get: () => cameraRig.lerpFactor,
           set: v => { cameraRig.lerpFactor = v },
+        },
+        {
+          key: 'cameraHeight', label: 'Height Offset',
+          min: 0.2, max: 3.0, step: 0.05,
+          get: () => cameraRig.heightOffset,
+          set: v => { cameraRig.heightOffset = v },
         },
       ],
     },
