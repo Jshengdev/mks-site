@@ -41,7 +41,8 @@ export default {
   ocean: {
     enabled: true,
     type: 'stylized', // Path B — Ashima simplex, binary threshold, cartoon foam
-    size: 256,
+    size: 500,         // large — infinity feel from cliff top
+    waterLevel: -0.5,  // cliff drops to -1.5, ocean sits above cliff floor
     colorNear: 0x0a2e3d,   // dark teal
     colorFar: 0x050d1a,    // deep midnight
     foamFrequency: 2.8,

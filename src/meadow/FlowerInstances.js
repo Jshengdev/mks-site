@@ -8,8 +8,8 @@ import flowerFragmentShader from './shaders/flower.frag.glsl?raw'
 import { SECTION_T_VALUES } from './constants.js'
 const CLEARING_RADIUS = 8 // world units around clearing center
 
-// BotW-inspired flower colors (6 types)
-const FLOWER_COLORS = [
+// Default BotW-inspired flower colors (6 types)
+const DEFAULT_FLOWER_COLORS = [
   new THREE.Color(0.95, 0.9, 0.8),   // daisy (cream)
   new THREE.Color(0.85, 0.2, 0.15),  // poppy (red-orange)
   new THREE.Color(0.95, 0.75, 0.1),  // marigold (golden)
@@ -22,9 +22,14 @@ const SUN_DIR = new THREE.Vector3(0.0, 0.21, -1.0).normalize()
 const SUN_COLOR = new THREE.Color(1.0, 1.0, 0.99)
 
 export default class FlowerInstances {
-  constructor(scene, cameraRig, count = 800, getTerrainHeight) {
+  constructor(scene, cameraRig, count = 800, getTerrainHeight, flowerConfig = {}) {
     this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
     this.meshes = []
+
+    // Per-world flower palette
+    const colors = flowerConfig.palette
+      ? flowerConfig.palette.map(hex => new THREE.Color(hex))
+      : DEFAULT_FLOWER_COLORS
 
     // Simple procedural flower geometry (cylinder stem + sphere head)
     const stemGeo = new THREE.CylinderGeometry(0.02, 0.03, 0.4, 4)
@@ -37,16 +42,16 @@ export default class FlowerInstances {
     stemGeo.dispose()
     headGeo.dispose()
 
-    const flowersPerType = Math.floor(count / FLOWER_COLORS.length)
+    const flowersPerType = Math.floor(count / colors.length)
     const dummy = new THREE.Object3D()
 
-    for (let t = 0; t < FLOWER_COLORS.length; t++) {
+    for (let t = 0; t < colors.length; t++) {
       const material = new THREE.ShaderMaterial({
         vertexShader: flowerVertexShader,
         fragmentShader: flowerFragmentShader,
         uniforms: {
           uTime: { value: 0 },
-          uColor: { value: FLOWER_COLORS[t] },
+          uColor: { value: colors[t] },
           uSunDirection: { value: SUN_DIR },
           uSunColor: { value: SUN_COLOR },
         },

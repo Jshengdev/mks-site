@@ -191,7 +191,7 @@ export default class WorldEngine {
     this.flowers = null
     if (envConfig.flowers?.enabled) {
       const count = envConfig.flowers.count ?? 800
-      this.flowers = new FlowerInstances(this.scene, this.cameraRig, count, this.getTerrainHeight)
+      this.flowers = new FlowerInstances(this.scene, this.cameraRig, count, this.getTerrainHeight, envConfig.flowers)
     }
 
     // ─── Post-processing ───
