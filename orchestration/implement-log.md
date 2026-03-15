@@ -1,5 +1,56 @@
 # Implement Log
 
+## 2026-03-15: Ocean Cliff V5 RELEASE Unlock + Ocean Interpolation Fix (64.8/70)
+
+**Winner:** exp-081 V5 — Composite Optimum RELEASE keyframe (extreme DOF dissolve + teal-touched amber)
+**Score:** 64.8/70 weighted average (+5.6 over baseline). RELEASE P5: +9 (54→63)
+**Target World:** Ocean Cliff ("Peaceful Heartache")
+**Performance Cost:** Zero — pure keyframe values + DevTuner slider range change
+
+### What Was Integrated
+
+**1. Bug fix: KEYFRAMES[0] missing ocean defaults**
+- `AtmosphereController.js` STILLNESS keyframe was missing `oceanColorNear`, `oceanColorFar`, `oceanFoamBrightness`, `oceanWaveLineIntensity`
+- Since `PARAM_KEYS = Object.keys(KEYFRAMES[0])`, ocean params were NEVER in PARAM_KEYS
+- This meant ocean color/foam interpolation never happened — the scroll-driven foam arc (0.3→1.0→0.2) was completely inert
+- Fix: Added ocean defaults (zeros) to KEYFRAMES[0]
+
+**2. Ocean Cliff RELEASE keyframe (t=1.0) updated with V5 composite values**
+- `dofFocusDistance: 20→50` — EXTREME dissolve: "can't focus on anything"
+- `dofBokehScale: 3.0→8.0` — "everything is soft orbs of light"
+- `splitToneWarm: [0.95,0.78,0.50]→[0.82,0.72,0.62]` — teal-touched amber: "the goodbye changed your color"
+- `splitToneCool: [0.65,0.78,0.95]→[0.48,0.65,0.80]` — deep teal: "the ocean's imprint"
+- `fogDensity: 0.008→0.012` — fog swallows the horizon
+- `ambientIntensity: 0.06→0.10`, `sunLightIntensity: 0.35→0.4`, `grassAmbientStrength: 0.14→0.18`
+- `bloomIntensity: 0.15→0.08` (light dying), `bloomThreshold: 0.85→0.90`
+- `vignetteDarkness: 0.65→0.75` (tunnel closing), `grainOpacity: 0.05→0.06` (fragility)
+- `colorGradeWarmth: 0.03→0.05` (last warmth), `colorGradeVibrance: 0.10→0.08` (desaturating)
+
+**3. DevTuner improvements**
+- DOF Focus Distance max extended from 50→100 (extreme dissolve tuning room)
+- Added Fog Mid Color picker to 3-Zone Fog section
+- Added Fog Far Color picker to 3-Zone Fog section (drives the "luminous horizon" effect)
+
+### Key Insight from exp-081 V5
+"The RELEASE position is the biggest unlock. V3's extreme DOF dissolve (focus 50, bokeh 8.0) turns the ending from 'dims to dark' into 'world dissolves into abstract light you can't hold.' The warm split-tone carries the cool teal home — the goodbye changed your color."
+
+### Files Modified (3 files)
+
+| File | Change |
+|------|--------|
+| `src/meadow/AtmosphereController.js` | Added ocean defaults to KEYFRAMES[0] (bug fix) |
+| `src/meadow/OceanCliffKeyframes.js` | RELEASE (t=1.0) updated with all V5 composite values |
+| `src/DevTuner.jsx` | DOF max extended 50→100, fog mid/far color pickers added |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- Volumetric Cumulus 3D Noise (49/70) → Storm Field (3-4 hrs, needs worker thread)
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+
+---
+
 ## 2026-03-15: Stylized Water Atmosphere Integration (47/70)
 
 **Winner:** exp-007 — Stylized water with cartoon foam (atmosphere-driven)

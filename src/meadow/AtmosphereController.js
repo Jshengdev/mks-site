@@ -72,6 +72,12 @@ const KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],  // default amber
     splitToneCool: [0.831, 0.769, 0.894],  // default lavender
+    // Ocean defaults (zeros — meadow has no water)
+    // MUST be in KEYFRAMES[0] so PARAM_KEYS includes them for interpolation
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack

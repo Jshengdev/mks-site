@@ -434,6 +434,28 @@ function buildParamGroups(api) {
           get: () => fogDepth.effect.uniforms.get('uDesaturation')?.value,
           set: v => { fogDepth.effect.uniforms.get('uDesaturation').value = v },
         },
+        {
+          key: 'fogMidColor', label: 'Mid Color', type: 'color',
+          get: () => {
+            const c = fogDepth.effect.uniforms.get('uMidColor')?.value
+            return c ? '#' + new THREE.Color(c.x, c.y, c.z).getHexString() : '#4d5073'
+          },
+          set: v => {
+            const c = new THREE.Color(v)
+            fogDepth.effect.uniforms.get('uMidColor').value.set(c.r, c.g, c.b)
+          },
+        },
+        {
+          key: 'fogFarColor', label: 'Far Color', type: 'color',
+          get: () => {
+            const c = fogDepth.effect.uniforms.get('uFarColor')?.value
+            return c ? '#' + new THREE.Color(c.x, c.y, c.z).getHexString() : '#262640'
+          },
+          set: v => {
+            const c = new THREE.Color(v)
+            fogDepth.effect.uniforms.get('uFarColor').value.set(c.r, c.g, c.b)
+          },
+        },
       ],
     }] : []),
     // ─── Phase 2B: Color Grade (SEUS) ───
@@ -661,7 +683,7 @@ function buildParamGroups(api) {
       params: [
         {
           key: 'dofFocusDistance', label: 'Focus Distance',
-          min: 1, max: 50, step: 0.5,
+          min: 1, max: 100, step: 0.5,
           get: () => dof.effect.cocMaterial?.focusDistance,
           set: v => { if (dof.effect.cocMaterial) dof.effect.cocMaterial.focusDistance = v },
         },
