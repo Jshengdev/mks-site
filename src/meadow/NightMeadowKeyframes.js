@@ -10,6 +10,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
   {
     t: 0.0, // SILENCE — absolute stillness, the world holds its breath
     rainBrightness: 0.0,
+    petalBrightness: 0.0,
     starBrightness: 0.5,   // stars half-visible, emerging
     sunElevation: -30,     // deep night — sun far below
     sunAzimuth: 180,
@@ -49,6 +50,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
   {
     t: 0.25, // REMEMBRANCE — fireflies stir, memories surface
     rainBrightness: 0.0,
+    petalBrightness: 0.0,
     starBrightness: 0.8,   // stars becoming vivid
     sunElevation: -25,
     sunAzimuth: 190,
@@ -88,6 +90,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
   {
     t: 0.50, // GRIEF — peak emotion, fireflies everywhere like tears of light
     rainBrightness: 0.0,
+    petalBrightness: 0.0,
     starBrightness: 1.0,   // stars fully blazing
     sunElevation: -20,     // moon at its brightest angle
     sunAzimuth: 200,
@@ -127,6 +130,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
   {
     t: 0.75, // PEACE — grief settling, a deep exhale, warmth acknowledged
     rainBrightness: 0.0,
+    petalBrightness: 0.0,
     starBrightness: 0.9,
     sunElevation: -22,
     sunAzimuth: 210,
@@ -166,6 +170,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed
     rainBrightness: 0.0,
+    petalBrightness: 0.0,
     starBrightness: 0.6,   // stars softening
     sunElevation: -28,
     sunAzimuth: 220,

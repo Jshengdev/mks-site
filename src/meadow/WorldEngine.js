@@ -19,6 +19,8 @@ import StylizedOcean from './StylizedOcean.js'
 import RainSystem from './RainSystem.js'
 import LightningSystem from './LightningSystem.js'
 import { STORM_FIELD_KEYFRAMES } from './StormFieldKeyframes.js'
+import { GHIBLI_KEYFRAMES } from './GhibliKeyframes.js'
+import PetalSystem from './PetalSystem.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
@@ -85,6 +87,7 @@ function staticAtmosphereFromConfig(env) {
     kuwaharaStrength: postFX.kuwahara?.enabled ? (postFX.kuwahara.radius ?? 4) / 10 : 0.0,
     starBrightness: env.sky?.stars?.enabled ? 1.0 : 0.0,
     rainBrightness: particles.rain?.enabled ? 0.7 : 0.0,
+    petalBrightness: particles.petals?.enabled ? 0.8 : 0.0,
   }
 
   return [
@@ -190,6 +193,7 @@ export default class WorldEngine {
       'night-meadow': NIGHT_MEADOW_KEYFRAMES,
       'ocean-cliff': OCEAN_CLIFF_KEYFRAMES,
       'storm-field': STORM_FIELD_KEYFRAMES,
+      'ghibli-painterly': GHIBLI_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
@@ -263,6 +267,12 @@ export default class WorldEngine {
       this.rain = new RainSystem(this.scene, envConfig.particles.rain)
     }
 
+    // ─── Petals (conditional — ghibli painterly) ───
+    this.petals = null
+    if (envConfig.particles?.petals?.enabled) {
+      this.petals = new PetalSystem(this.scene, envConfig.particles.petals)
+    }
+
     // ─── Lightning (conditional — storm field) ───
     this.lightning = null
     if (envConfig.sky?.lightning?.enabled) {
@@ -282,6 +292,7 @@ export default class WorldEngine {
     this.atmosphere.godRayPass = this.godRayPass
     this.atmosphere.starField = this.starField
     this.atmosphere.rain = this.rain
+    this.atmosphere.petals = this.petals
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -322,6 +333,7 @@ export default class WorldEngine {
     this.dustMotes?.update(animElapsed)
     this.starField?.update(animElapsed)
     this.rain?.update(animElapsed)
+    this.petals?.update(animElapsed)
     this.lightning?.update(animElapsed, delta)
 
     this.cursorInteraction.update(this.camera, delta)
@@ -403,6 +415,7 @@ export default class WorldEngine {
       godRayPass: this.godRayPass,
       starField: this.starField,
       rain: this.rain,
+      petals: this.petals,
       lightning: this.lightning,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
@@ -431,6 +444,7 @@ export default class WorldEngine {
     this.starField?.dispose()
     this.ocean?.dispose()
     this.rain?.dispose()
+    this.petals?.dispose()
     this.lightning?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()

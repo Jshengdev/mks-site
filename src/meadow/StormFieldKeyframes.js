@@ -11,6 +11,7 @@
 export const STORM_FIELD_KEYFRAMES = [
   {
     t: 0.0, // UNEASE — something is coming, the air is charged
+    petalBrightness: 0.0,
     starBrightness: 0.0,   // no stars — overcast
     sunElevation: 5,       // low, obscured
     sunAzimuth: 200,

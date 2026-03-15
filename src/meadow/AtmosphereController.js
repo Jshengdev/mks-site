@@ -29,6 +29,7 @@ const KEYFRAMES = [
     t: 0.0, // STILLNESS — cold world, sacred anticipation, held breath
     starBrightness: 0.0,   // no stars in golden meadow
     rainBrightness: 0.0,   // no rain in golden meadow
+    petalBrightness: 0.0,  // no petals in golden meadow
     sunElevation: 2,       // slightly above horizon — hints of color
     sunAzimuth: 250,       // far from artist direction
     turbidity: 12,         // slightly cleaner for more color in sky
@@ -243,6 +244,7 @@ export default class AtmosphereController {
     this.godRayPass = null
     this.starField = null
     this.rain = null
+    this.petals = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -395,6 +397,11 @@ export default class AtmosphereController {
     // ─── Rain (storm field) ───
     if (this.rain && c.rainBrightness !== undefined) {
       this.rain.setBrightness(c.rainBrightness)
+    }
+
+    // ─── Petals (ghibli painterly) ───
+    if (this.petals && c.petalBrightness !== undefined) {
+      this.petals.setBrightness(c.petalBrightness)
     }
 
   }
