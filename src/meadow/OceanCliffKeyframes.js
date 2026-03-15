@@ -50,6 +50,12 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     waveWindDirY: 1.0,       // from the ocean
     waveWindSpeed: 0.3,
     waveWindStrength: 0.1,   // gentle sea breeze
+    // DOF v3 (exp-022, 61/70) — far focus on arrival
+    dofFocusDistance: 20,
+    dofBokehScale: 2.0,
+    // Split-tone — no warmth yet, approaching the cliff
+    splitToneWarm: [0.95, 0.78, 0.50],   // amber (warm shadows)
+    splitToneCool: [0.65, 0.78, 0.95],   // steel-blue (cool highlights)
   },
   {
     t: 0.25, // RECOGNITION — the ocean comes into view, vastness registers
@@ -84,7 +90,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     fogFarColor: [0.03, 0.06, 0.12],
     colorGradeContrast: 0.05,
     colorGradeVibrance: 0.20,
-    colorGradeWarmth: 0.005,
+    colorGradeWarmth: 0.05,   // split-tone first hint — faded memory emerging
     vignetteDarkness: 0.50,
     grainOpacity: 0.04,
     dustMoteBrightness: 0.0,
@@ -94,6 +100,12 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     waveWindDirY: 1.0,
     waveWindSpeed: 0.4,
     waveWindStrength: 0.15,
+    // DOF v3 — focus pulling closer, ocean reveals itself
+    dofFocusDistance: 12,
+    dofBokehScale: 4.0,
+    // Split-tone — first hint of warmth
+    splitToneWarm: [0.95, 0.78, 0.50],
+    splitToneCool: [0.65, 0.78, 0.95],
   },
   {
     t: 0.50, // CONTEMPLATION — beside the figure, looking at the horizon together
@@ -128,7 +140,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     fogFarColor: [0.04, 0.07, 0.14],
     colorGradeContrast: 0.06,
     colorGradeVibrance: 0.25,
-    colorGradeWarmth: 0.01,  // tiny warmth — the connection
+    colorGradeWarmth: 0.15,  // split-tone peak — "faded memory" quality (exp-022)
     vignetteDarkness: 0.42,  // opens up
     grainOpacity: 0.03,
     dustMoteBrightness: 0.0,
@@ -138,6 +150,12 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     waveWindDirY: 1.0,
     waveWindSpeed: 0.5,
     waveWindStrength: 0.2,   // peak sea breeze
+    // DOF v3 — intimate focus, peak "faded memory" quality (exp-022: 61/70)
+    dofFocusDistance: 8,
+    dofBokehScale: 5.5,      // heavy bokeh — cinematic intimacy
+    // Split-tone peak — warm amber shadows at 15%, cool blue highlights
+    splitToneWarm: [0.95, 0.78, 0.50],
+    splitToneCool: [0.65, 0.78, 0.95],
   },
   {
     t: 0.75, // UNDERSTANDING — the goodbye becomes real, beauty in the sadness
@@ -172,7 +190,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     fogFarColor: [0.03, 0.05, 0.10],
     colorGradeContrast: 0.05,
     colorGradeVibrance: 0.18,
-    colorGradeWarmth: 0.005,
+    colorGradeWarmth: 0.12,  // split-tone sustained — beauty in the sadness
     vignetteDarkness: 0.52,
     grainOpacity: 0.04,
     dustMoteBrightness: 0.0,
@@ -182,6 +200,12 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     waveWindDirY: 1.0,
     waveWindSpeed: 0.4,
     waveWindStrength: 0.15,
+    // DOF v3 — sustained intimacy, the goodbye moment
+    dofFocusDistance: 8,
+    dofBokehScale: 5.0,
+    // Split-tone sustained
+    splitToneWarm: [0.95, 0.78, 0.50],
+    splitToneCool: [0.65, 0.78, 0.95],
   },
   {
     t: 1.0, // RELEASE — letting go, the horizon dissolves into darkness
@@ -216,7 +240,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     fogFarColor: [0.02, 0.04, 0.08],
     colorGradeContrast: 0.03,
     colorGradeVibrance: 0.10,
-    colorGradeWarmth: 0.0,
+    colorGradeWarmth: 0.03,  // split-tone fading — warmth dissolving
     vignetteDarkness: 0.65,
     grainOpacity: 0.05,
     dustMoteBrightness: 0.0,
@@ -226,5 +250,11 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     waveWindDirY: 1.0,
     waveWindSpeed: 0.25,
     waveWindStrength: 0.08,  // dying breeze
+    // DOF v3 — letting go, everything dissolves into soft blur
+    dofFocusDistance: 20,
+    dofBokehScale: 3.0,
+    // Split-tone fading — warmth dissolving
+    splitToneWarm: [0.95, 0.78, 0.50],
+    splitToneCool: [0.65, 0.78, 0.95],
   },
 ]

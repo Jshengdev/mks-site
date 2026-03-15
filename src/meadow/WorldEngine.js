@@ -197,7 +197,8 @@ export default class WorldEngine {
     // ─── Post-processing ───
     this.postProcessing = new PostProcessingStack(
       this.renderer, this.scene, this.camera,
-      this.config.postFX
+      this.config.postFX,
+      envConfig.postFX?.dof ?? {}
     )
 
     // ─── Atmosphere (keyframes: hand-tuned per world, or auto-generated) ───
@@ -370,6 +371,13 @@ export default class WorldEngine {
     }
 
     this.postProcessing.update(this.scrollEngine.velocity, camPos, this._sectionPositions)
+
+    // Atmosphere-driven DOF overrides auto-focus (Ocean Cliff intimate DOF v3)
+    const dofCurrent = this.atmosphere.current
+    if (this.postProcessing.dof && dofCurrent.dofFocusDistance > 0) {
+      this.postProcessing.dof.effect.cocMaterial.focusDistance = dofCurrent.dofFocusDistance
+      this.postProcessing.dof.effect.bokehScale = dofCurrent.dofBokehScale
+    }
 
     if (this.audioReactive.analyser) {
       this.postProcessing.bloom.intensity += this.audioReactive.bass * 0.3

@@ -419,6 +419,20 @@ function buildParamGroups(api) {
           set: v => { colorGrade.uniforms.get('uSplitIntensity').value = v },
         },
         {
+          key: 'cgWarmColor', label: 'Warm Color', type: 'color',
+          get: () => '#' + (colorGrade.uniforms.get('uWarmColor')?.value
+            ? new THREE.Color().copy(colorGrade.uniforms.get('uWarmColor').value).getHexString()
+            : 'ec9484'),
+          set: v => { const c = new THREE.Color(v); colorGrade.uniforms.get('uWarmColor').value.copy(c) },
+        },
+        {
+          key: 'cgCoolColor', label: 'Cool Color', type: 'color',
+          get: () => '#' + (colorGrade.uniforms.get('uCoolColor')?.value
+            ? new THREE.Color().copy(colorGrade.uniforms.get('uCoolColor').value).getHexString()
+            : 'd4c4e4'),
+          set: v => { const c = new THREE.Color(v); colorGrade.uniforms.get('uCoolColor').value.copy(c) },
+        },
+        {
           key: 'cgVibrance', label: 'Vibrance',
           min: 0.5, max: 2.0, step: 0.05,
           get: () => colorGrade.uniforms.get('uVibrance')?.value,
@@ -556,6 +570,12 @@ function buildParamGroups(api) {
       badge: 'live',
       params: [
         {
+          key: 'dofFocusDistance', label: 'Focus Distance',
+          min: 1, max: 50, step: 0.5,
+          get: () => dof.effect.cocMaterial?.focusDistance,
+          set: v => { if (dof.effect.cocMaterial) dof.effect.cocMaterial.focusDistance = v },
+        },
+        {
           key: 'dofBokehScale', label: 'Bokeh Scale',
           min: 0, max: 10, step: 0.1,
           get: () => dof.effect.bokehScale,
@@ -563,7 +583,7 @@ function buildParamGroups(api) {
         },
         {
           key: 'dofFocusRange', label: 'Focus Range',
-          min: 1, max: 30, step: 0.5,
+          min: 0.1, max: 30, step: 0.1,
           get: () => dof.effect.cocMaterial?.focusRange,
           set: v => { if (dof.effect.cocMaterial) dof.effect.cocMaterial.focusRange = v },
         },

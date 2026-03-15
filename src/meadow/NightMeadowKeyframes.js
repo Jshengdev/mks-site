@@ -50,6 +50,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.1,
     waveWindStrength: 0.0,   // frozen stillness
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.25, // REMEMBRANCE — fireflies stir, memories surface
@@ -94,6 +98,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.1,
     waveWindStrength: 0.02,  // whisper
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.50, // GRIEF — peak emotion, fireflies everywhere like tears of light
@@ -138,6 +146,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.15,
     waveWindStrength: 0.05,  // gentle sigh
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.75, // PEACE — grief settling, a deep exhale, warmth acknowledged
@@ -182,6 +194,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.12,
     waveWindStrength: 0.03,
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed
@@ -226,5 +242,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.08,
     waveWindStrength: 0.0,   // still again
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
 ]

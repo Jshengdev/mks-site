@@ -21,7 +21,7 @@ import { KuwaharaEffect } from './KuwaharaEffect.js'
 import { GodRayCompositeEffect } from './GodRayCompositeEffect.js'
 
 export default class PostProcessingStack {
-  constructor(renderer, scene, camera, tier) {
+  constructor(renderer, scene, camera, tier, dofConfig = {}) {
     this.composer = new EffectComposer(renderer, {
       frameBufferType: THREE.HalfFloatType,
     })
@@ -53,7 +53,7 @@ export default class PostProcessingStack {
     this.ca = new RadialCAEffect({ distortion: 0.5 })
     this.motionBlur = new MotionBlurEffect()
     this.vignette = new VignetteEffect({ darkness: 0.5, offset: 0.3 })
-    this.dof = isReduced ? null : createDOF(camera)
+    this.dof = isReduced ? null : createDOF(camera, dofConfig)
     this.godRayComposite = new GodRayCompositeEffect()
     // Research winner: 8-sector anisotropic, radius=6, alpha=25, 16-level quantize, 1.5x sat
     this.kuwahara = new KuwaharaEffect({

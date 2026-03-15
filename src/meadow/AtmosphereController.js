@@ -68,6 +68,10 @@ const KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.2,
     waveWindStrength: 0.0,   // frozen — held breath
+    dofFocusDistance: 0,     // 0 = don't override DOF auto-focus
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],  // default amber
+    splitToneCool: [0.831, 0.769, 0.894],  // default lavender
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack
@@ -111,6 +115,10 @@ const KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.4,
     waveWindStrength: 0.1,
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
@@ -154,6 +162,10 @@ const KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.6,
     waveWindStrength: 0.3,   // gentle rolling waves
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.75, // DEEPENING — The Hidden Sun revealed, peak emotional climax
@@ -198,6 +210,10 @@ const KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.8,
     waveWindStrength: 0.3,   // sustained waves at peak
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
@@ -241,6 +257,10 @@ const KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.3,
     waveWindStrength: 0.1,   // settling
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
 ]
 
@@ -405,6 +425,13 @@ export default class AtmosphereController {
     cgU.get('uContrast').value = c.colorGradeContrast
     cgU.get('uVibrance').value = c.colorGradeVibrance
     cgU.get('uSplitIntensity').value = c.colorGradeWarmth
+    // Split-tone warm/cool colors (per-world — Ocean Cliff uses amber/steel-blue)
+    if (c.splitToneWarm) {
+      cgU.get('uWarmColor').value.set(c.splitToneWarm[0], c.splitToneWarm[1], c.splitToneWarm[2])
+    }
+    if (c.splitToneCool) {
+      cgU.get('uCoolColor').value.set(c.splitToneCool[0], c.splitToneCool[1], c.splitToneCool[2])
+    }
 
     // ─── Dust motes ───
     if (this.dustMotes) {

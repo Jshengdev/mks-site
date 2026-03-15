@@ -52,6 +52,10 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindDirY: 0.6,
     waveWindSpeed: 0.6,
     waveWindStrength: 0.4,   // wind building
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.25, // PURSUIT — running now, wind howling, rain intensifying
@@ -96,6 +100,10 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindDirY: 0.53,
     waveWindSpeed: 1.0,
     waveWindStrength: 0.9,
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.50, // TEMPEST — peak storm, maximum darkness and wind
@@ -140,6 +148,10 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindDirY: 0.44,
     waveWindSpeed: 1.5,
     waveWindStrength: 1.5,   // violent — grass flattened
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 0.75, // BREAK — storm begins to crack, first rays of hope
@@ -184,6 +196,10 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindDirY: 0.53,
     waveWindSpeed: 0.8,
     waveWindStrength: 0.8,   // easing
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
   {
     t: 1.0, // REVELATION — you found what you were searching for
@@ -228,5 +244,9 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindDirY: 0.6,
     waveWindSpeed: 0.4,
     waveWindStrength: 0.3,   // calm after storm
+    dofFocusDistance: 0,
+    dofBokehScale: 3.0,
+    splitToneWarm: [0.925, 0.706, 0.518],
+    splitToneCool: [0.831, 0.769, 0.894],
   },
 ]

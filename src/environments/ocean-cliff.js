@@ -95,9 +95,9 @@ export default {
     godRays: { enabled: false },
     dof: {
       enabled: true,
-      focusRange: 1.5,
-      bokehScale: 1.2,
-      // focus on seated figure, horizon soft
+      focusDistance: 8,    // exp-022 DOF v3 — intimate, close-up focus
+      focusRange: 1.5,     // narrow DOF — sharp subject, soft everything else
+      bokehScale: 5.5,     // heavy bokeh — cinematic "faded memory" quality
     },
     ssao: { enabled: true },
   },

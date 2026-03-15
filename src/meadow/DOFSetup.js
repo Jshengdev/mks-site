@@ -11,13 +11,13 @@ const DEFAULTS = {
   fallbackFocus: 50,
 }
 
-export function createDOF(camera) {
+export function createDOF(camera, config = {}) {
   if (!camera) return null
 
   const effect = new DepthOfFieldEffect(camera, {
-    focusDistance: DEFAULTS.focusDistance,
-    focusRange: DEFAULTS.focusRange,
-    bokehScale: DEFAULTS.bokehScale,
+    focusDistance: config.focusDistance ?? DEFAULTS.focusDistance,
+    focusRange: config.focusRange ?? DEFAULTS.focusRange,
+    bokehScale: config.bokehScale ?? DEFAULTS.bokehScale,
     resolutionScale: DEFAULTS.resolutionScale,
   })
 
