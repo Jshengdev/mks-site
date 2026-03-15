@@ -549,11 +549,82 @@ mod: src/meadow/AtmosphereController.js (init from active keyframes, not meadow)
 
 ---
 
+## Step 11: Genuinely Different Scenes — COMPLETE
+
+### The Problem
+Every world used the same `getTerrainHeight()` formula (rolling sine/cosine hills).
+All worlds used Preetham sky. Flower colors were hardcoded. Worlds were the same
+meadow with different colors — not genuinely different scenes.
+
+### What Was Built
+
+#### 1. Per-World Terrain Algorithms (`TerrainPlane.js`)
+- **`createTerrain()` now returns `{ mesh, getHeight }`** — height function per world
+- **Golden Meadow / Night Meadow**: `meadowHeight` — rolling sine/cosine hills (unchanged)
+- **Ocean Cliff**: `oceanCliffHeight` — 8-10m plateau with sigmoid cliff drop at z=-30, rocky detail near edge, ocean floor at -1.5m. Camera is ON a cliff looking at infinity.
+- **Storm Field**: `stormFieldHeight` — sharp angular V-peaks via `abs(sin)`. Higher frequency, less smoothing. Multiple ridge layers.
+- **Ghibli Painterly**: `ghibliHeight` — softer, rounder hills (fewer octaves, more stylized)
+
+#### 2. Per-World Terrain Vertex Colors
+- **Ocean Cliff**: steep cliff faces get dark rock color, cliff-top gets earth color (from normal.y steepness)
+- **Ghibli Painterly**: 4-band quantized vertex colors (deep shadow green → mid green → bright green → golden-green hilltop). Cel-shaded ground.
+
+#### 3. Gradient Dome Sky (`MeadowScene.js`)
+- **`sky.type === 'cel-dome'`** creates a vertex-colored sphere with zenith → mid → horizon gradient
+- Replaces Preetham for Ghibli Painterly — looks like you walked into a Miyazaki painting
+- Other worlds still use Preetham (appropriate for realistic/stylized split)
+
+#### 4. Per-World Height Function Wiring
+All 5 subsystems that used `getTerrainHeight` now accept per-world function:
+- `CameraRig` — terrain following uses world's height function
+- `GrassChunkManager` — grass blade placement on world's terrain
+- `FlowerInstances` — flower placement on world's terrain
+- `PortalHint` — portal placement on world's terrain
+- `ArtistFigure` — figure placement on world's terrain
+
+#### 5. Per-World Flower Palette
+- `FlowerInstances` now reads `config.flowers.palette` for per-world colors
+- **Ghibli**: vivid Miyazaki palette (#e85d75 pink, #f0a830 amber, #5bc0eb sky blue, #fde74c yellow, #ff6b6b coral, #7dcfb6 mint)
+- **Golden Meadow**: default BotW palette (cream, poppy, marigold, cornflower, buttercup, sage)
+
+#### 6. Ocean Cliff Scene Completion
+- Ocean plane enlarged to 500x500 for infinity feel from cliff top
+- Cliff terrain drops into water naturally (cliff floor -1.5m, water surface -0.5m)
+- Camera arc at heightOffset 2.5m on 8-10m cliff = dramatic height
+
+### Spatial Composition Summary
+
+| World | Terrain | Camera | Feeling |
+|-------|---------|--------|---------|
+| Golden Meadow | Rolling hills (2m) | S-curve at 2.0m — walking through | Gentle, wandering |
+| Ocean Cliff | 10m plateau + cliff drop | Arc at 2.5m on cliff — sitting at edge | Vast, contemplative |
+| Night Meadow | Same as meadow | Slow push at 1.2m — IN the grass | Intimate, hidden |
+| Storm Field | Sharp V-peaks (12m) | Urgent push at 1.0m with shake | Exposed, urgent |
+| Ghibli Painterly | Soft hills + cel bands | Spiral at 2.5m | Dreamlike, vivid |
+
+### Files Changed (Step 11)
+```
+mod: src/meadow/TerrainPlane.js (4 height algorithms, vertex colors, returns {mesh, getHeight})
+mod: src/meadow/CameraRig.js (accepts per-world height function)
+mod: src/meadow/WorldEngine.js (wires height function to all subsystems)
+mod: src/meadow/MeadowScene.js (gradient dome sky for cel-dome type)
+mod: src/meadow/GrassChunkManager.js (accepts per-world height function)
+mod: src/meadow/FlowerInstances.js (accepts per-world height function + palette)
+mod: src/meadow/PortalHint.js (accepts per-world height function)
+mod: src/meadow/ArtistFigure.js (accepts per-world height function)
+mod: src/environments/ocean-cliff.js (ocean size 500, waterLevel)
+mod: src/environments/ghibli-painterly.js (vivid flower palette, 4 bands)
+```
+
+### Build Status
+- `npx vite build` passes (125 modules, ~1.3s)
+- Chunk size warning expected (Three.js)
+
+---
+
 ## What's NOT Done Yet (Future Polish)
-- **Terrain differentiation** — the single biggest visual gap (needs human taste)
 - Volumetric clouds (exp-010 proven but 44 FPS — needs half-res + TAAU for production)
 - Billboard clouds (ghibli painterly)
-- Cel-shaded sky dome (ghibli — currently uses Preetham)
 - Full 3-pass anisotropic Kuwahara (tensor pass → kuwahara pass → composite — current is single-pass 8-sector)
 - Wave-like grass wind (directional coherence for storm)
 - Bezier flower geometry (glflower reference)
