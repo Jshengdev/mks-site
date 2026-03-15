@@ -48,6 +48,11 @@ export default class GrassChunkManager {
         uCelEnabled: { value: 0.0 },
         uCelThresholds: { value: new THREE.Vector3(0.6, 0.35, 0.001) },
         uCelMultipliers: { value: new THREE.Vector4(1.2, 0.9, 0.5, 0.25) },
+        // Wave wind — ocean-like rolling swells across meadow
+        // (spacejack/terra scrolling technique + daniel-ilett directional separation)
+        uWaveWindDir: { value: new THREE.Vector2(0.707, 0.707) },   // 45-degree diagonal
+        uWaveWindSpeed: { value: 0.8 },
+        uWaveWindStrength: { value: 1.5 },
         // Cursor wind push
         uCursorPos: { value: new THREE.Vector3(0, -100, 0) },
         uCursorRadius: { value: 4.0 },

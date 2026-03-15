@@ -250,9 +250,10 @@ export default class AtmosphereController {
     this.keyframes = keyframes ?? KEYFRAMES
     this.current = {}
 
-    // Initialize current to first keyframe
+    // Initialize current to first keyframe of the active world's keyframes
+    const initKf = this.keyframes[0]
     for (const key of PARAM_KEYS) {
-      const val = KEYFRAMES[0][key]
+      const val = initKf[key] ?? KEYFRAMES[0][key]
       this.current[key] = Array.isArray(val) ? [...val] : val
     }
 

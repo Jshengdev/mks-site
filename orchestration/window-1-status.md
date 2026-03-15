@@ -450,8 +450,107 @@ mod: src/meadow/PostProcessingStack.js (Kuwahara winner params)
 
 ---
 
+## Step 10: Polish Audit — COMPLETE
+
+### Fixes Applied
+
+1. **Night Meadow firefly count: 800 → 400**
+   - Window 2 research (exp-008, score 56/70) found 400 is the sweet spot
+   - Updated `src/environments/night-meadow.js`
+
+2. **Storm Field keyframe NaN bug**
+   - `petalBrightness` was missing from keyframes at t=0.25, 0.50, 0.75, 1.0
+   - AtmosphereController's `PARAM_KEYS` (from meadow keyframes) includes `petalBrightness`
+   - Interpolation produced `lerpScalar(0.0, undefined, t) = NaN`
+   - Harmless in practice (Storm Field has no petals) but fixed for correctness
+   - Added `petalBrightness: 0.0` to all 4 missing keyframes in `StormFieldKeyframes.js`
+
+3. **AtmosphereController initial value mismatch**
+   - `current` was always initialized from `KEYFRAMES[0]` (meadow values)
+   - Even when the engine was created with Night Meadow or Storm Field keyframes
+   - First frame of render showed meadow atmosphere before scrolling corrected it
+   - Fixed: now initializes from `this.keyframes[0]` with meadow fallback for missing keys
+
+### Audit Results
+
+#### What's Working (Unique Per World)
+
+| World | Unique Subsystems | Camera | Atmosphere Arc |
+|-------|------------------|--------|----------------|
+| Golden Meadow | 60K grass, 800 flowers, fireflies, dust, god rays, score sheets, artist figure, portal hints | S-curve, terrain-follow | STILLNESS→AWAKENING→ALIVE→DEEPENING→QUIETING |
+| Night Meadow | 60K grass (dark), 400 fireflies (amber), 8K spectral stars + moon, score sheets | Slow push, low height | SILENCE→REMEMBRANCE→GRIEF→PEACE→ACCEPTANCE |
+| Ocean Cliff | 20K grass, StylizedOcean (simplex foam), dusk stars, artist figure, score sheets | Arc orbit, cinematic lag | ARRIVAL→RECOGNITION→CONTEMPLATION→UNDERSTANDING→RELEASE |
+| Storm Field | 50K grass (violent wind), 2000 rain streaks, lightning flashes, score sheets | Urgent push, camera shake | UNEASE→PURSUIT→TEMPEST→BREAK→REVELATION |
+| Ghibli | 40K cel-shaded grass, 600 flowers, 300 petals, 150 dust, god rays, Kuwahara, artist figure, score sheets | Spiral, medium damping | WONDER→IMMERSION→RADIANCE→TRANSFIGURATION→TRANSCENDENCE |
+
+#### Entry Page — Working
+- Dithered 4-tone procedural flower (Bezier petals, Bayer 4x4 matrix)
+- 6-layer cursor parallax (stem, back petals, front petals, center, stamen, text)
+- Breathing animation (scale oscillation + flutter skew)
+- Half-resolution render (`scale=0.5`, `image-rendering: pixelated`)
+- Click → dissolve via dither threshold → `completeEntry()` → WebGL loads
+- AudioContext confirmed on click (browser autoplay policy)
+
+#### Atmosphere Keyframes — All Well-Crafted
+Each world has 5 keyframes with meaningful emotional progression:
+- Values interpolated via smoothstep between adjacent keyframes
+- Peak emotional moment consistently at t=0.50
+- Unique parameters driven per world (fireflies for Night, rain for Storm, Kuwahara for Ghibli)
+
+#### Portal Transitions — Infrastructure Only
+- `TransitionRenderer` + 5 GLSL transition types built
+- `useWorldTransition` React hook ready
+- **NOT wired into EnvironmentScene** — current world swap is instant (engine destroy + create)
+- Full integration requires both engines alive simultaneously during 1.5s blend
+
+### What's Broken / Missing (Needs Human Taste)
+
+#### CRITICAL: Terrain is Identical for All Worlds
+`TerrainPlane.js` uses a single `getTerrainHeight()` formula:
+```
+Math.sin(x * 0.02) * Math.cos(z * 0.015) * 2.0 + Math.sin(x * 0.05 + z * 0.03) * 0.5
+```
+Every world gets the same rolling hills shape. Only the vertex color changes.
+
+The configs describe aspirational terrain types:
+- Night Meadow: same meadow terrain ✓ (intentional — "same place, different time")
+- Ocean Cliff: `simplex-layers-cliff` — should be cliff + flat ocean plane ✗
+- Storm Field: `diamond-square` — should be sharp peaks/valleys ✗
+- Ghibli: `simplex-layers-stylized` — should be stylized rolling hills ✗
+
+**This is the biggest gap.** The terrain differentiation needs either:
+1. Config-driven terrain formulas (pass height function to `createTerrain`)
+2. Per-world terrain generators (separate functions for cliff, diamond-square, etc.)
+3. Pre-generated heightmap textures
+
+This requires **human taste** to decide which approach and what the terrain shapes should feel like.
+
+#### Missing Assets
+- 4 of 5 tracks have `src: null` (no MP3s for Ocean Cliff, Night Meadow, Ghibli, Storm Field)
+- No .glb models (seated figure, walking figure, cliff geometry)
+- Per-world content overlays are placeholder text only
+
+#### Visual Gaps
+- All worlds use Preetham sky model — Ghibli should have cel-dome, Storm should have overcast
+- No volumetric/billboard clouds in any world
+- Ocean Cliff ocean sits at y=-0.5 with meadow terrain on top — looks like water under a field, not a cliff
+- Portal transitions are instant, not cinematic
+
+### Build Status
+- `npx vite build` passes (125 modules, 1.54s)
+- Chunk size warning expected (Three.js)
+
+### Files Changed (Step 10)
+```
+mod: src/environments/night-meadow.js (firefly count 800→400)
+mod: src/meadow/StormFieldKeyframes.js (petalBrightness added to 4 keyframes)
+mod: src/meadow/AtmosphereController.js (init from active keyframes, not meadow)
+```
+
+---
+
 ## What's NOT Done Yet (Future Polish)
-- Different terrain generators per world (diamond-square for storm, cliff for ocean)
+- **Terrain differentiation** — the single biggest visual gap (needs human taste)
 - Volumetric clouds (exp-010 proven but 44 FPS — needs half-res + TAAU for production)
 - Billboard clouds (ghibli painterly)
 - Cel-shaded sky dome (ghibli — currently uses Preetham)

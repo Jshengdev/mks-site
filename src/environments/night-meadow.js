@@ -62,7 +62,7 @@ export default {
   particles: {
     fireflies: {
       enabled: true,
-      count: 800,            // more than meadow — they ARE the warmth
+      count: 400,            // Window 2 research: 400 is the sweet spot
       color: [0.83, 0.79, 0.41],
       brightness: 2.0,       // brighter
       bobSpeed: 0.5,         // slower bob

@@ -51,6 +51,7 @@ export const STORM_FIELD_KEYFRAMES = [
   },
   {
     t: 0.25, // PURSUIT — running now, wind howling, rain intensifying
+    petalBrightness: 0.0,
     starBrightness: 0.0,
     sunElevation: 4,
     sunAzimuth: 210,
@@ -90,6 +91,7 @@ export const STORM_FIELD_KEYFRAMES = [
   },
   {
     t: 0.50, // TEMPEST — peak storm, maximum darkness and wind
+    petalBrightness: 0.0,
     starBrightness: 0.0,
     sunElevation: 3,
     sunAzimuth: 220,
@@ -129,6 +131,7 @@ export const STORM_FIELD_KEYFRAMES = [
   },
   {
     t: 0.75, // BREAK — storm begins to crack, first rays of hope
+    petalBrightness: 0.0,
     starBrightness: 0.0,
     sunElevation: 6,       // sun pushing through
     sunAzimuth: 230,
@@ -168,6 +171,7 @@ export const STORM_FIELD_KEYFRAMES = [
   },
   {
     t: 1.0, // REVELATION — you found what you were searching for
+    petalBrightness: 0.0,
     starBrightness: 0.0,
     sunElevation: 8,
     sunAzimuth: 240,

@@ -13,6 +13,12 @@ uniform float uCursorRadius;   // effect radius in world units
 uniform float uCursorStrength; // wave force multiplier
 uniform vec2 uCursorVelocity;  // cursor movement direction (normalized-ish)
 
+// Wave wind — large-scale directional noise for ocean-like swells
+// (spacejack/terra scrolling-UV technique + daniel-ilett wind direction separation)
+uniform vec2 uWaveWindDir;       // normalized XZ wind direction
+uniform float uWaveWindSpeed;    // noise scroll speed
+uniform float uWaveWindStrength; // max tip displacement (world units)
+
 varying float vElevation;
 varying float vSideGradient;
 varying vec3 vNormal;
@@ -120,7 +126,30 @@ void main() {
 
   vec4 worldPosition = instanceMatrix * vec4(p, 1.0);
 
-  // ─── Layer 5: Cursor wind brush (Unseen Studio-inspired) ───
+  // ─── Layer 5½: Wave wind — ocean-like rolling swells ───
+  // Low-frequency cnoise in world space, scrolled along wind direction
+  // (spacejack/terra scrolling technique + daniel-ilett directional separation)
+  {
+    // Sample noise at world XZ, low frequency (0.04 = ~25 unit wavelength)
+    // Offset by (31.7, 17.3) to decorrelate from Layer 3's cnoise
+    vec2 noiseCoord = worldPosition.xz * 0.04
+      + uWaveWindDir * uWaveWindSpeed * uTime
+      + vec2(31.7, 17.3);
+    float waveNoise = cnoise(noiseCoord);  // range [-1, 1]
+
+    // Height-dependent: tips bend, roots stay planted (quadratic, matches Layer 3)
+    float heightFactor = pow(position.y, 2.0);
+
+    // XZ displacement along wind direction
+    vec2 waveDisplacement = uWaveWindDir * waveNoise * uWaveWindStrength * heightFactor;
+    worldPosition.x += waveDisplacement.x;
+    worldPosition.z += waveDisplacement.y;
+
+    // Y depression: bent grass arcs down slightly
+    worldPosition.y -= 0.15 * abs(waveNoise) * uWaveWindStrength * heightFactor;
+  }
+
+  // ─── Layer 6: Cursor wind brush (Unseen Studio-inspired) ───
   // Directional wave that follows cursor movement — brushing, not pushing
   vec2 toCursor = worldPosition.xz - uCursorPos.xz;
   float cursorDist = length(toCursor);
