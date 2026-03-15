@@ -225,6 +225,93 @@
   letter-spacing: 0.05em;
 }
 
+/* ===== ALBUM ROW ===== */
+.player-album-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.player-tracklist-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.player-tracklist-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== TRACK LIST ===== */
+.player-tracklist {
+  margin-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.player-tracklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.5rem;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.player-tracklist-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.player-tracklist-item.active {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.player-tracklist-item.active .tracklist-num {
+  color: var(--track-color, #c8d4e8);
+}
+
+.tracklist-num {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  opacity: 0.5;
+  width: 1.2rem;
+  flex-shrink: 0;
+}
+
+.tracklist-title {
+  font-family: 'PT Serif', serif;
+  font-size: 0.8rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tracklist-emotion {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.6rem;
+  font-style: italic;
+  opacity: 0.35;
+  white-space: nowrap;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .mini-player {

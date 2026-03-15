@@ -1,0 +1,27 @@
+/* Entry Page — full-screen Canvas 2D dithered flower */
+.entry-page {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #111110;
+  cursor: pointer !important;
+}
+
+.entry-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.entry-page.dissolving {
+  pointer-events: none;
+}
+
+/* Reduced motion: skip breathing animation via CSS flag */
+@media (prefers-reduced-motion: reduce) {
+  .entry-page {
+    /* Canvas animations check this via matchMedia */
+  }
+}

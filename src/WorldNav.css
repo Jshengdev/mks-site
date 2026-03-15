@@ -35,6 +35,8 @@
   transition: opacity 0.6s ease;
   padding: 0.25rem 0;
   position: relative;
+  background: none;
+  border: none;
 }
 
 .world-nav__link:hover {

@@ -1,16 +1,15 @@
+// MiniPlayer — THE ROUTER
+// Music drives world transitions. Selecting a track navigates to its world.
+// Track list is the navigation. Play/pause/seek is the interaction.
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { useWorld } from './WorldContext.jsx'
+import { TRACK_LIST, ENVIRONMENTS } from './environments/index.js'
 import './MiniPlayer.css'
-
-const TRACK = {
-  title: 'Through the Veil',
-  artist: 'Michael Kim-Sheng',
-  album: 'Heavy Moon',
-  src: '/through-the-veil.mp3',
-}
 
 const BAR_COUNT = 48
 
 export default function MiniPlayer() {
+  const { currentWorld, navigateToWorld, entryComplete } = useWorld()
   const audioRef = useRef(null)
   const analyserRef = useRef(null)
   const sourceRef = useRef(null)
@@ -24,6 +23,11 @@ export default function MiniPlayer() {
   const [duration, setDuration] = useState(0)
   const [expanded, setExpanded] = useState(false)
   const [dragging, setDragging] = useState(false)
+  const [showTrackList, setShowTrackList] = useState(false)
+
+  // Current track from the active world
+  const currentTrack = ENVIRONMENTS[currentWorld]?.audio?.track
+  const currentIdx = TRACK_LIST.findIndex(t => t.worldId === currentWorld)
 
   // Set up audio analyser
   const initAnalyser = useCallback(() => {
@@ -40,6 +44,24 @@ export default function MiniPlayer() {
     sourceRef.current = source
   }, [])
 
+  // When world changes, update the audio source
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio || !currentTrack) return
+
+    const wasPlaying = playing
+    if (currentTrack.src) {
+      audio.src = currentTrack.src
+      audio.load()
+      if (wasPlaying) {
+        audio.play().catch(() => {})
+      }
+    }
+    setCurrentTime(0)
+    setDuration(0)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentWorld])
+
   // Visualizer loop
   useEffect(() => {
     const canvas = canvasRef.current
@@ -53,7 +75,6 @@ export default function MiniPlayer() {
       c.clearRect(0, 0, w, h)
 
       if (!analyserRef.current) {
-        // Static idle bars
         for (let i = 0; i < BAR_COUNT; i++) {
           const barH = 2
           const x = (i / BAR_COUNT) * w
@@ -73,15 +94,11 @@ export default function MiniPlayer() {
         const barH = Math.max(2, val * h * 0.9)
         const x = (i / BAR_COUNT) * w
         const barW = (w / BAR_COUNT) * 0.6
-
-        // Gradient color based on intensity
         const alpha = 0.3 + val * 0.7
         const hue = 210 + val * 30
         c.fillStyle = playing
           ? `hsla(${hue}, 40%, ${70 + val * 20}%, ${alpha})`
           : 'rgba(255, 255, 255, 0.15)'
-
-        // Draw bar centered vertically
         c.fillRect(x, h / 2 - barH / 2, barW, barH)
       }
     }
@@ -95,11 +112,22 @@ export default function MiniPlayer() {
     const audio = audioRef.current
     if (!audio) return
 
-    const onTime = () => {
-      if (!dragging) setCurrentTime(audio.currentTime)
-    }
+    const onTime = () => { if (!dragging) setCurrentTime(audio.currentTime) }
     const onDuration = () => setDuration(audio.duration)
-    const onEnded = () => setPlaying(false)
+    const onEnded = () => {
+      setPlaying(false)
+      // Auto-advance to next world when track ends
+      if (currentIdx < TRACK_LIST.length - 1) {
+        navigateToWorld(TRACK_LIST[currentIdx + 1].worldId)
+        // Will auto-play via the useEffect above
+        setTimeout(() => {
+          if (audioRef.current?.src) {
+            audioRef.current.play().catch(() => {})
+            setPlaying(true)
+          }
+        }, 200)
+      }
+    }
 
     audio.addEventListener('timeupdate', onTime)
     audio.addEventListener('loadedmetadata', onDuration)
@@ -109,11 +137,11 @@ export default function MiniPlayer() {
       audio.removeEventListener('loadedmetadata', onDuration)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [dragging])
+  }, [dragging, currentIdx, navigateToWorld])
 
   const togglePlay = async () => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio || !currentTrack?.src) return
 
     initAnalyser()
     if (ctxRef.current?.state === 'suspended') {
@@ -126,6 +154,24 @@ export default function MiniPlayer() {
       await audio.play()
     }
     setPlaying(!playing)
+  }
+
+  const selectTrack = (worldId) => {
+    navigateToWorld(worldId)
+    setShowTrackList(false)
+    // Auto-play the new track after a brief delay for engine swap
+    setTimeout(async () => {
+      const audio = audioRef.current
+      if (!audio) return
+      initAnalyser()
+      if (ctxRef.current?.state === 'suspended') {
+        await ctxRef.current.resume()
+      }
+      if (audio.src) {
+        await audio.play().catch(() => {})
+        setPlaying(true)
+      }
+    }, 300)
   }
 
   const seek = (e) => {
@@ -157,13 +203,15 @@ export default function MiniPlayer() {
 
   const progress = duration ? (currentTime / duration) * 100 : 0
 
+  // Don't render until entry page is complete
+  if (!entryComplete) return null
+
   return (
     <div className={`mini-player ${expanded ? 'expanded' : ''} ${playing ? 'is-playing' : ''}`}>
-      <audio ref={audioRef} src={TRACK.src} preload="metadata" />
+      <audio ref={audioRef} preload="metadata" />
 
       {/* Collapsed: compact bar */}
       <div className="player-bar" onClick={() => setExpanded(!expanded)}>
-        {/* Visualizer canvas */}
         <canvas
           ref={canvasRef}
           className="player-visualizer"
@@ -172,8 +220,8 @@ export default function MiniPlayer() {
         />
 
         <div className="player-info">
-          <span className="player-title">{TRACK.title}</span>
-          <span className="player-artist">{TRACK.artist}</span>
+          <span className="player-title">{currentTrack?.title || 'No Track'}</span>
+          <span className="player-artist">{currentTrack?.artist || ''}</span>
         </div>
 
         <button
@@ -194,10 +242,21 @@ export default function MiniPlayer() {
         </button>
       </div>
 
-      {/* Expanded: progress + time */}
+      {/* Expanded: progress + track list toggle */}
       {expanded && (
         <div className="player-expanded">
-          <div className="player-album">{TRACK.album}</div>
+          <div className="player-album-row">
+            <span className="player-album">{currentTrack?.album || ''}</span>
+            <button
+              className="player-tracklist-btn"
+              onClick={(e) => { e.stopPropagation(); setShowTrackList(!showTrackList) }}
+              aria-label="Track list"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="16" height="16">
+                <path d="M4 6h16M4 12h16M4 18h12" />
+              </svg>
+            </button>
+          </div>
           <div
             className="player-progress"
             ref={progressRef}
@@ -211,6 +270,24 @@ export default function MiniPlayer() {
             <span>{fmt(currentTime)}</span>
             <span>{fmt(duration)}</span>
           </div>
+
+          {/* Track list — the navigation */}
+          {showTrackList && (
+            <div className="player-tracklist">
+              {TRACK_LIST.map((track, i) => (
+                <button
+                  key={track.worldId}
+                  className={`player-tracklist-item ${track.worldId === currentWorld ? 'active' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); selectTrack(track.worldId) }}
+                  style={{ '--track-color': track.dominantColor }}
+                >
+                  <span className="tracklist-num">{i + 1}</span>
+                  <span className="tracklist-title">{track.title}</span>
+                  <span className="tracklist-emotion">{track.emotion}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

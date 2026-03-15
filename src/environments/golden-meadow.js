@@ -108,6 +108,12 @@ export default {
   audio: {
     ambient: null,
     musicTrigger: { threshold: 0.35 },
+    track: {
+      title: 'In a Field of Silence',
+      artist: 'Michael Kim-Sheng',
+      album: 'Heavy Moon',
+      src: null, // resolved at runtime via ES import
+    },
   },
 
   dominantColor: '#d4a830', // amber/gold

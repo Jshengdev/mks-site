@@ -128,6 +128,12 @@ export default {
   audio: {
     ambient: 'night', // crickets, distant wind, silence
     musicTrigger: { threshold: 0.4 },
+    track: {
+      title: 'Letting Go',
+      artist: 'Michael Kim-Sheng',
+      album: 'Heavy Moon',
+      src: null, // placeholder — wire when MP3 available
+    },
   },
 
   dominantColor: '#2a3a5a', // blue-silver

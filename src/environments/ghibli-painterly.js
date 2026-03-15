@@ -140,6 +140,12 @@ export default {
   audio: {
     ambient: null,
     musicTrigger: { threshold: 0.3 }, // music as primary driver
+    track: {
+      title: 'The Fall',
+      artist: 'Michael Kim-Sheng',
+      album: 'Heavy Moon',
+      src: null, // placeholder — wire when MP3 available
+    },
   },
 
   dominantColor: '#4a8d7e', // saturated green

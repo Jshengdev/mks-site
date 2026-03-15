@@ -1,29 +1,35 @@
-import { Routes, Route } from 'react-router-dom'
+// App — Music-driven, no URL routing
+// WorldContext drives which environment is active.
+// MiniPlayer is the navigation. Entry page gates everything.
+import { WorldProvider, useWorld } from './WorldContext.jsx'
 import EnvironmentScene from './EnvironmentScene.jsx'
 import MiniPlayer from './MiniPlayer.jsx'
 import MoonlightCursor from './MoonlightCursor.jsx'
 import WorldNav from './WorldNav.jsx'
-import { ENVIRONMENTS } from './environments/index.js'
+import EntryPage from './entry/EntryPage.jsx'
 
-function App() {
+function AppInner() {
+  const { entryComplete, currentWorld } = useWorld()
+
+  if (!entryComplete) {
+    return <EntryPage />
+  }
+
   return (
     <>
-      {/* Routes — each environment is a full-screen 3D world */}
-      <Routes>
-        {Object.values(ENVIRONMENTS).map(env => (
-          <Route
-            key={env.id}
-            path={env.route}
-            element={<EnvironmentScene envId={env.id} />}
-          />
-        ))}
-      </Routes>
-
-      {/* Persistent across all routes */}
+      <EnvironmentScene envId={currentWorld} />
       <WorldNav />
       <MiniPlayer />
       <MoonlightCursor />
     </>
+  )
+}
+
+function App() {
+  return (
+    <WorldProvider>
+      <AppInner />
+    </WorldProvider>
   )
 }
 

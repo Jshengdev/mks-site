@@ -139,6 +139,12 @@ export default {
       triggerOnScroll: true, // at scroll milestones
     },
     musicTrigger: { threshold: 0.4 },
+    track: {
+      title: 'The Search',
+      artist: 'Michael Kim-Sheng',
+      album: 'Heavy Moon',
+      src: null, // placeholder — wire when MP3 available
+    },
   },
 
   dominantColor: '#1a1a20', // dark grey

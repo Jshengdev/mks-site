@@ -1,6 +1,6 @@
 // EnvironmentScene — Mounts the 3D engine for each environment world
-// Handles engine lifecycle: create on mount, destroy on unmount/route change
-// All environments now use WorldEngine with their config — no more placeholder stubs.
+// Handles engine lifecycle: create on mount, destroy on world change
+// Driven by WorldContext, not URL routes
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { ENVIRONMENTS } from './environments/index.js'
 import WorldEngine from './meadow/WorldEngine.js'
@@ -72,7 +72,6 @@ export default function EnvironmentScene({ envId }) {
 }
 
 // Environment content for non-meadow worlds
-// Shows the emotional identity + the 3D engine renders behind it
 function EnvironmentContent({ config }) {
   return (
     <div className="content-overlay">

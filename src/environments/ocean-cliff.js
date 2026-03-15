@@ -133,6 +133,12 @@ export default {
   audio: {
     ambient: 'ocean', // looping wave sounds
     musicTrigger: { threshold: 0.5 },
+    track: {
+      title: 'Through the Veil',
+      artist: 'Michael Kim-Sheng',
+      album: 'Heavy Moon',
+      src: null, // placeholder — wire when MP3 available
+    },
   },
 
   dominantColor: '#0a2e3d', // teal/midnight
