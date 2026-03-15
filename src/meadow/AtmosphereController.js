@@ -296,19 +296,26 @@ export default class AtmosphereController {
   _pushToSubsystems() {
     const c = this.current
 
-    // ─── Sky (Preetham) ───
+    // ─── Sky (Preetham — null for cel-dome worlds) ───
     const sky = this.sceneSetup.sky
-    const skyU = sky.material.uniforms
-    skyU['turbidity'].value = c.turbidity
-    skyU['rayleigh'].value = c.rayleigh
-    skyU['mieCoefficient'].value = c.mieCoefficient
-    skyU['mieDirectionalG'].value = c.mieDirectionalG
+    if (sky && sky.material) {
+      const skyU = sky.material.uniforms
+      skyU['turbidity'].value = c.turbidity
+      skyU['rayleigh'].value = c.rayleigh
+      skyU['mieCoefficient'].value = c.mieCoefficient
+      skyU['mieDirectionalG'].value = c.mieDirectionalG
 
-    // Sun position from elevation + azimuth
-    const phi = THREE.MathUtils.degToRad(90 - c.sunElevation)
-    const theta = THREE.MathUtils.degToRad(c.sunAzimuth)
-    this._sunPos.setFromSphericalCoords(1, phi, theta)
-    skyU['sunPosition'].value.copy(this._sunPos)
+      // Sun position from elevation + azimuth
+      const phi = THREE.MathUtils.degToRad(90 - c.sunElevation)
+      const theta = THREE.MathUtils.degToRad(c.sunAzimuth)
+      this._sunPos.setFromSphericalCoords(1, phi, theta)
+      skyU['sunPosition'].value.copy(this._sunPos)
+    } else {
+      // Still compute sun position for lighting even without Preetham sky
+      const phi = THREE.MathUtils.degToRad(90 - c.sunElevation)
+      const theta = THREE.MathUtils.degToRad(c.sunAzimuth)
+      this._sunPos.setFromSphericalCoords(1, phi, theta)
+    }
 
     // ─── Sun light ───
     const sunLight = this.sceneSetup.sunLight

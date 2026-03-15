@@ -28,6 +28,7 @@ export default function MiniPlayer() {
   // Current track from the active world
   const currentTrack = ENVIRONMENTS[currentWorld]?.audio?.track
   const currentIdx = TRACK_LIST.findIndex(t => t.worldId === currentWorld)
+  const hasAutoPlayed = useRef(false)
 
   // Set up audio analyser
   const initAnalyser = useCallback(() => {
@@ -43,6 +44,30 @@ export default function MiniPlayer() {
     analyserRef.current = analyser
     sourceRef.current = source
   }, [])
+
+  // Auto-play on first mount (user just clicked Enter — gesture allows autoplay)
+  useEffect(() => {
+    if (hasAutoPlayed.current) return
+    const audio = audioRef.current
+    if (!audio || !currentTrack?.src) return
+    hasAutoPlayed.current = true
+
+    audio.src = currentTrack.src
+    audio.load()
+
+    // Small delay for engine to initialize, then start playback
+    const timer = setTimeout(async () => {
+      initAnalyser()
+      if (ctxRef.current?.state === 'suspended') {
+        await ctxRef.current.resume()
+      }
+      await audio.play().catch(() => {})
+      setPlaying(true)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTrack])
 
   // When world changes, update the audio source
   useEffect(() => {

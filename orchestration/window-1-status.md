@@ -622,6 +622,87 @@ mod: src/environments/ghibli-painterly.js (vivid flower palette, 4 bands)
 
 ---
 
+## Step 12: Audio Auto-Play + Ghibli Crash Fix + Verification — COMPLETE
+
+### What Was Done
+
+#### 1. Fixed Ghibli Painterly Crash (AtmosphereController)
+- `AtmosphereController._pushToSubsystems()` unconditionally accessed `sky.material.uniforms`
+- For `cel-dome` worlds, `setupScene()` returns `sky: null` — null dereference crash
+- **Fix:** Added null-check around sky uniform writes; still computes sun position for lighting
+- **File:** `src/meadow/AtmosphereController.js`
+
+#### 2. Auto-Play "In a Field of Silence" on Entry
+- MiniPlayer had no auto-play — user had to manually click play after entering
+- **Fix:** Added `useEffect` that auto-plays the current track on first mount
+- Uses `hasAutoPlayed` ref to fire only once
+- 500ms delay for engine initialization before playback
+- User gesture from entry page click satisfies browser autoplay policy
+- **File:** `src/MiniPlayer.jsx`
+
+#### 3. Entry Page Golden Bloom — Already Complete (verified)
+- `PALETTE_GOLD` with warm amber tones already defined
+- `lerpPalette(t)` smoothly transitions monochrome → golden
+- Bloom sequence: 800ms color+open → 400ms hold → 800ms dissolve
+- Petals scale 25% larger during bloom (`bloomScale = 1 + bloomOpen * 0.25`)
+
+#### 4. Code-Level Visual Audit (All 5 Worlds)
+
+##### Golden Meadow — WORKING
+- Full subsystem complement (grass, flowers, fireflies, dust, god rays, score sheets, portals)
+- Preetham sky with golden hour params
+- Rolling hills terrain
+- 5-keyframe atmosphere arc (STILLNESS→QUIETING)
+- Audio auto-plays on entry ✓
+
+##### Ocean Cliff — WORKING (with caveats)
+- StylizedOcean renders with simplex foam + binary step threshold
+- Real cliff geometry (10m plateau + sigmoid drop + ocean floor at -1.5m)
+- Stars visible (8K with spectral colors, via config `sky.stars.enabled`)
+- Sparse cliff-top grass (20K blades)
+- Artist figure (seated silhouette)
+- **Caveat:** Sky type `preetham-dusk` falls through to Preetham (not a true dusk sky, but sunElevation=-5 creates a post-sunset look via Preetham params)
+- **Caveat:** `fadeFactor` from star config is ignored by StarField
+
+##### Night Meadow — WORKING
+- Same terrain as Golden Meadow (intentional — "same place, different time")
+- 400 fireflies (amber, brighter, slower bob)
+- Stars + moon via StarField
+- Dark blue-teal grass, near-black fog
+- Heavy vignette (0.8-0.9), grain (0.08)
+- **Caveat:** Sky type `night-atmosphere` falls through to Preetham with sunElevation=-30 (deep night). `tealTint` config not consumed. Works visually but not the intended custom atmosphere shader.
+- **Caveat:** Star `sharpness`, `falloff`, `visibility` params ignored by StarField
+
+##### Storm Field — WORKING
+- Sharp V-peak terrain with diamond-square-inspired formula
+- 2000 rain particles with cross-product stretch
+- Lightning system (8-20s intervals, 200ms decay)
+- Violent wind (3.0x), heavy vignette (0.9)
+- Dark earth terrain colors
+- **Caveat:** Sky type `overcast` falls through to Preetham (turbidity=8, rayleigh=0.5 creates a washed-out look but not true overcast)
+- **Caveat:** No volumetric clouds yet
+
+##### Ghibli Painterly — WORKING (after crash fix)
+- **Was crashing** before AtmosphereController fix
+- Gradient dome sky (cel-dome) — vertex-colored sphere with zenith→mid→horizon
+- Cel-shaded grass (4-band step function)
+- 300 cherry blossom petals
+- Vivid Miyazaki flower palette (6 bright colors)
+- Kuwahara post-FX (8-sector anisotropic, quantization)
+- God rays enabled
+
+### Build Status
+- `npx vite build` passes (125 modules, ~1.1s)
+- Chunk size warning expected (Three.js)
+
+### Files Changed (Step 12)
+```
+mod: src/meadow/AtmosphereController.js (null-safe sky access for cel-dome)
+mod: src/MiniPlayer.jsx (auto-play on first mount)
+```
+
+---
+
 ## What's NOT Done Yet (Future Polish)
 - Volumetric clouds (exp-010 proven but 44 FPS — needs half-res + TAAU for production)
 - Billboard clouds (ghibli painterly)

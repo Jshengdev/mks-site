@@ -11,13 +11,35 @@ import { useRef, useEffect, useState, useCallback } from 'react'
 import { useWorld } from '../WorldContext.jsx'
 import './EntryPage.css'
 
-// 4-tone palette — botanical specimen aesthetic
-const PALETTE = [
+// 4-tone palette — dark monochrome base (pre-bloom)
+const PALETTE_MONO = [
   [0x11, 0x11, 0x10], // darkest
   [0x54, 0x52, 0x50], // dark mid
   [0xa8, 0xa8, 0xa4], // light mid
   [0xed, 0xed, 0xea], // lightest
 ]
+
+// Golden palette — warm amber tones (post-bloom, earned warmth)
+const PALETTE_GOLD = [
+  [0x1a, 0x12, 0x08], // warm black
+  [0x8a, 0x6a, 0x2a], // dark amber
+  [0xd4, 0xc9, 0x68], // amber (--amber from design system)
+  [0xf0, 0xe8, 0xc8], // warm cream
+]
+
+// Lerp between two palettes
+function lerpPalette(t) {
+  return PALETTE_MONO.map((mono, i) => {
+    const gold = PALETTE_GOLD[i]
+    return [
+      Math.round(mono[0] + (gold[0] - mono[0]) * t),
+      Math.round(mono[1] + (gold[1] - mono[1]) * t),
+      Math.round(mono[2] + (gold[2] - mono[2]) * t),
+    ]
+  })
+}
+
+let PALETTE = PALETTE_MONO
 
 // Bayer 4x4 dither matrix (normalized 0-1)
 const BAYER_4 = [
@@ -96,6 +118,8 @@ export default function EntryPage() {
   const timeRef = useRef(0)
   const [dissolving, setDissolving] = useState(false)
   const dissolveRef = useRef(0)
+  const bloomRef = useRef(0) // 0→1 color bloom (gold appears)
+  const openRef = useRef(0) // 0→1 petal opening
   const { completeEntry } = useWorld()
 
   const handleEnter = useCallback(() => {
@@ -103,16 +127,42 @@ export default function EntryPage() {
     setDissolving(true)
   }, [dissolving])
 
-  // Dissolve animation → complete entry
+  // Bloom sequence: petals open + color blooms → then dissolve → enter
   useEffect(() => {
     if (!dissolving) return
     const start = performance.now()
-    const duration = 1200
+    const bloomDuration = 800  // color + open
+    const holdDuration = 400   // hold at full gold
+    const dissolveDuration = 800 // dissolve to world
+    const total = bloomDuration + holdDuration + dissolveDuration
 
     const animate = (now) => {
-      const t = Math.min(1, (now - start) / duration)
-      dissolveRef.current = t
-      if (t < 1) {
+      const elapsed = now - start
+
+      // Phase 1: Bloom color + open petals (0-800ms)
+      if (elapsed < bloomDuration) {
+        const t = elapsed / bloomDuration
+        const eased = t * t * (3 - 2 * t) // smoothstep
+        bloomRef.current = eased
+        openRef.current = eased
+        PALETTE = lerpPalette(eased)
+      }
+      // Phase 2: Hold at full gold (800-1200ms)
+      else if (elapsed < bloomDuration + holdDuration) {
+        bloomRef.current = 1
+        openRef.current = 1
+        PALETTE = PALETTE_GOLD
+      }
+      // Phase 3: Dissolve to world (1200-2000ms)
+      else {
+        const t = (elapsed - bloomDuration - holdDuration) / dissolveDuration
+        bloomRef.current = 1
+        openRef.current = 1
+        dissolveRef.current = Math.min(1, t)
+        PALETTE = PALETTE_GOLD
+      }
+
+      if (elapsed < total) {
         requestAnimationFrame(animate)
       } else {
         completeEntry()
@@ -162,9 +212,11 @@ export default function EntryPage() {
       const mx = mouseRef.current.x
       const my = mouseRef.current.y
       const dissolve = dissolveRef.current
+      const bloomOpen = openRef.current
 
-      // Clear to darkest palette color
-      ctx.fillStyle = '#111110'
+      // Clear to darkest palette color (shifts warm during bloom)
+      const bg = PALETTE[0]
+      ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`
       ctx.fillRect(0, 0, w, h)
 
       // Center of canvas in pixel coords
@@ -172,9 +224,10 @@ export default function EntryPage() {
       const centerY = h * 0.45 // slightly above center
       const flowerScale = Math.min(w, h) * 0.8
 
-      // Breathing animation
-      const breathe = 1 + Math.sin(t * 0.8) * 0.015
-      const flutter = Math.sin(t * 1.2) * 0.02
+      // Breathing animation + bloom opening
+      const bloomScale = 1 + bloomOpen * 0.25 // petals grow 25% during bloom
+      const breathe = (1 + Math.sin(t * 0.8) * 0.015) * bloomScale
+      const flutter = Math.sin(t * 1.2) * 0.02 + bloomOpen * 0.15 // petals spread apart
 
       // === LAYER 0: Stem ===
       const stemParallax = PARALLAX_DEPTHS[0]
@@ -183,7 +236,8 @@ export default function EntryPage() {
 
       ctx.save()
       ctx.translate(stemOffX, stemOffY)
-      ctx.strokeStyle = '#545250'
+      const midColor = PALETTE[1]
+      ctx.strokeStyle = `rgb(${midColor[0]},${midColor[1]},${midColor[2]})`
       ctx.lineWidth = Math.max(1, w * 0.004)
       ctx.beginPath()
       const stemTopY = centerY + seed.centerRadius * flowerScale * 0.5
@@ -223,11 +277,13 @@ export default function EntryPage() {
       // Draw back petals (every other petal)
       for (let i = 0; i < seed.petalCount; i += 2) {
         const angle = (i / seed.petalCount) * Math.PI * 2 - Math.PI * 0.5
-        ctx.fillStyle = '#a8a8a4'
+        const backPetalColor = PALETTE[2]
+        ctx.fillStyle = `rgb(${backPetalColor[0]},${backPetalColor[1]},${backPetalColor[2]})`
         drawPetal(ctx, 0, 0, angle, seed.petalLength * flowerScale, seed.petalWidth * flowerScale, seed.petalCurve, 1.0)
         ctx.fill()
         // Darker edge
-        ctx.strokeStyle = '#545250'
+        const edgeColor = PALETTE[1]
+        ctx.strokeStyle = `rgb(${edgeColor[0]},${edgeColor[1]},${edgeColor[2]})`
         ctx.lineWidth = Math.max(1, w * 0.002)
         ctx.stroke()
       }
@@ -246,10 +302,12 @@ export default function EntryPage() {
 
       for (let i = 1; i < seed.petalCount; i += 2) {
         const angle = (i / seed.petalCount) * Math.PI * 2 - Math.PI * 0.5
-        ctx.fillStyle = '#ededed'
+        const frontPetalColor = PALETTE[3]
+        ctx.fillStyle = `rgb(${frontPetalColor[0]},${frontPetalColor[1]},${frontPetalColor[2]})`
         drawPetal(ctx, 0, 0, angle, seed.petalLength * flowerScale * 0.95, seed.petalWidth * flowerScale, seed.petalCurve, 1.0)
         ctx.fill()
-        ctx.strokeStyle = '#a8a8a4'
+        const frontEdge = PALETTE[2]
+        ctx.strokeStyle = `rgb(${frontEdge[0]},${frontEdge[1]},${frontEdge[2]})`
         ctx.lineWidth = Math.max(1, w * 0.002)
         ctx.stroke()
       }
@@ -266,12 +324,14 @@ export default function EntryPage() {
       // Center disk
       ctx.beginPath()
       ctx.arc(centerX, centerY, cr, 0, Math.PI * 2)
-      ctx.fillStyle = '#545250'
+      const centerColor = PALETTE[1]
+      ctx.fillStyle = `rgb(${centerColor[0]},${centerColor[1]},${centerColor[2]})`
       ctx.fill()
       // Inner ring
       ctx.beginPath()
       ctx.arc(centerX, centerY, cr * 0.6, 0, Math.PI * 2)
-      ctx.fillStyle = '#111110'
+      const innerColor = PALETTE[0]
+      ctx.fillStyle = `rgb(${innerColor[0]},${innerColor[1]},${innerColor[2]})`
       ctx.fill()
       ctx.restore()
 
@@ -289,7 +349,8 @@ export default function EntryPage() {
         const sy = centerY + Math.sin(angle) * stLen
         ctx.beginPath()
         ctx.arc(sx, sy, Math.max(1, w * 0.003), 0, Math.PI * 2)
-        ctx.fillStyle = '#a8a8a4'
+        const stamenColor = PALETTE[2]
+        ctx.fillStyle = `rgb(${stamenColor[0]},${stamenColor[1]},${stamenColor[2]})`
         ctx.fill()
       }
       ctx.restore()
@@ -303,12 +364,14 @@ export default function EntryPage() {
       ctx.translate(tOffX, tOffY)
       // Artist name
       ctx.font = `${Math.floor(w * 0.025)}px "Cormorant Garamond", Georgia, serif`
-      ctx.fillStyle = '#a8a8a4'
+      const nameColor = PALETTE[2]
+      ctx.fillStyle = `rgb(${nameColor[0]},${nameColor[1]},${nameColor[2]})`
       ctx.textAlign = 'center'
       ctx.fillText('Michael Kim-Sheng', centerX, h * 0.82)
       // Subtitle
       ctx.font = `italic ${Math.floor(w * 0.015)}px "DM Sans", sans-serif`
-      ctx.fillStyle = '#545250'
+      const subColor = PALETTE[1]
+      ctx.fillStyle = `rgb(${subColor[0]},${subColor[1]},${subColor[2]})`
       ctx.fillText('composer', centerX, h * 0.86)
       ctx.restore()
 
