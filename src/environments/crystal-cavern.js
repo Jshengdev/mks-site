@@ -236,7 +236,7 @@ export default {
     // Camera descends into the earth
     // Start: cavern entrance, looking down
     // End: crystal cathedral at the bottom, surrounded
-    heightOffset: 1.5,
+    heightOffset: 1.0,        // LOW — deep underground
     dampingFactor: 1.0,        // smooth, deliberate — you CHOOSE to go deeper
     fov: 42,                   // slightly narrow — intimate, focused
     controlPoints: [
