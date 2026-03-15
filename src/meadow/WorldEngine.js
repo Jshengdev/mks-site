@@ -14,6 +14,8 @@ import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
 import AtmosphereController, { MEADOW_KEYFRAMES } from './AtmosphereController.js'
 import { NIGHT_MEADOW_KEYFRAMES } from './NightMeadowKeyframes.js'
+import { OCEAN_CLIFF_KEYFRAMES } from './OceanCliffKeyframes.js'
+import StylizedOcean from './StylizedOcean.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
@@ -136,6 +138,12 @@ export default class WorldEngine {
     // ─── Terrain (always — color from config) ───
     this.terrain = createTerrain(this.scene, envConfig)
 
+    // ─── Stylized ocean (conditional) ───
+    this.ocean = null
+    if (envConfig.ocean?.enabled) {
+      this.ocean = new StylizedOcean(this.scene, envConfig.ocean)
+    }
+
     // ─── Cloud shadows (optional) ───
     this.cloudShadows = new CloudShadows(this.scene)
 
@@ -176,6 +184,7 @@ export default class WorldEngine {
     const KEYFRAME_MAP = {
       'golden-meadow': MEADOW_KEYFRAMES,
       'night-meadow': NIGHT_MEADOW_KEYFRAMES,
+      'ocean-cliff': OCEAN_CLIFF_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
@@ -274,6 +283,7 @@ export default class WorldEngine {
     const camPos = this.cameraRig.getPosition()
 
     this.cloudShadows.update(animElapsed)
+    this.ocean?.update(animElapsed)
     this.grassManager?.update(camPos, animElapsed)
     this.fireflies?.update(animElapsed)
     this.flowers?.update(animElapsed)
@@ -361,6 +371,7 @@ export default class WorldEngine {
       fireflies: this.fireflies,
       flowers: this.flowers,
       cloudShadows: this.cloudShadows,
+      ocean: this.ocean,
       atmosphere: this.atmosphere,
       musicTrigger: this.musicTrigger,
       scoreSheets: this.scoreSheets,
@@ -394,6 +405,7 @@ export default class WorldEngine {
     this.dustMotes?.dispose()
     this.godRayPass?.dispose()
     this.starField?.dispose()
+    this.ocean?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
