@@ -54,6 +54,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.25, // REMEMBRANCE — fireflies stir, memories surface
@@ -102,6 +106,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.50, // GRIEF — peak emotion, fireflies everywhere like tears of light
@@ -150,6 +158,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.75, // PEACE — ground-level among fireflies, the intimate peak
@@ -200,6 +212,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dofBokehScale: 3.5,      // moderate bokeh — fireflies become soft orbs
     splitToneWarm: [0.93, 0.75, 0.50],   // amber warmth from firefly proximity
     splitToneCool: [0.80, 0.78, 0.90],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed
@@ -248,5 +264,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
 ]

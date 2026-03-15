@@ -9,7 +9,7 @@ import './DevTuner.css'
 function buildParamGroups(api) {
   if (!api) return []
 
-  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets } = api
+  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets, ocean } = api
   const sky = sceneSetup?.sky
   const sunLight = sceneSetup?.sunLight
   const fogDepth = postProcessing.fogDepth
@@ -312,6 +312,60 @@ function buildParamGroups(api) {
         },
       ],
     },
+    // ─── Ocean (stylized water — exp-007, 47/70) ───
+    ...(ocean ? [{
+      id: 'ocean',
+      title: 'Ocean',
+      badge: 'live',
+      params: [
+        {
+          key: 'oceanFoamBrightness', label: 'Foam Brightness',
+          min: 0, max: 1.5, step: 0.05,
+          get: () => ocean.material.uniforms.uFoamBrightness.value,
+          set: v => { ocean.material.uniforms.uFoamBrightness.value = v },
+        },
+        {
+          key: 'oceanWaveLineIntensity', label: 'Wave Lines',
+          min: 0, max: 1.5, step: 0.05,
+          get: () => ocean.material.uniforms.uWaveLineIntensity.value,
+          set: v => { ocean.material.uniforms.uWaveLineIntensity.value = v },
+        },
+        {
+          key: 'oceanFoamFreq', label: 'Foam Frequency',
+          min: 0.5, max: 8, step: 0.1,
+          get: () => ocean.material.uniforms.uFoamFreq.value,
+          set: v => { ocean.material.uniforms.uFoamFreq.value = v },
+        },
+        {
+          key: 'oceanWaveLineThreshold', label: 'Wave Threshold',
+          min: 0.1, max: 0.9, step: 0.01,
+          get: () => ocean.material.uniforms.uWaveLineThreshold.value,
+          set: v => { ocean.material.uniforms.uWaveLineThreshold.value = v },
+        },
+        {
+          key: 'oceanBobSpeed', label: 'Bob Speed',
+          min: 0, max: 5, step: 0.1,
+          get: () => ocean.material.uniforms.uBobSpeed.value,
+          set: v => { ocean.material.uniforms.uBobSpeed.value = v },
+        },
+        {
+          key: 'oceanBobAmplitude', label: 'Bob Amplitude',
+          min: 0, max: 0.5, step: 0.01,
+          get: () => ocean.material.uniforms.uBobAmplitude.value,
+          set: v => { ocean.material.uniforms.uBobAmplitude.value = v },
+        },
+        {
+          key: 'oceanColorNear', label: 'Near Color', type: 'color',
+          get: () => '#' + ocean.material.uniforms.uColorNear.value.getHexString(),
+          set: v => { ocean.material.uniforms.uColorNear.value.set(v) },
+        },
+        {
+          key: 'oceanColorFar', label: 'Far Color', type: 'color',
+          get: () => '#' + ocean.material.uniforms.uColorFar.value.getHexString(),
+          set: v => { ocean.material.uniforms.uColorFar.value.set(v) },
+        },
+      ],
+    }] : []),
     // ─── God Rays (GPU Gems 3 radial blur) ───
     ...(godRayPass ? [{
       id: 'godrays',

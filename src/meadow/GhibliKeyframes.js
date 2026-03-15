@@ -60,6 +60,10 @@ export const GHIBLI_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.25, // IMMERSION — world warming, colors intensifying, strokes bolder
@@ -108,6 +112,10 @@ export const GHIBLI_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.50, // RADIANCE — beautiful but NOT the peak, still building
@@ -156,6 +164,10 @@ export const GHIBLI_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.75, // TRANSFIGURATION — the fall begins, but light INTENSIFIES
@@ -205,6 +217,10 @@ export const GHIBLI_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 1.0, // TRANSCENDENCE — "his life has NEVER felt brighter" — THE PEAK
@@ -256,5 +272,9 @@ export const GHIBLI_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
 ]

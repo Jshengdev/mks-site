@@ -9,6 +9,8 @@ uniform vec3 uColorFar;    // 0x050d1a deep midnight
 uniform float uFoamFreq;   // textureSize * 2.8
 uniform vec2 uFoamThreshold; // smoothstep(0.08, 0.001)
 uniform float uWaveLineThreshold; // 0.6
+uniform float uFoamBrightness;    // 0-1 foam visibility (atmosphere-driven)
+uniform float uWaveLineIntensity;  // 0-1 wave line visibility (atmosphere-driven)
 
 varying vec2 vUv;
 varying vec3 vWorldPos;
@@ -112,13 +114,13 @@ void main() {
   float waveLine = smoothstep(lineThreshold - 0.02, lineThreshold, noise)
                  * (1.0 - smoothstep(lineThreshold, lineThreshold + 0.02, noise));
 
-  // Compose — foam is bright, wave lines are subtle
+  // Compose — foam and wave line intensity driven by atmosphere uniforms
   vec3 foamColor = vec3(0.6, 0.7, 0.8); // cool white foam
   vec3 lineColor = mix(baseColor, vec3(0.3, 0.4, 0.5), 0.5);
 
   vec3 color = baseColor;
-  color = mix(color, foamColor, foam * 0.4);
-  color = mix(color, lineColor, waveLine * 0.3);
+  color = mix(color, foamColor, foam * 0.4 * uFoamBrightness);
+  color = mix(color, lineColor, waveLine * 0.3 * uWaveLineIntensity);
 
   // Apply depth darkening
   color *= depthFade * 0.8 + 0.2;

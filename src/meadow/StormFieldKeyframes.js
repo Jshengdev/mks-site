@@ -56,6 +56,10 @@ export const STORM_FIELD_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.25, // PURSUIT — running now, wind howling, rain intensifying
@@ -104,6 +108,10 @@ export const STORM_FIELD_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.50, // TEMPEST — peak storm, maximum darkness and wind
@@ -152,6 +160,10 @@ export const STORM_FIELD_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.75, // BREAK — storm begins to crack, first rays of hope
@@ -200,6 +212,10 @@ export const STORM_FIELD_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 1.0, // REVELATION — you found what you were searching for
@@ -248,5 +264,9 @@ export const STORM_FIELD_KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
 ]

@@ -119,6 +119,10 @@ const KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
@@ -166,6 +170,10 @@ const KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 0.75, // DEEPENING — The Hidden Sun revealed, peak emotional climax
@@ -214,6 +222,10 @@ const KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
@@ -261,6 +273,10 @@ const KEYFRAMES = [
     dofBokehScale: 3.0,
     splitToneWarm: [0.925, 0.706, 0.518],
     splitToneCool: [0.831, 0.769, 0.894],
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   },
 ]
 
@@ -285,6 +301,7 @@ export default class AtmosphereController {
     this.starField = null
     this.rain = null
     this.petals = null
+    this.ocean = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -463,6 +480,22 @@ export default class AtmosphereController {
     // ─── Petals (ghibli painterly) ───
     if (this.petals && c.petalBrightness !== undefined) {
       this.petals.setBrightness(c.petalBrightness)
+    }
+
+    // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───
+    if (this.ocean) {
+      if (c.oceanColorNear) {
+        this.ocean.setColorNear(c.oceanColorNear[0], c.oceanColorNear[1], c.oceanColorNear[2])
+      }
+      if (c.oceanColorFar) {
+        this.ocean.setColorFar(c.oceanColorFar[0], c.oceanColorFar[1], c.oceanColorFar[2])
+      }
+      if (c.oceanFoamBrightness !== undefined) {
+        this.ocean.setFoamBrightness(c.oceanFoamBrightness)
+      }
+      if (c.oceanWaveLineIntensity !== undefined) {
+        this.ocean.setWaveLineIntensity(c.oceanWaveLineIntensity)
+      }
     }
 
   }

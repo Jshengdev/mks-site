@@ -22,6 +22,8 @@ export default class StylizedOcean {
         uWaveLineThreshold: { value: config.waveLineThreshold ?? 0.6 },
         uBobAmplitude: { value: config.bobAmplitude ?? 0.1 },
         uBobSpeed: { value: config.bobSpeed ?? 1.2 },
+        uFoamBrightness: { value: config.foamBrightness ?? 1.0 },
+        uWaveLineIntensity: { value: config.waveLineIntensity ?? 1.0 },
       },
       vertexShader,
       fragmentShader,
@@ -38,6 +40,22 @@ export default class StylizedOcean {
 
   update(elapsed) {
     this.material.uniforms.uTime.value = elapsed
+  }
+
+  setColorNear(r, g, b) {
+    this.material.uniforms.uColorNear.value.setRGB(r, g, b)
+  }
+
+  setColorFar(r, g, b) {
+    this.material.uniforms.uColorFar.value.setRGB(r, g, b)
+  }
+
+  setFoamBrightness(v) {
+    this.material.uniforms.uFoamBrightness.value = v
+  }
+
+  setWaveLineIntensity(v) {
+    this.material.uniforms.uWaveLineIntensity.value = v
   }
 
   dispose() {

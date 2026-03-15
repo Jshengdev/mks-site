@@ -1,5 +1,68 @@
 # Implement Log
 
+## 2026-03-15: Stylized Water Atmosphere Integration (47/70)
+
+**Winner:** exp-007 — Stylized water with cartoon foam (atmosphere-driven)
+**Score:** 47/70 (top feasible unintegrated winner)
+**Target World:** Ocean Cliff ("Peaceful Heartache")
+**Performance Cost:** Zero — pure uniform updates, no new draw calls or textures
+
+### What Was Integrated
+
+**1. Atmosphere-driven ocean color and foam (was static)**
+- `ocean.frag.glsl` — 2 new uniforms: `uFoamBrightness`, `uWaveLineIntensity`
+- Foam brightness and wave line intensity now modulated by atmosphere keyframes
+- Previously hardcoded at `foam * 0.4` and `waveLine * 0.3`; now `foam * 0.4 * uFoamBrightness` and `waveLine * 0.3 * uWaveLineIntensity`
+
+**2. StylizedOcean setter methods**
+- `setColorNear(r,g,b)`, `setColorFar(r,g,b)`, `setFoamBrightness(v)`, `setWaveLineIntensity(v)`
+- Clean API for AtmosphereController to drive water appearance per-frame
+
+**3. AtmosphereController ocean wiring**
+- `this.ocean` property added to optional subsystems
+- `_pushToSubsystems()` now drives ocean color, foam brightness, and wave line intensity
+- Ocean subsystem wired in WorldEngine: `this.atmosphere.ocean = this.ocean`
+
+**4. Ocean Cliff keyframe emotional arc**
+- 4 new params per keyframe: `oceanColorNear[3]`, `oceanColorFar[3]`, `oceanFoamBrightness`, `oceanWaveLineIntensity`
+- ARRIVAL (t=0): foam 0.3, waves 0.2 — fog obscures, barely visible
+- RECOGNITION (t=0.25): foam 0.6, waves 0.5 — patterns emerging
+- CONTEMPLATION (t=0.50): foam 1.0, waves 0.8 — full reveal, "the infinite ocean"
+- UNDERSTANDING (t=0.75): foam 0.8, waves 0.7 — beauty in sadness
+- RELEASE (t=1.0): foam 0.2, waves 0.15 — fog swallows the patterns
+
+**5. DevTuner Ocean section (8 sliders)**
+- Foam Brightness (0–1.5), Wave Lines (0–1.5), Foam Frequency (0.5–8)
+- Wave Threshold (0.1–0.9), Bob Speed (0–5), Bob Amplitude (0–0.5)
+- Near Color picker, Far Color picker
+
+**6. Default ocean params in all keyframe files**
+- All non-ocean worlds get `oceanFoamBrightness: 0` defaults
+- Prevents NaN in interpolation when PARAM_KEYS includes ocean params
+
+### Files Modified (9 files)
+
+| File | Change |
+|------|--------|
+| `src/meadow/shaders/ocean.frag.glsl` | 2 new uniforms: `uFoamBrightness`, `uWaveLineIntensity` |
+| `src/meadow/StylizedOcean.js` | 2 new uniforms + 4 setter methods |
+| `src/meadow/AtmosphereController.js` | `this.ocean` property + ocean push in `_pushToSubsystems()` + ocean defaults in MEADOW_KEYFRAMES |
+| `src/meadow/WorldEngine.js` | Wire `this.atmosphere.ocean = this.ocean` + ocean defaults in `staticAtmosphereFromConfig` |
+| `src/meadow/OceanCliffKeyframes.js` | 4 ocean params across 5 keyframes (emotional arc) |
+| `src/meadow/NightMeadowKeyframes.js` | Default ocean values (zeros) |
+| `src/meadow/StormFieldKeyframes.js` | Default ocean values (zeros) |
+| `src/meadow/GhibliKeyframes.js` | Default ocean values (zeros) |
+| `src/DevTuner.jsx` | Ocean section: 6 sliders + 2 color pickers |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- Volumetric Cumulus 3D Noise (49/70) → Storm Field (3-4 hrs, needs worker thread)
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+
+---
+
 ## 2026-03-15: Ocean Cliff DOF v3 + Split-Tone (61/70)
 
 **Winner:** exp-022 — Intimate DOF v3 config + split-tone color grading

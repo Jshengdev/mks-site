@@ -56,6 +56,11 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     // Split-tone — no warmth yet, approaching the cliff
     splitToneWarm: [0.95, 0.78, 0.50],   // amber (warm shadows)
     splitToneCool: [0.65, 0.78, 0.95],   // steel-blue (cool highlights)
+    // Ocean (exp-007, 47/70) — fog obscures, barely visible
+    oceanColorNear: [0.04, 0.18, 0.24],  // dark teal, half-hidden
+    oceanColorFar: [0.02, 0.05, 0.10],   // deep midnight
+    oceanFoamBrightness: 0.3,            // foam barely visible through fog
+    oceanWaveLineIntensity: 0.2,         // wave lines suppressed
   },
   {
     t: 0.25, // RECOGNITION — the ocean comes into view, vastness registers
@@ -106,6 +111,11 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     // Split-tone — first hint of warmth
     splitToneWarm: [0.95, 0.78, 0.50],
     splitToneCool: [0.65, 0.78, 0.95],
+    // Ocean — the ocean comes into view, patterns emerge
+    oceanColorNear: [0.04, 0.22, 0.30],  // teal brightening
+    oceanColorFar: [0.02, 0.08, 0.14],   // deep blue
+    oceanFoamBrightness: 0.6,            // foam dots emerging
+    oceanWaveLineIntensity: 0.5,         // wave lines appearing
   },
   {
     t: 0.50, // CONTEMPLATION — beside the figure, looking at the horizon together
@@ -156,6 +166,11 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     // Split-tone peak — warm amber shadows at 15%, cool blue highlights
     splitToneWarm: [0.95, 0.78, 0.50],
     splitToneCool: [0.65, 0.78, 0.95],
+    // Ocean peak — full visibility, the infinite ocean
+    oceanColorNear: [0.06, 0.28, 0.36],  // brightest teal — the ocean you can't name
+    oceanColorFar: [0.02, 0.10, 0.16],   // midnight blue
+    oceanFoamBrightness: 1.0,            // full foam — the feeling reveals itself
+    oceanWaveLineIntensity: 0.8,         // breathing wave lines at their clearest
   },
   {
     t: 0.75, // UNDERSTANDING — the goodbye becomes real, beauty in the sadness
@@ -206,6 +221,11 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     // Split-tone sustained
     splitToneWarm: [0.95, 0.78, 0.50],
     splitToneCool: [0.65, 0.78, 0.95],
+    // Ocean sustained — beauty in the sadness
+    oceanColorNear: [0.05, 0.24, 0.32],  // slightly dimmer
+    oceanColorFar: [0.02, 0.08, 0.14],
+    oceanFoamBrightness: 0.8,            // foam softening
+    oceanWaveLineIntensity: 0.7,         // wave lines sustained
   },
   {
     t: 1.0, // RELEASE — letting go, the horizon dissolves into darkness
@@ -256,5 +276,10 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     // Split-tone fading — warmth dissolving
     splitToneWarm: [0.95, 0.78, 0.50],
     splitToneCool: [0.65, 0.78, 0.95],
+    // Ocean dissolving — fog swallows the patterns
+    oceanColorNear: [0.03, 0.14, 0.20],  // darkening
+    oceanColorFar: [0.01, 0.04, 0.08],   // near-black
+    oceanFoamBrightness: 0.2,            // foam fading to nothing
+    oceanWaveLineIntensity: 0.15,        // wave lines dissolving
   },
 ]

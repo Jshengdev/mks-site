@@ -88,6 +88,10 @@ function staticAtmosphereFromConfig(env) {
     starBrightness: env.sky?.stars?.enabled ? 1.0 : 0.0,
     rainBrightness: particles.rain?.enabled ? 0.7 : 0.0,
     petalBrightness: particles.petals?.enabled ? 0.8 : 0.0,
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
   }
 
   return [
@@ -307,6 +311,7 @@ export default class WorldEngine {
     this.atmosphere.starField = this.starField
     this.atmosphere.rain = this.rain
     this.atmosphere.petals = this.petals
+    this.atmosphere.ocean = this.ocean
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
