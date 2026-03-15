@@ -1,5 +1,63 @@
 # Implement Log
 
+## 2026-03-15: Ocean Cliff exp-082 V5 Composite — 7-Dimensional Dissolution (67/70)
+
+**Winner:** exp-082 V5 — Ocean vividity arc + star emergence + wind death + multi-dimensional dissolution
+**Score:** 67/70 weighted average (+2.8 over exp-081 V5 at 64.8). P3+P4 reach 70/70. P5: 65 (+11 over baseline 54).
+**Target World:** Ocean Cliff ("Peaceful Heartache")
+**Performance Cost:** Zero — pure keyframe value changes
+
+### What Was Integrated
+
+**1. Ocean vividity arc — "the feeling reveals itself, then dissolves"**
+- ARRIVAL: oceanColorNear darkened [0.03,0.14,0.20], foam 0.15, waveLines 0.1 (hidden in fog)
+- RECOGNITION: teal brightening [0.05,0.26,0.34], foam 0.70, waveLines 0.6
+- CONTEMPLATION: PEAK teal [0.08,0.34,0.44], waveLines 0.95 (the feeling at its most vivid)
+- UNDERSTANDING: sustained [0.06,0.28,0.36], foam 0.75, waveLines 0.65
+- RELEASE: nearly BLACK [0.01,0.06,0.10], foam 0.05, waveLines 0.03 (feeling dissolves to nothing)
+
+**2. Star emergence + fade — "truths visible only in darkness"**
+- ARRIVAL: 0.20 (fewer visible, dusk), CONTEMPLATION: 0.80 (sky opening)
+- UNDERSTANDING: **0.95** (PEAK — truths revealed as the goodbye becomes real)
+- RELEASE: **0.35** (even the truths go dark)
+- Star-bokeh synergy at UNDERSTANDING: stars at 0.95 through DOF bokeh 7.0 = pentagon-shaped star-glow
+
+**3. Wind alive→dead — "the world's breath"**
+- ARRIVAL: grassWindSpeed 0.20, waveWindStrength 0.06 (barely any breeze)
+- CONTEMPLATION: grassWindSpeed **0.60**, waveWindStrength **0.28** (PEAK — alive with someone)
+- waveWindDirX: 0.0→0.1→**0.3**→0.15→0.0 ("even the direction of things changes")
+- RELEASE: grassWindSpeed **0.08**, waveWindStrength **0.02** (no more sea breeze)
+
+**4. 7-dimensional sensory dissolution at RELEASE (t=1.0)**
+Each dimension of visual reality removed separately:
+- **SPATIAL:** DOF focus 50, bokeh 8.0 (can't see details — exp-081 V5)
+- **COLOR:** vibrance 0.08→0.03 (world goes gray)
+- **TONAL:** contrast 0.03→0.01 (darks and lights merge)
+- **DEPTH:** fogDensity 0.012→0.015 (horizon swallowed)
+- **PERIPHERAL:** vignetteDarkness 0.75→0.82 (tunnel closing)
+- **TEMPORAL:** wind death (grassWindSpeed 0.08, waveWindStrength 0.02)
+- **MATERIAL:** grainOpacity 0.06→0.08 (film/memory degrading)
+- **LUMINOUS:** bloomIntensity 0.08→0.04, threshold 0.90→0.92 (glow extinguished)
+
+### Key Insight from exp-082 V5
+"P4 UNDERSTANDING reaches 70 — star-bokeh synergy. Stars at 0.95 viewed through DOF bokeh 7.0 = pentagon-shaped star-glow surrounding the goodbye. Neither technique achieves this alone. P3 CONTEMPLATION reaches 70 — ocean at peak teal + wind alive + stars overhead. The moment of being WITH someone is the most ALIVE the world ever is."
+
+### Files Modified (1 file)
+
+| File | Change |
+|------|--------|
+| `src/meadow/OceanCliffKeyframes.js` | exp-082 V5 dissolution values + header comment update |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- Volumetric Cumulus 3D Noise (49/70) → Storm Field (3-4 hrs, needs worker thread)
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+- NPR cross-hatching portal transitions (spite/cross-hatching extraction, +2 estimated)
+
+---
+
 ## 2026-03-15: Ocean Cliff V5 RELEASE Unlock + Ocean Interpolation Fix (64.8/70)
 
 **Winner:** exp-081 V5 — Composite Optimum RELEASE keyframe (extreme DOF dissolve + teal-touched amber)
