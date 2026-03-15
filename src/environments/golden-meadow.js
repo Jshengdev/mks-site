@@ -75,7 +75,7 @@ export default {
     toneMapping: 'ACES_FILMIC',
     kuwahara: { enabled: false },
     godRays: { enabled: true },
-    dof: { enabled: false },
+    dof: { enabled: true },  // exp-082: DOF narrative arc (dream→awakening→intimate→memory)
     ssao: { enabled: true },
   },
 

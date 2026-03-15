@@ -703,11 +703,51 @@ mod: src/MiniPlayer.jsx (auto-play on first mount)
 
 ---
 
+## Step 13: Wave Wind Integration — COMPLETE
+
+### What Was Done
+
+Wired the existing wave wind shader uniforms (`uWaveWindDir`, `uWaveWindSpeed`, `uWaveWindStrength` in `grass.vert.glsl`) into the AtmosphereController scroll-driven keyframe system. The uniforms were already declared in `GrassChunkManager.js` material but never driven by atmosphere keyframes — they sat at static defaults.
+
+#### Per-World Wave Wind Design
+
+| World | Peak Strength | Speed | Direction | Feel |
+|-------|--------------|-------|-----------|------|
+| Golden Meadow | 0.3 | 0.6 | 45° diagonal | Gentle rolling swells |
+| Storm Field | 1.5 | 1.5 | Shifting (~25°→~64°) | Violent, grass flattened |
+| Night Meadow | 0.05 | 0.15 | 45° diagonal | Barely a whisper |
+| Ocean Cliff | 0.2 | 0.5 | From ocean (0°,1°) | Consistent sea breeze |
+| Ghibli Painterly | 0.35 | 0.8 | 37° (~0.6, 0.8) | Whimsical, flowing |
+
+- Storm Field wind direction shifts during TEMPEST (0.8,0.6 → 0.9,0.44 → back) for directional chaos
+- Golden Meadow strength ramps STILLNESS(0) → ALIVE(0.3) → DEEPENING(0.3) → QUIETING(0.1)
+- Night Meadow wave wind nearly zero — the stillness is the point
+
+#### Implementation
+- Added `waveWindDirX`, `waveWindDirY`, `waveWindSpeed`, `waveWindStrength` to all 5 keyframes in all 5 keyframe sets
+- Added push logic in `_pushToSubsystems()` using `setUniform()` (propagates to base + all chunk clones)
+- Added reusable `_waveWindDir` Vector2 in constructor (no per-frame allocations)
+
+### Files Changed (Step 13)
+```
+mod: src/meadow/AtmosphereController.js (wave wind params in KEYFRAMES + push logic + reusable Vector2)
+mod: src/meadow/StormFieldKeyframes.js (violent wave wind, shifting direction)
+mod: src/meadow/NightMeadowKeyframes.js (whisper-level wave wind)
+mod: src/meadow/OceanCliffKeyframes.js (sea breeze wave wind)
+mod: src/meadow/GhibliKeyframes.js (whimsical wave wind)
+```
+
+### Build Status
+- `npx vite build` passes (125 modules, ~1.9s)
+- Chunk size warning expected (Three.js)
+
+---
+
 ## What's NOT Done Yet (Future Polish)
 - Volumetric clouds (exp-010 proven but 44 FPS — needs half-res + TAAU for production)
 - Billboard clouds (ghibli painterly)
 - Full 3-pass anisotropic Kuwahara (tensor pass → kuwahara pass → composite — current is single-pass 8-sector)
-- Wave-like grass wind (directional coherence for storm)
+- ~~Wave-like grass wind (directional coherence for storm)~~ → DONE (Step 13)
 - Bezier flower geometry (glflower reference)
 - Full dual-engine transition integration with EnvironmentScene
 - .glb model assets (seated figure, walking figure, cliff geometry)

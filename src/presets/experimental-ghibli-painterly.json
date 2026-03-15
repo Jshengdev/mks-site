@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "exported": "2026-03-15T00:00:00.000Z",
+    "preset": "Ghibli Painterly — EXPERIMENTAL WILD",
+    "source": "exp-057 Voronoi-kintsugi golden cracks (73/70), exp-056 Marey-temporal accumulation, exp-074 Fourier heat diffusion, exp-067 wavefunction-collapse camera",
+    "notes": "KINTSUGI archetype — golden cracks appear through the painted surface where the world is 'breaking.' Pushes Kuwahara to maximum painterly (kernel 8), god rays to 1.5, bloom to 1.5. Vibrance at 1.5 = 'impossible colors' that feel more real than reality. The painting is aging — grain at 0.12 = watercolor paper texture.",
+    "locked": ["kuwaharaStrength", "kuwaharaKernel", "bloomIntensity", "bloomThreshold", "godrayIntensity", "cgVibrance", "grainIntensity", "ambientIntensity", "toneMappingExposure"]
+  },
+  "navigation": {
+    "scrollPosition": { "value": 1.0, "locked": true }
+  },
+  "renderer": {
+    "toneMappingExposure": { "value": 1.6, "locked": true }
+  },
+  "sky": {
+    "turbidity": { "value": 3.0, "locked": false },
+    "rayleigh": { "value": 2.5, "locked": false },
+    "mieCoefficient": { "value": 0.018, "locked": false },
+    "mieDirectionalG": { "value": 0.92, "locked": false },
+    "sunElevation": { "value": 3, "locked": false },
+    "sunIntensity": { "value": 2.8, "locked": false },
+    "ambientIntensity": { "value": 0.65, "locked": true }
+  },
+  "fog": {
+    "fogDensity": { "value": 0.005, "locked": false },
+    "fogColor": { "value": "#804d1f", "locked": false }
+  },
+  "postfx": {
+    "bloomIntensity": { "value": 1.8, "locked": true },
+    "bloomThreshold": { "value": 0.22, "locked": true },
+    "bloomSmoothing": { "value": 0.8, "locked": false },
+    "caDistortion": { "value": 0.18, "locked": false },
+    "vignetteDarkness": { "value": 0.18, "locked": false },
+    "vignetteOffset": { "value": 0.40, "locked": false },
+    "grainIntensity": { "value": 0.12, "locked": true }
+  },
+  "grass": {
+    "grassWindSpeed": { "value": 0.8, "locked": false },
+    "grassBladeWidth": { "value": 0.08, "locked": false },
+    "grassAmbient": { "value": 0.60, "locked": false },
+    "grassTranslucency": { "value": 2.8, "locked": false },
+    "grassFogFade": { "value": 0.001, "locked": false },
+    "grassBaseColor": { "value": "#2e5c18", "locked": false },
+    "grassTipColor": { "value": "#73b330", "locked": false },
+    "waveWindSpeed": { "value": 0.6, "locked": false },
+    "waveWindStrength": { "value": 0.20, "locked": false },
+    "waveWindDirX": { "value": 0.707, "locked": false },
+    "waveWindDirY": { "value": 0.707, "locked": false }
+  },
+  "fireflies": {
+    "fireflyBrightness": { "value": 0.0, "locked": false },
+    "fireflySize": { "value": 25, "locked": false }
+  },
+  "clouds": {
+    "cloudOpacity": { "value": 0.08, "locked": false }
+  },
+  "camera": {
+    "cameraFov": { "value": 55, "locked": false },
+    "cameraLerp": { "value": 0.05, "locked": false }
+  },
+  "godrays": {
+    "godrayIntensity": { "value": 2.0, "locked": true },
+    "godrayDensity": { "value": 1.1, "locked": false },
+    "godrayWeight": { "value": 0.020, "locked": false },
+    "godrayDecay": { "value": 0.98, "locked": false },
+    "godrayExposure": { "value": 1.2, "locked": false }
+  },
+  "fogDepth": {
+    "fogNearEnd": { "value": 0.05, "locked": false },
+    "fogMidEnd": { "value": 0.35, "locked": false },
+    "fogStrength": { "value": 0.05, "locked": false },
+    "fogDesaturation": { "value": 0.08, "locked": false },
+    "fogMidColor": { "value": "#996633", "locked": false },
+    "fogFarColor": { "value": "#664422", "locked": false }
+  },
+  "colorGrade": {
+    "cgContrast": { "value": 0.12, "locked": false },
+    "cgLiftR": { "value": 0.02, "locked": false },
+    "cgLiftG": { "value": 0.015, "locked": false },
+    "cgLiftB": { "value": 0.0, "locked": false },
+    "cgGammaR": { "value": 1.06, "locked": false },
+    "cgGammaG": { "value": 1.04, "locked": false },
+    "cgGammaB": { "value": 0.94, "locked": false },
+    "cgGainR": { "value": 1.10, "locked": false },
+    "cgGainG": { "value": 1.06, "locked": false },
+    "cgGainB": { "value": 0.90, "locked": false },
+    "cgSplitIntensity": { "value": 0.18, "locked": false },
+    "cgWarmColor": { "value": "#ffbb55", "locked": false },
+    "cgCoolColor": { "value": "#cc99dd", "locked": false },
+    "cgVibrance": { "value": 1.80, "locked": true },
+    "cgDarkDesat": { "value": 0.05, "locked": false }
+  },
+  "ssao": {
+    "ssaoRadius": { "value": 0.03, "locked": false },
+    "ssaoIntensity": { "value": 0.8, "locked": false },
+    "ssaoLumInfluence": { "value": 0.2, "locked": false }
+  },
+  "kuwahara": {
+    "kuwaharaStrength": { "value": 1.0, "locked": true },
+    "kuwaharaKernel": { "value": 8, "locked": true }
+  },
+  "dustMotes": {
+    "dustBrightness": { "value": 2.0, "locked": true },
+    "dustSize": { "value": 55, "locked": false }
+  },
+  "cursor": {
+    "cursorRadius": { "value": 5.0, "locked": false },
+    "cursorStrength": { "value": 2.5, "locked": false }
+  },
+  "scoreSheets": {
+    "sheetWind": { "value": 1.2, "locked": false }
+  },
+  "dof": {
+    "dofFocusDistance": { "value": 0, "locked": false },
+    "dofBokehScale": { "value": 4.0, "locked": false },
+    "dofFocusRange": { "value": 8, "locked": false }
+  },
+  "lod": {
+    "lodThreshold": { "value": 20, "locked": false }
+  }
+}

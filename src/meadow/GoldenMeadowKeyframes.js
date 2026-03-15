@@ -8,18 +8,26 @@
 // peaks simultaneously at DEEPENING (t=0.75). The convergence IS the revelation —
 // the Hidden Sun doesn't show one thing, it transforms EVERYTHING at once.
 //
+// exp-082 IMPROVE cycle (67→70/70): 4-axis composite sweep:
+//   V1 AWAKENING lift (+0.8), V2 DOF narrative arc (+1.6), V3 split-tone sunrise (+1.0),
+//   V4 STILLNESS floor (+1.3) → V5 composite (+3.0). Biggest unlocks at bookends:
+//   P1 STILLNESS +7 (silver-violet predawn dream + visible shapes + DOF)
+//   P5 QUIETING +5 (DOF memory fade + warm-touched blue + grain aging)
+//   P2 AWAKENING +2 (ambient lift + bloom + godRays + DOF focus pull = "she opened her eyes")
+//
 // Source: exp-058 cymatics (67/70), exp-030 reaction-diffusion grass,
 // exp-055 electromagnetic field-line alignment, exp-079 Navier-Stokes fluid wind,
-// exp-064 SIR epidemic awakening
+// exp-064 SIR epidemic awakening, exp-082 composite sweep (70/70)
 //
 // Over base MEADOW_KEYFRAMES: bloom 1.0→1.8, godrays 1.0→1.8, translucency 3.0→4.0,
 // wind 2.2→3.5, kuwahara 0.35→0.65, vibrance 0.9→1.4, CA 0.02→0.30
 
 export const GOLDEN_MEADOW_KEYFRAMES = [
   {
-    t: 0.0, // STILLNESS — cold world, sacred anticipation, held breath
-    // Darker than base to maximize contrast with DEEPENING convergence.
-    // The world is asleep. Not dead — waiting.
+    t: 0.0, // STILLNESS — silver-violet predawn dream, dim but PRESENT
+    // exp-082 V5: floor lift + DOF dream + split-tone character.
+    // The world is asleep — but you can SEE it sleeping. Dim shapes in darkness,
+    // distant DOF softness, silver-violet predawn character. Not void — dreaming.
     starBrightness: 0.0,
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -33,8 +41,8 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     fogDensity: 0.020,                  // thicker than base (0.018) — more hidden
     sunLightColor: [0.40, 0.45, 0.58],  // cooler blue-steel
     sunLightIntensity: 0.20,            // dimmer — deeper sleep
-    ambientIntensity: 0.03,             // near-dark — the void before music
-    grassBaseColor: [0.01, 0.02, 0.02], // near-black
+    ambientIntensity: 0.05,             // V5: floor lift — can see dim shapes waiting (was 0.03)
+    grassBaseColor: [0.02, 0.03, 0.03], // V5: faintest shape visible (was [0.01,0.02,0.02])
     grassTipColor: [0.02, 0.06, 0.05], // barely visible teal
     grassWindSpeed: 0.05,               // near-frozen — not even a breath
     grassAmbientStrength: 0.12,
@@ -45,15 +53,15 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     fireflyBrightness: 0.0,
     fireflySize: 25,
     bloomIntensity: 0.08,               // barely any glow
-    bloomThreshold: 0.92,               // only brightest spots
+    bloomThreshold: 0.88,               // V5: catches any spark (was 0.92)
     fogDepthStrength: 0.06,
     fogMidColor: [0.20, 0.25, 0.38],
     fogFarColor: [0.10, 0.12, 0.22],
     colorGradeContrast: 0.02,           // flat — no drama yet
     colorGradeVibrance: 0.08,           // desaturated cold world
     colorGradeWarmth: 0.0,              // zero warmth — earned later
-    vignetteDarkness: 0.88,             // tight tunnel — world is small
-    grainOpacity: 0.06,
+    vignetteDarkness: 0.78,             // V5: less tunnel — shapes visible (was 0.88)
+    grainOpacity: 0.05,                 // V5: slightly less noise (was 0.06)
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,               // no rays — sun is hidden
     kuwaharaStrength: 0.0,              // sharp — reality is clear and cold
@@ -62,10 +70,10 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.15,
     waveWindStrength: 0.0,              // frozen
-    dofFocusDistance: 0,
-    dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    dofFocusDistance: 60,               // V5: distant dream — world out of focus (was 0)
+    dofBokehScale: 4.0,                 // V5: soft dream bokeh (was 3.0)
+    splitToneWarm: [0.80, 0.72, 0.75],  // V5: silver-violet predawn (was [.925,.706,.518])
+    splitToneCool: [0.70, 0.75, 0.92],  // V5: deep predawn blue (was [.831,.769,.894])
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -75,9 +83,10 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     cloudIntensity: 0,
   },
   {
-    t: 0.25, // AWAKENING — first warmth, light finds a crack
-    // The epidemic begins. One blade catches light, then two, then a patch.
-    // Wind stirs. The convergence is seeding.
+    t: 0.25, // AWAKENING — "She opened her eyes" — the REVELATION moment
+    // exp-082 V5: ambient lift + bloom + godRays + translucency + DOF focus pull.
+    // Focus sharpens on near grass as amber light arrives and the world warms.
+    // The epidemic begins. But now you can SEE it begin.
     starBrightness: 0.0,
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -91,39 +100,39 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     fogDensity: 0.010,                   // thinning — revealing
     sunLightColor: [0.70, 0.65, 0.55],   // first amber hint
     sunLightIntensity: 0.7,
-    ambientIntensity: 0.08,
+    ambientIntensity: 0.14,              // V5: world SHOWS itself (was 0.08)
     grassBaseColor: [0.03, 0.08, 0.02],
     grassTipColor: [0.10, 0.25, 0.06],   // first green showing
     grassWindSpeed: 0.5,                  // first stir
     grassAmbientStrength: 0.25,
-    grassTranslucency: 0.9,              // first hint of backlit glow
+    grassTranslucency: 1.5,              // V5: strong first backlit glow (was 0.9)
     grassFogFade: 0.004,
     cloudShadowOpacity: 0.06,
     cloudDriftSpeed: 0.00003,
     fireflyBrightness: 0.0,
     fireflySize: 35,
-    bloomIntensity: 0.25,                // gentle glow beginning
+    bloomIntensity: 0.40,                // V5: genuine first glow (was 0.25)
     bloomThreshold: 0.78,
     fogDepthStrength: 0.04,
     fogMidColor: [0.55, 0.48, 0.38],
     fogFarColor: [0.35, 0.32, 0.35],
     colorGradeContrast: 0.05,
-    colorGradeVibrance: 0.30,            // color waking up
-    colorGradeWarmth: 0.02,              // first earned warmth
-    vignetteDarkness: 0.65,              // opening slightly
+    colorGradeVibrance: 0.48,            // V5: color waking faster (was 0.30)
+    colorGradeWarmth: 0.05,              // V5: first genuine warmth (was 0.02)
+    vignetteDarkness: 0.48,              // V5: eyes opening wide (was 0.65)
     grainOpacity: 0.04,
-    dustMoteBrightness: 0.15,            // first motes catching light
-    godRayIntensity: 0.10,               // first ray breaks through
+    dustMoteBrightness: 0.40,            // V5: motes clearly catching light (was 0.15)
+    godRayIntensity: 0.25,               // V5: first rays clearly visible (was 0.10)
     kuwaharaStrength: 0.0,               // still sharp — reality
     caDistortion: 0.0,                   // still clean
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.35,
     waveWindStrength: 0.08,              // first wave ripple
-    dofFocusDistance: 0,
-    dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    dofFocusDistance: 20,                // V5: focus pulling near — "seeing" for first time (was 0)
+    dofBokehScale: 3.5,                  // V5: moderate DOF (was 3.0)
+    splitToneWarm: [0.90, 0.72, 0.50],   // V5: warming amber (was [.925,.706,.518])
+    splitToneCool: [0.78, 0.76, 0.88],   // V5: softening blue (was [.831,.769,.894])
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -167,8 +176,8 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     fogMidColor: [0.95, 0.78, 0.45],
     fogFarColor: [0.55, 0.50, 0.45],
     colorGradeContrast: 0.10,
-    colorGradeVibrance: 0.75,            // colors intensifying
-    colorGradeWarmth: 0.06,
+    colorGradeVibrance: 0.80,            // V5: colors intensifying stronger (was 0.75)
+    colorGradeWarmth: 0.10,              // V5: richer golden warmth (was 0.06)
     vignetteDarkness: 0.38,              // opening up — world expanding
     grainOpacity: 0.03,
     dustMoteBrightness: 0.8,
@@ -179,8 +188,8 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.7,
     waveWindStrength: 0.25,              // visible wave grass
-    dofFocusDistance: 0,
-    dofBokehScale: 3.5,
+    dofFocusDistance: 10,                // V5: sharp awareness — focused on world (was 0)
+    dofBokehScale: 3.0,                  // V5: less bokeh = fully awake (was 3.5)
     splitToneWarm: [0.95, 0.75, 0.50],   // warming
     splitToneCool: [0.85, 0.78, 0.88],
     oceanColorNear: [0, 0, 0],
@@ -241,8 +250,8 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 1.2,
     waveWindStrength: 0.50,              // strong rolling waves
-    dofFocusDistance: 0,
-    dofBokehScale: 5.0,                  // soft background at peak
+    dofFocusDistance: 5,                 // V5: intimate near-focus at convergence (was 0)
+    dofBokehScale: 5.5,                  // V5: heavy bokeh catches bloom circles (was 5.0)
     splitToneWarm: [1.0, 0.67, 0.27],    // #ffaa44 — warm amber highlights
     splitToneCool: [0.53, 0.40, 0.53],   // #886688 — muted purple shadows
     oceanColorNear: [0, 0, 0],
@@ -254,11 +263,12 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     cloudIntensity: 0,
   },
   {
-    t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
-    // The convergence recedes. Not disappears — recedes. The world remembers
-    // what just happened. Bloom fades but warmth lingers. Wind settles but
-    // the grass still sways. The painting softens back toward photography.
-    // "The light changed everything, and now everything rests."
+    t: 1.0, // QUIETING — memory with warmth residue, the sunrise changed your color
+    // exp-082 V5: DOF memory fade + warm-touched split-tone + grain aging.
+    // The convergence recedes. Not disappears — recedes. The world remembers.
+    // DOF softens to distance — you can't hold the details. The cool split-tone
+    // has warmed — the sunrise changed your blue. Grain increases = aging film.
+    // "The light changed everything, and you carry its warmth home."
     starBrightness: 0.0,
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -290,10 +300,10 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     fogFarColor: [0.42, 0.40, 0.40],
     colorGradeContrast: 0.08,
     colorGradeVibrance: 0.45,            // color settling
-    colorGradeWarmth: 0.04,              // warmth lingers
-    vignetteDarkness: 0.55,              // closing gently
-    grainOpacity: 0.04,                  // grain returns — film aging
-    dustMoteBrightness: 0.35,
+    colorGradeWarmth: 0.07,              // V5: warmth lingers MORE (was 0.04)
+    vignetteDarkness: 0.50,              // V5: memory still breathes (was 0.55)
+    grainOpacity: 0.06,                  // V5: aging memory film (was 0.04)
+    dustMoteBrightness: 0.45,            // V5: motes linger longer (was 0.35)
     godRayIntensity: 0.25,               // last rays lingering
     kuwaharaStrength: 0.08,              // barely painterly — back to photography
     caDistortion: 0.02,                  // lens settling
@@ -301,10 +311,10 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     waveWindDirY: 0.707,
     waveWindSpeed: 0.3,
     waveWindStrength: 0.10,              // settling
-    dofFocusDistance: 0,
-    dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    dofFocusDistance: 40,                // V5: memory fading — world slipping away (was 0)
+    dofBokehScale: 4.5,                  // V5: pronounced memory blur (was 3.0)
+    splitToneWarm: [0.90, 0.72, 0.58],   // V5: amber-touched calm (was [.925,.706,.518])
+    splitToneCool: [0.78, 0.76, 0.85],   // V5: warmed blue — sunrise changed your blue (was [.831,.769,.894])
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,

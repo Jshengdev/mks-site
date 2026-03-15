@@ -14,7 +14,7 @@ When updating:
 
 ## What This Is
 
-A scroll-driven cinematic website for composer **Michael Kim-Sheng**. The entire site is a continuous 3D BotW-style golden hour meadow rendered in WebGL. The user scrolls to move a camera along a winding path through a flower field. Content sections (Landing, Music, About, Store, Footer) are clearings in the meadow, revealed by fog as the camera approaches. React DOM content overlays the canvas.
+An immersive music experience for composer **Michael Kim-Sheng**. Five distinct 3D worlds, each tied to a composition and an emotional state from real listener descriptions. The music IS the router — selecting a track in MiniPlayer enters that track's world. Each world is a scroll-driven WebGL scene where the user moves a camera along a spline path through a unique landscape. A Canvas 2D entry page serves as the threshold before WebGL loads.
 
 ## Tech Stack
 
@@ -28,64 +28,82 @@ A scroll-driven cinematic website for composer **Michael Kim-Sheng**. The entire
 
 ### Key Dependencies
 ```
-three, lenis, postprocessing
+three, lenis, postprocessing, react-router-dom
 ```
 
 ## Architecture
 
+### Active Branch: `feature/environment-worlds` (from `v0.1.0-meadow-stable`)
+
 ```
 src/
-  App.jsx                    — Canvas mount + ContentOverlay + MiniPlayer + MoonlightCursor
+  App.jsx                    — Music-as-router shell: MiniPlayer + WorldContext + react-router-dom
+  EnvironmentScene.jsx       — React mount point for config-driven WorldEngine
   index.css                  — Global reset + Lenis CSS
   useScrollAudio.js          — Hook: ramps audio volume from Lenis scroll progress
+  useWorldTransition.js      — Portal transition hook (FBO-based GLSL dissolves)
   DevTuner.jsx + .css        — Live parameter panel (backtick to toggle, freeze/live atmosphere)
 
+  entry/                     — Canvas 2D entry page (zero Three.js weight)
+    EntryPage.jsx            — Dithered botanical flower, cursor parallax, audio context gate
+
+  environments/              — World configs (pure data, no Three.js imports)
+    golden-meadow.js         — Landing world (/) — rolling hills, golden hour, "Innocent Awakening"
+    ocean-cliff.js           — /listen — cliff geometry, stylized water, dusk DOF, "Person Against Infinity"
+    night-meadow.js          — /story — same terrain at night, stars, 800 fireflies, "Small But Not Alone"
+    storm-field.js           — /witness — sharp terrain, rain, lightning, "Searching Through Chaos"
+    ghibli-painterly.js      — /collect — cel-shading, Kuwahara, hyper-vivid, "Never Felt Brighter"
+    index.js                 — Environment registry
+
   meadow/                    — Three.js engine (vanilla, class-based)
+    WorldEngine.js           — Config-driven orchestrator (accepts environment config objects)
+    MeadowEngine.js          — Backward-compat wrapper around WorldEngine
     constants.js             — Shared constants (SECTION_T_VALUES)
-    MeadowEngine.js          — Top-level orchestrator, render loop, resize, subsystem wiring
     ScrollEngine.js          — Lenis wrapper, exposes progress + velocity
     CameraRig.js             — CatmullRomCurve3 S-curve spline + damped lerp + terrain follow
     TierDetection.js         — Performance tier detection (1=desktop, 2=laptop, 3=mobile)
     MeadowScene.js           — Sky dome (Preetham), fog, directional + ambient light
-    TerrainPlane.js          — 400x400 PlaneGeometry with sin/cos rolling hills
+    TerrainPlane.js          — Configurable terrain (sin/cos hills, cliff+ocean, diamond-square)
     CloudShadows.js          — Multiply-blended shadow plane with glacial UV drift
     GrassGeometry.js         — Blade mesh generator (7-segment high LOD, 1-segment low)
     GrassChunkManager.js     — Chunk pool (20x20 units), activate/dispose/fade-in, LOD swap
     FlowerInstances.js       — 6 color types x ~133 each, clearing avoidance, toon shader
-    FireflySystem.js         — 500 Points with additive blending, vertical bob
+    FireflySystem.js         — Configurable count (400 optimal), additive blending, vertical bob
     AtmosphereController.js  — 5-keyframe scroll-driven interpolation (sky, grass, fog, post-FX)
-    CursorInteraction.js     — Mouse-to-world raycast (y=0 plane), lerped worldPos + smoothed velocity for grass wind
+    CursorInteraction.js     — Mouse-to-world raycast (y=0 plane), lerped worldPos + smoothed velocity
     PostProcessingStack.js   — EffectComposer: bloom, CA, vignette, grain, SSAO, DOF, fog, color grade
     GodRayPass.js            — Screen-space radial blur (GPU Gems 3), half-res FBO
     ScoreSheetCloth.js       — Wind-driven score sheets tumbling through meadow
     ClothSolver.js           — Verlet integration cloth physics (used by ScoreSheetCloth)
-    ArtistFigure.js          — 2D cutout billboard at far end of meadow
+    ArtistFigure.js          — 2D cutout billboard (needs seated/walking variants)
     PortalHint.js            — Shimmering spots teasing future worlds
     DustMotes.js             — Floating particles catching sunlight
     MusicTrigger.js          — BotW discovery moment at scroll threshold
     AudioReactive.js         — FFT analysis for music-driven effects
 
     shaders/
-      grass.vert.glsl        — 4-layer wind + cursor wind brush, billboard, fake normals
+      grass.vert.glsl        — 4-layer wind + cursor wind brush + wave wind, billboard, fake normals
       grass.frag.glsl        — Translucent lighting (al-ro), iquilez fog, cloud shadows
       firefly.vert.glsl      — Point particle vertical bob (Alex-DG)
       firefly.frag.glsl      — Inverse-distance radial glow, warm amber
       flower.vert.glsl       — Gentle sway + instanceMatrix
       flower.frag.glsl       — 3-band toon diffuse + rim light (daniel-ilett)
+      star.vert.glsl         — Procedural star field (pow(rand,3) sampling)
       dust.vert/frag.glsl    — Dust mote particles
       portal.vert/frag.glsl  — Shimmer portal effect
       score-sheet.vert/frag  — Cloth rendering
+      transition.vert/frag   — GLSL dissolve transitions between worlds
       god-ray-blur.frag.glsl — Radial blur pass
       color-grade.frag.glsl  — SEUS-style lift/gamma/gain/split-tone
       fog-depth.frag.glsl    — 3-zone depth fog
       motion-blur.frag.glsl  — Velocity-based motion blur
 
-    effects/ (custom pmndrs Effect subclasses, all in meadow/ currently)
+    effects/ (custom pmndrs Effect subclasses)
       FilmGrainEffect.js, RadialCAEffect.js, MotionBlurEffect.js,
       KuwaharaEffect.js, GodRayCompositeEffect.js, ColorGradeEffect.js,
       FogDepthPass.js, SSAOSetup.js, DOFSetup.js
 
-  content/                   — React DOM overlays (opacity driven by MeadowEngine, not CSS)
+  content/                   — React DOM overlays (opacity driven by engine, not CSS)
     ContentOverlay.jsx       — Container, registers section DOM refs with engine
     LandingContent.jsx       — Title + subtitle (placeholder)
     MusicContent.jsx         — Glass-card placeholder
@@ -94,20 +112,60 @@ src/
     FooterContent.jsx        — Copyright
     content-overlay.css      — Fixed overlay styles, glass-card
 
-  MiniPlayer.jsx + .css      — Audio player (surviving component from old site)
+  MiniPlayer.jsx + .css      — Audio player + world navigation (dispatches route changes on track select)
   MoonlightCursor.jsx        — Custom cursor effect
 
   assets/
     textures/cloud.jpg       — Perlin FBM noise texture (from al-ro)
     textures/score-sheet.jpg — Score sheet texture
     textures/mks-portrait.jpg — Artist portrait
+    audio/In a Field of Silence.mp3 — Golden Meadow composition (4:37, 320kbps)
 
 docs/
-  superpowers/specs/         — Design specification
-  superpowers/plans/         — Implementation plan (22 tasks, 7 chunks)
+  superpowers/specs/         — Design specifications
+  superpowers/plans/         — Implementation plans
   webgl-reference/           — 26 reference shader/code files from GitHub repos
-  mks-design-philosophy/     — 12+ design documents
+  mks-design-philosophy/     — 19+ design documents
 ```
+
+### Music-as-Router Pattern
+
+Navigation is music-driven, not URL-driven. The MiniPlayer IS the navigation system.
+
+| Route | World | Track | Emotional Atlas |
+|-------|-------|-------|-----------------|
+| `/` | Golden Meadow | "In a Field of Silence" | Innocent Awakening |
+| `/listen` | Ocean Cliff | TBD | Person Against Infinity |
+| `/story` | Night Meadow | TBD | Small But Not Alone |
+| `/collect` | Ghibli Painterly | TBD | Never Felt Brighter |
+| `/witness` | Storm Field | TBD | Searching Through Chaos |
+
+- Selecting a track in MiniPlayer = entering that track's world
+- URLs update to reflect current world but are secondary
+- Portal transitions (GLSL dissolves) fire when the track changes
+- The scroll arc maps to the structure of the current piece
+
+### Entry Page
+
+Before WebGL loads, a Canvas 2D entry page:
+- Procedural dithered flower (botanical specimen aesthetic)
+- 6-layer cursor parallax on flower parts
+- Audio context confirmation gate
+- Click Enter → music starts → dissolve into WebGL world
+- Zero Three.js weight, instant load
+
+### Environment World Config Schema
+
+Each world is a pure data config in `src/environments/`. The config defines:
+- Terrain type and parameters
+- Sky/atmosphere settings
+- Vegetation (grass density, flower types, colors)
+- Particle systems (fireflies, rain, petals, dust, stars)
+- Post-processing recipe (bloom, DOF, grain, color grade, Kuwahara)
+- Camera path (spline points, speed, height)
+- Atmosphere keyframes (5 emotional arc positions)
+
+`WorldEngine.js` reads the config and wires all subsystems accordingly. `MeadowEngine.js` is a backward-compat wrapper that passes the golden-meadow config.
 
 ### How the Render Loop Works
 1. Lenis updates `scrollEngine.progress` (0→1)
@@ -201,33 +259,67 @@ All shader code is adapted from real GitHub repos. Reference files live in `docs
 - **Meadow orchestrator:** `orchestration/meadow-orchestrator.sh`
 - **Commands:** `init`, `launch`, `status`, `monitor`, `merge`, `build`, `cleanup`
 - **Worker structure:** `orchestration/meadow-workers/wN-name/{CLAUDE.md, TASK.md, CORRECTIONS.md, output/}`
+- **Window status files:** `orchestration/window-N-status.md` — each parallel window writes status here
+- **Session reports:** `orchestration/session-report-YYYY-MM-DD.md`
 - Uses `tmux` sessions + `git worktree` for parallel Claude Code workers
 - **Critical:** Must `unset CLAUDECODE` before launching nested Claude instances in tmux
 - Workers write DONE.md and FILES.md to their output dir when complete
-- Workers must NOT modify MeadowEngine.js — integration is post-merge
+- Workers must NOT modify MeadowEngine.js / WorldEngine.js — integration is post-merge
+
+## AutoResearch Pipeline
+
+- **Location:** `/Users/johnnysheng/mks/research/pipeline/`
+- **Methodology:** `program.md` — Karpathy autoresearch pattern adapted for visual/shader research
+- **Harness:** `prepare.js` — evaluation framework (FPS, draw calls, emotional atlas scoring)
+- **Results:** `results.tsv` — 24 experiments logged
+- **Winners:** `winners/` — 12 technique documents with integration instructions
+- **Scoring:** Each experiment scored /70 against emotional atlas criteria (beauty, nostalgia, aliveness, intimacy, whimsy, innocence, heartache)
+
+### Per-World Best Scores (as of 2026-03-14)
+| World | Score | Key Technique | Experiment |
+|-------|-------|--------------|------------|
+| Ocean Cliff | 61/70 | DOF v3 (focus=8, range=1.5, bokeh=5.5) + split-tone | exp-022 |
+| Night Meadow | 58/70 (62 potential) | 400 fireflies + stars + camera arc at t=0.75 | exp-013 |
+| Ghibli Painterly | 56/70 | Atmosphere fix (ambient 0.20→0.45) + cel+Kuwahara | exp-023 |
+| Storm Field | 47/70 | Rain + volumetric clouds + lightning | exp-012 |
+| Golden Meadow | 45/70 | Wave wind + golden hour atmosphere | exp-002+018 |
+
+## Web Extractor Tool
+
+- **Location:** `/Users/johnnysheng/mks/research/web-extractor/`
+- **Usage:** `node src/extract.js <url> [--scroll-positions 50] [--wait 8]`
+- Captures: shaders (GLSL), textures (PNG), uniforms, draw calls, scene graphs, scroll behavior
+- Requires system Chrome (Playwright bundled Chromium lacks headless WebGL)
+- 7 sites extracted, validated against WebGL Aquarium (32 shaders, 93 textures)
 
 ## Where to Read More
 
 Design philosophy: `mks-design-philosophy/` — Read `BRAND-ESSENCE.md` and `STYLE-DECISIONS.md` first.
 
-Spec: `docs/superpowers/specs/2026-03-12-webgl-meadow-design.md`
+Specs:
+- `docs/superpowers/specs/2026-03-12-webgl-meadow-design.md` — original meadow spec
+- `docs/superpowers/specs/2026-03-13-environment-worlds-prd.md` — multi-world PRD (596 lines)
 
 Plan: `docs/superpowers/plans/2026-03-12-webgl-meadow.md`
 
+Session reports: `orchestration/session-report-2026-03-14.md` — comprehensive build log
+
+Research: `research/pipeline/` — 24 experiments with scoring, `research/web-extractor/` — site extraction tool
+
 ## What's Built vs. What's Next
 
-### Built (Meadow Phase 1 + Phase 2A) ✓
+### Built (Phase 1 + Phase 2A: Meadow Engine) ✓
 - Full Three.js meadow engine with 17 subsystems wired
-- 60K instanced grass (thinner blades, sparser) with 4-layer wind + cursor wind brush
+- 60K instanced grass with 4-layer wind + cursor wind brush + wave wind
 - Procedural terrain with rolling hills
 - Sky dome (Preetham model) with golden hour lighting
 - Cloud shadow plane with glacial drift
 - 800 instanced flowers with toon shading
-- 500 firefly particles with additive blending
+- Configurable firefly particles (400 = emotional optimum) with additive blending
 - Post-processing: bloom, CA, vignette, grain, SSAO, DOF, 3-zone fog, color grade (SEUS), motion blur, kuwahara painterly, god ray composite
 - GodRayPass — screen-space radial blur (GPU Gems 3)
 - AtmosphereController — 5-keyframe scroll-driven interpolation with 38 params each
-- Cursor interaction — mouse→world raycast, lerped worldPos (smooth grass push), smoothed velocity
+- Cursor interaction — mouse→world raycast, lerped worldPos, smoothed velocity
 - Score sheet cloth — Verlet physics, wind-driven
 - Artist figure — 2D billboard at far end
 - Portal hints — shimmering spots for future worlds
@@ -238,29 +330,68 @@ Plan: `docs/superpowers/plans/2026-03-12-webgl-meadow.md`
 - Lenis smooth scroll → CameraRig spline path
 - Performance tiers (3 levels) with LOD switching
 - Camera terrain-following (prevents clipping into hills)
-- DevTuner — live parameter panel with freeze mode, Lenis-safe scrolling, exposure/FOV/firefly brightness/dust size controls all properly wired
+- DevTuner — live parameter panel with freeze mode
 - MiniPlayer + MoonlightCursor preserved
 
-### Stripped (decided against / needs redo)
-- **GhibliClouds** — toon-shaded hemisphere dome. Removed: looked like flat blobs, not Ghibli. Needs reference implementation from a real repo if attempted again.
-- **CursorCreatures** — butterflies (PNG texture) + cursor fireflies. Removed: butterflies looked terrible as textured planes. User wants simple 3D geometry butterfly with wing flap, no textures. Fireflies were too aggressive. Needs complete rethink.
+### Built (Phase 3: Environment Worlds — `feature/environment-worlds` branch) ✓
+- **Config-driven WorldEngine** — abstracts MeadowEngine into configurable system
+- **5 environment world configs** — golden-meadow, ocean-cliff, night-meadow, storm-field, ghibli-painterly
+- **Music-as-router** — MiniPlayer dispatches route changes, track = world
+- **Entry page** — Canvas 2D dithered flower, cursor parallax, audio context gate
+- **Night Meadow** — same terrain at night, procedural star field, 800 fireflies, night atmosphere
+- **Ocean Cliff** — cliff geometry + flat ocean plane, stylized water shader, dusk sky, DOF
+- **Storm Field** — rain particles, lightning system, urgent wind, dramatic atmosphere
+- **Ghibli Painterly** — cel-shading, Kuwahara post-processing, petal particles, hyper-vivid
+- **Portal transitions** — FBO-based GLSL dissolves between route changes
+- **Per-world terrain algorithms** — rolling hills, cliff+ocean, diamond-square, smooth
+- **Audio asset** — "In a Field of Silence" (320kbps) wired to Golden Meadow
+- **react-router-dom routing** — `/`, `/listen`, `/story`, `/collect`, `/witness`
 
-### Next Phase: Polish & Content
-- **3D butterflies** — simple geometry (no texture), flapping wings, flying away from screen. Find a GitHub repo with good wing-flap math.
-- **Cursor fireflies** — revisit with subtler approach, sparser, fewer
-- **Stylized sky** — Preetham model is too realistic. Needs more golden hour / stylized feel.
-- **Clouds** — need a completely different approach. Reference a real implementation.
-- **Real content** — migrate actual album art, bio text, products into content sections
-- **Nav component** — minimal fixed top nav
-- **Tier 3 fallback** — static screenshot as background image
-- **prefers-reduced-motion** — freeze camera lerp, jump directly to target
-- **Contact page** — decide if it lives in the meadow or separate
-- **Audio integration** — scroll-driven ambient meadow sounds
+### Built (Research Infrastructure)
+- **AutoResearch Pipeline** (`/research/pipeline/`) — Karpathy-style autonomous experiment loop
+  - 24 experiments completed, 12 winners documented, 3 IMPROVE cycle iterations
+  - Best scores: Ocean Cliff 61/70, Night Meadow 58/70 (62 potential), Ghibli 56/70
+- **Web Extractor** (`/research/web-extractor/`) — Playwright-based WebGL site extraction
+  - Captures shaders, textures, uniforms, draw calls, scene graphs
+  - 7 sites extracted, validated (32 shaders from WebGL Aquarium alone)
+- **MKS Immersive Site Skill** (`.claude/skills/mks-immersive-site/`) — 853-line Claude Code skill
+  - Encodes full architecture, design philosophy, 15 bug learnings
+  - `/build-world` slash command for generating new environment configs
+
+### Stripped (decided against / needs redo)
+- **GhibliClouds** — toon-shaded hemisphere dome. Removed: flat blobs. Needs real volumetric approach.
+- **CursorCreatures** — textured butterflies. Removed: looked terrible. User wants simple 3D geometry with wing flap.
+
+### Next Phase: Polish & Integration
+
+**Tier 1 — Blocking core experience:**
+1. `CliffTerrainGenerator.js` — Ocean Cliff needs real cliff island geometry
+2. Seated figure variant for `ArtistFigure.js` — the DOF emotional anchor
+3. `VolumetricCloudSystem.js` — Storm Field sky needs real volumetric clouds
+
+**Tier 2 — High value (7 research winners ready to integrate):**
+4. Stars + fireflies integration → Night Meadow (56/70, zero perf cost)
+5. Wave grass wind keyframe ramp → Golden Meadow (needs DevTuner testing)
+6. Kuwahara + cel-shading combo verification → Ghibli (56/70 with atmosphere fix)
+7. Intimate DOF v3 config → Ocean Cliff (61/70, zero additional cost)
+8. Rain system keyframes → Storm Field
+9. Bezier flower geometry → all worlds (6 archetypes prototyped, drop-in ready)
+10. Spray + fog wisps → Ocean Cliff ambiance
+
+**Tier 3 — Polish:**
+11. Shadow-map god rays (`three-good-godrays` integration)
+12. Entry page improvement (better source art — current scores 38/70)
+13. Split-tone color grading → Ocean Cliff (warm shadows, cool highlights)
+14. Camera arc fix at t=0.75 → Night Meadow (ground-level is emotional peak)
+15. Real content — migrate actual album art, bio text, products
+16. `prefers-reduced-motion` — freeze camera lerp, jump directly to target
 
 ### Known Issues
-- Flower geometry is procedural (cylinder+sphere), not stylized .glb models
+- Flower geometry is still procedural (cylinder+sphere), not Bezier or .glb models
 - Content sections are placeholder text
-- God rays render the full scene twice per frame (occlusion pass + normal), doubling draw calls when enabled
+- God rays render the full scene twice per frame (doubling draw calls when enabled)
+- Entry page dithering source art is "too clean/symmetric" (38/70)
+- Track-to-world mapping only defined for Golden Meadow ("In a Field of Silence")
 
 ## Refactor Plan
 
@@ -313,10 +444,15 @@ If a session runs out of context, the next session should:
 1. **Read this CLAUDE.md first** — it's the complete project state
 2. **Check `git log --oneline -20`** — see what was done recently
 3. **Check `git diff --stat`** — see uncommitted work
-4. **Read `docs/superpowers/specs/2026-03-12-webgl-meadow-design.md`** — the design spec
-5. **Run `npx vite build`** — verify the build is clean before starting
+4. **Check `git branch`** — you're likely on `feature/environment-worlds`
+5. **Read `docs/superpowers/specs/2026-03-13-environment-worlds-prd.md`** — the multi-world spec
+6. **Read `orchestration/window-2-status.md`** — research pipeline state and winner recipes
+7. **Run `npx vite build`** — verify the build is clean before starting
 
-The codebase is now clean enough that reading MeadowEngine.js + AtmosphereController.js + this file gives a complete picture of the system.
+The codebase now has two key entry points:
+- **WorldEngine.js** — the config-driven engine (read this + environment configs for world architecture)
+- **AtmosphereController.js** — the keyframe system (read this for emotional arc tuning)
+- **This file** — complete project state and all learnings
 
 ---
 
@@ -350,3 +486,18 @@ The codebase is now clean enough that reading MeadowEngine.js + AtmosphereContro
 - 2026-03-14: Score sheets were invisible because they were at Y:4.5-8.5m (camera is ~1.5m above terrain). Lowered to Y:2.0-4.5m and enlarged (1.8x1.3) to be visible.
 - 2026-03-14: pmndrs SSAOEffect property access varies by version. Use `effect.radius` getter/setter rather than digging into `ssaoMaterial.uniforms.radius.value`. Add try/catch with fallback for robustness.
 - 2026-03-14: User's first DevTuner tuning session (JSON export at scroll ~0.48). Key taste: wants more golden/desaturated colors, liked cloud shadows, wants smoother grass push, FOV should go more extreme. Effects need to be visually obvious or user can't tell they exist.
+- 2026-03-14: Music-as-router pattern: MiniPlayer dispatches route changes → portal transition fires → new WorldEngine config loads. Track selection IS navigation. URLs are secondary.
+- 2026-03-14: Entry page must be Canvas 2D (zero Three.js weight). Solves: audio autoplay, GPU warm-up time, emotional threshold. The user chooses to enter.
+- 2026-03-14: Environment configs are pure data objects — no Three.js imports. WorldEngine reads the config and wires subsystems. This separation is critical for the config-driven architecture.
+- 2026-03-14: Each world needs genuinely different terrain algorithms, not just color swaps. Sin/cos (golden), cliff+ocean (ocean), diamond-square (storm), smooth (ghibli). Without unique geometry, worlds feel like reskins.
+- 2026-03-14: Research pipeline IMPROVE cycle delivers +3 to +4 point gains on highest-scoring worlds. Key insight: score against emotional atlas (feeling), not technical quality (pixels).
+- 2026-03-14: Firefly emotional optimum is 400 count. 1000 = solid amber band (screensaver feel, 28/70). Void between fireflies IS the grief — don't fill it.
+- 2026-03-14: Camera position at t=0.75 (ground-level among fireflies) scores HIGHER than t=0.50 aerial view (33/40 vs 31/40). Being AMONG the lights is more intimate than being above them.
+- 2026-03-14: Ghibli "never felt brighter" failed at ambient 0.20 because cel-shading's 4-band system snapped shadow-facing grass to near-black. At 0.45, shadows are dark but recognizably colored — matching actual Ghibli films.
+- 2026-03-14: Split-tone color grading (warm amber shadows at 15% + cool blue highlights at 10%) creates "faded memory" quality. Zero performance cost — just uniforms.
+- 2026-03-14: Web extractor requires system Chrome (`channel: 'chrome'`) — Playwright's bundled Chromium lacks SwiftShader for headless WebGL rendering.
+- 2026-03-14: 4-window parallel orchestration (build, research, tools, skills) is effective. Status files in `orchestration/window-N-status.md` enable cross-window communication.
+- 2026-03-15: **FULL PROJECT AUDIT** — 9,968 LOC across 100 src files (66 JS/JSX, 23 shaders, 6 CSS). Build passes clean in 1.63s. 30 commits on feature/environment-worlds. 72 research experiments (19 IMPROVE cycles). 12 winner docs (20+ undocumented above 60/70). 10 sites extracted (949 shaders, 578 programs). MKS skill is comprehensive at ~850 lines. Full audit at `orchestration/audit-2026-03-15.md`.
+- 2026-03-15: JS bundle is 998 KB — needs code splitting via dynamic imports before production. Audio asset (11 MB) needs streaming/lazy-load.
+- 2026-03-15: Winner documentation backlog is significant — 20+ techniques above 60/70 lack formal docs. Key breakthroughs: GOLDEN RUINS (multiplicative convergence), VIGIL (absence as presence), gravitational lensing (largest weighted gain ever).
+- 2026-03-15: Web extractor Tier 1 techniques ready for implementation: Active Theory's analytical curl noise (3x faster), scroll-driven particle lifecycle, Immersive Garden's wave propagation and dissipation model.

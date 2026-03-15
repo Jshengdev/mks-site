@@ -1,0 +1,121 @@
+{
+  "_meta": {
+    "exported": "2026-03-15T00:00:00.000Z",
+    "preset": "Night Meadow — EXPERIMENTAL WILD",
+    "source": "exp-060 VIGIL-orbit (71/70), exp-040 Lorenz-attractor fireflies, exp-073 Kuramoto-coupled oscillators, exp-041 aurora-borealis sky, exp-051 boids-flocking",
+    "notes": "VIGIL archetype — absence as spatial presence. Fireflies orbit the VOID where the figure should be. Extreme bloom for 'tears of light' effect. Camera ground-level at t=0.75 for maximum intimacy. The void between fireflies IS the grief — don't fill it.",
+    "locked": ["fireflyBrightness", "fireflySize", "bloomIntensity", "bloomThreshold", "vignetteDarkness", "grainIntensity", "grassWindSpeed", "cgDarkDesat"]
+  },
+  "navigation": {
+    "scrollPosition": { "value": 0.75, "locked": true }
+  },
+  "renderer": {
+    "toneMappingExposure": { "value": 0.85, "locked": true }
+  },
+  "sky": {
+    "turbidity": { "value": 1.0, "locked": false },
+    "rayleigh": { "value": 0.5, "locked": false },
+    "mieCoefficient": { "value": 0.002, "locked": false },
+    "mieDirectionalG": { "value": 0.82, "locked": false },
+    "sunElevation": { "value": -30, "locked": false },
+    "sunIntensity": { "value": 0.25, "locked": false },
+    "ambientIntensity": { "value": 0.03, "locked": false }
+  },
+  "fog": {
+    "fogDensity": { "value": 0.004, "locked": false },
+    "fogColor": { "value": "#080810", "locked": false }
+  },
+  "postfx": {
+    "bloomIntensity": { "value": 1.0, "locked": true },
+    "bloomThreshold": { "value": 0.35, "locked": true },
+    "bloomSmoothing": { "value": 0.7, "locked": false },
+    "caDistortion": { "value": 0.10, "locked": false },
+    "vignetteDarkness": { "value": 0.88, "locked": true },
+    "vignetteOffset": { "value": 0.25, "locked": false },
+    "grainIntensity": { "value": 0.10, "locked": true }
+  },
+  "grass": {
+    "grassWindSpeed": { "value": 0.08, "locked": true },
+    "grassBladeWidth": { "value": 0.06, "locked": false },
+    "grassAmbient": { "value": 0.10, "locked": false },
+    "grassTranslucency": { "value": 0.3, "locked": false },
+    "grassFogFade": { "value": 0.005, "locked": false },
+    "grassBaseColor": { "value": "#020505", "locked": false },
+    "grassTipColor": { "value": "#061008", "locked": false },
+    "waveWindSpeed": { "value": 0.05, "locked": false },
+    "waveWindStrength": { "value": 0.02, "locked": false },
+    "waveWindDirX": { "value": 0.707, "locked": false },
+    "waveWindDirY": { "value": 0.707, "locked": false }
+  },
+  "fireflies": {
+    "fireflyBrightness": { "value": 1.8, "locked": true },
+    "fireflySize": { "value": 150, "locked": true }
+  },
+  "clouds": {
+    "cloudOpacity": { "value": 0.0, "locked": false }
+  },
+  "camera": {
+    "cameraFov": { "value": 55, "locked": false },
+    "cameraLerp": { "value": 0.03, "locked": false }
+  },
+  "godrays": {
+    "godrayIntensity": { "value": 0.0, "locked": false },
+    "godrayDensity": { "value": 0.96, "locked": false },
+    "godrayWeight": { "value": 0.015, "locked": false },
+    "godrayDecay": { "value": 0.97, "locked": false },
+    "godrayExposure": { "value": 1.0, "locked": false }
+  },
+  "fogDepth": {
+    "fogNearEnd": { "value": 0.06, "locked": false },
+    "fogMidEnd": { "value": 0.35, "locked": false },
+    "fogStrength": { "value": 0.08, "locked": false },
+    "fogDesaturation": { "value": 0.85, "locked": false },
+    "fogMidColor": { "value": "#141420", "locked": false },
+    "fogFarColor": { "value": "#080810", "locked": false }
+  },
+  "colorGrade": {
+    "cgContrast": { "value": 0.08, "locked": false },
+    "cgLiftR": { "value": 0.0, "locked": false },
+    "cgLiftG": { "value": 0.0, "locked": false },
+    "cgLiftB": { "value": 0.015, "locked": false },
+    "cgGammaR": { "value": 0.90, "locked": false },
+    "cgGammaG": { "value": 0.94, "locked": false },
+    "cgGammaB": { "value": 1.08, "locked": false },
+    "cgGainR": { "value": 0.88, "locked": false },
+    "cgGainG": { "value": 0.92, "locked": false },
+    "cgGainB": { "value": 1.12, "locked": false },
+    "cgSplitIntensity": { "value": 0.04, "locked": false },
+    "cgWarmColor": { "value": "#cc9944", "locked": false },
+    "cgCoolColor": { "value": "#6688cc", "locked": false },
+    "cgVibrance": { "value": 0.08, "locked": false },
+    "cgDarkDesat": { "value": 0.9, "locked": true }
+  },
+  "ssao": {
+    "ssaoRadius": { "value": 0.06, "locked": false },
+    "ssaoIntensity": { "value": 2.0, "locked": false },
+    "ssaoLumInfluence": { "value": 0.5, "locked": false }
+  },
+  "kuwahara": {
+    "kuwaharaStrength": { "value": 0.0, "locked": false },
+    "kuwaharaKernel": { "value": 4, "locked": false }
+  },
+  "dustMotes": {
+    "dustBrightness": { "value": 0.0, "locked": false },
+    "dustSize": { "value": 30, "locked": false }
+  },
+  "cursor": {
+    "cursorRadius": { "value": 5.0, "locked": false },
+    "cursorStrength": { "value": 2.5, "locked": false }
+  },
+  "scoreSheets": {
+    "sheetWind": { "value": 0.3, "locked": false }
+  },
+  "dof": {
+    "dofFocusDistance": { "value": 6, "locked": false },
+    "dofBokehScale": { "value": 6.0, "locked": false },
+    "dofFocusRange": { "value": 3, "locked": false }
+  },
+  "lod": {
+    "lodThreshold": { "value": 20, "locked": false }
+  }
+}
