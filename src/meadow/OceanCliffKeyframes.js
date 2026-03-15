@@ -50,6 +50,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.02,      // clean lens on arrival
     waveWindDirX: 0.0,
     waveWindDirY: 1.0,       // from the ocean
     waveWindSpeed: 0.3,
@@ -105,6 +106,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.03,      // subtle — vastness registering
     waveWindDirX: 0.1,                  // exp-082 V5: 0.0→0.1 (wind shifting direction)
     waveWindDirY: 1.0,
     waveWindSpeed: 0.4,
@@ -160,6 +162,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.05,      // minimal — focus is on DOF here, not CA
     waveWindDirX: 0.3,                  // exp-082 V5: 0.0→0.3 (wind shifts direction with someone)
     waveWindDirY: 1.0,
     waveWindSpeed: 0.5,
@@ -215,6 +218,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.08,      // slight distortion — star-bokeh synergy moment
     waveWindDirX: 0.15,                  // exp-082 V5: 0.0→0.15 (wind shifting back)
     waveWindDirY: 1.0,
     waveWindSpeed: 0.4,
@@ -274,6 +278,7 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.15,      // 8th dimension of dissolution — lens can't hold the image
     waveWindDirX: 0.0,
     waveWindDirY: 1.0,
     waveWindSpeed: 0.25,

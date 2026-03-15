@@ -51,6 +51,7 @@ export const GHIBLI_KEYFRAMES = [
     dustMoteBrightness: 0.3,
     godRayIntensity: 0.15,       // dawn — subtle (was 0.2)
     kuwaharaStrength: 0.35,      // slightly deeper strokes (was 0.30)
+    caDistortion: 0.05,        // lens through a painting
     petalBrightness: 0.4,
     waveWindDirX: 0.6,
     waveWindDirY: 0.8,
@@ -103,6 +104,7 @@ export const GHIBLI_KEYFRAMES = [
     dustMoteBrightness: 0.5,
     godRayIntensity: 0.45,       // growing (was 0.4)
     kuwaharaStrength: 0.52,      // strokes bolder (was 0.45)
+    caDistortion: 0.08,        // warmth warps the lens
     petalBrightness: 0.7,
     waveWindDirX: 0.6,
     waveWindDirY: 0.8,
@@ -155,6 +157,7 @@ export const GHIBLI_KEYFRAMES = [
     dustMoteBrightness: 0.8,
     godRayIntensity: 0.65,       // dramatic but not peak (was 0.70)
     kuwaharaStrength: 0.68,      // strong strokes (was 0.60)
+    caDistortion: 0.12,        // vividity distorts perception
     petalBrightness: 1.0,
     waveWindDirX: 0.6,
     waveWindDirY: 0.8,
@@ -208,6 +211,7 @@ export const GHIBLI_KEYFRAMES = [
     dustMoteBrightness: 0.9,
     godRayIntensity: 1.0,        // MAX god rays — setting sun (was 0.90)
     kuwaharaStrength: 0.65,      // bold strokes (was 0.55)
+    caDistortion: 0.15,        // reality bending — the fall intensifies
     petalBrightness: 0.9,
     waveWindDirX: 0.6,
     waveWindDirY: 0.8,
@@ -263,6 +267,7 @@ export const GHIBLI_KEYFRAMES = [
     dustMoteBrightness: 1.0,     // golden motes everywhere (was 0.50)
     godRayIntensity: 0.90,       // sunset god rays blazing (was 0.40)
     kuwaharaStrength: 0.55,      // painterly maintained (was 0.40)
+    caDistortion: 0.10,        // settling into acceptance — lens eases
     petalBrightness: 1.0,        // petals blazing in sunset light (was 0.50)
     waveWindDirX: 0.6,
     waveWindDirY: 0.8,

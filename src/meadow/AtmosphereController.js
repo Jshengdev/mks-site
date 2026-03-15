@@ -64,6 +64,7 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.0,        // no lens stress in innocence (exp-059 PERCOLATION, 71/70)
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.2,
@@ -117,6 +118,7 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.2,
     godRayIntensity: 0.15,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.0,        // still clean
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.4,
@@ -168,6 +170,7 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.9,
     godRayIntensity: 0.5,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.01,       // barely perceptible at golden hour
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.6,
@@ -220,6 +223,7 @@ const KEYFRAMES = [
     dustMoteBrightness: 1.0,
     godRayIntensity: 1.0,     // max — "rays fan out and touch everything"
     kuwaharaStrength: 0.35,   // painterly glow at emotional peak
+    caDistortion: 0.02,       // tiny warmth distortion at peak
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.8,
@@ -271,6 +275,7 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.3,
     godRayIntensity: 0.2,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.01,       // settling
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.3,
@@ -471,6 +476,12 @@ export default class AtmosphereController {
     // ─── Kuwahara painterly (activates at emotional peak) ───
     if (pp.kuwahara) {
       pp.kuwahara.uniforms.get('uStrength').value = c.kuwaharaStrength
+    }
+
+    // ─── Chromatic Aberration (atmosphere-driven base — exp-059 PERCOLATION, 71/70) ───
+    // Velocity boost is additive in PostProcessingStack.update()
+    if (pp.ca) {
+      pp.ca.uniforms.get('uDistortion').value = c.caDistortion
     }
 
     // ─── Stars (night/dusk skies) ───

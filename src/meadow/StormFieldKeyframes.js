@@ -47,6 +47,7 @@ export const STORM_FIELD_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.05,    // barely perceptible — something is off (exp-059 PERCOLATION, 71/70)
     rainBrightness: 0.3,   // light rain starting
     waveWindDirX: 0.8,
     waveWindDirY: 0.6,
@@ -99,6 +100,7 @@ export const STORM_FIELD_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.15,    // growing disorientation — lens can't hold steady
     rainBrightness: 0.6,
     waveWindDirX: 0.85,
     waveWindDirY: 0.53,
@@ -151,6 +153,7 @@ export const STORM_FIELD_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.50,    // MAXIMUM lens stress — vision splitting at storm peak (exp-059: 71/70)
     rainBrightness: 0.9,    // peak rain
     waveWindDirX: 0.9,
     waveWindDirY: 0.44,
@@ -203,6 +206,7 @@ export const STORM_FIELD_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.25,    // stress easing but still present — aftershock
     rainBrightness: 0.4,    // rain slowing
     waveWindDirX: 0.85,
     waveWindDirY: 0.53,
@@ -255,6 +259,7 @@ export const STORM_FIELD_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.05,    // calm after storm — lens recovers
     rainBrightness: 0.1,    // last drops
     waveWindDirX: 0.8,
     waveWindDirY: 0.6,

@@ -46,6 +46,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.0,       // pure stillness — no distortion
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.1,
@@ -98,6 +99,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.01,      // barely there — memories stirring
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.1,
@@ -150,6 +152,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.03,      // subtle — emotion, not violence
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.15,
@@ -204,6 +207,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.01,      // peace — lens still
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.10,
@@ -256,6 +260,7 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.02,      // gentle — dissolution begins
     waveWindDirX: 0.707,
     waveWindDirY: 0.707,
     waveWindSpeed: 0.08,

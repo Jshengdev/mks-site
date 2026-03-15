@@ -96,9 +96,11 @@ export default class PostProcessingStack {
   update(scrollVelocity, cameraPos, sectionPositions) {
     if (!this.ca) return
 
-    // Radial CA intensity scales with scroll velocity
-    const caIntensity = Math.min(1.0, 0.3 + Math.abs(scrollVelocity) * 0.2)
-    this.ca.uniforms.get('uDistortion').value = caIntensity
+    // CA base is set by AtmosphereController (per-world keyframe-driven)
+    // Velocity adds on top — fast scrolling amplifies the world's lens distortion
+    const velocityBoost = Math.abs(scrollVelocity) * 0.15
+    const current = this.ca.uniforms.get('uDistortion').value
+    this.ca.uniforms.get('uDistortion').value = Math.min(1.5, current + velocityBoost)
 
     if (this.dof && cameraPos && sectionPositions) {
       this.dof.updateFocus(cameraPos, sectionPositions)
