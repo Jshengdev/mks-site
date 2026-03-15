@@ -19,7 +19,7 @@ export default {
     type: 'simplex-layers-stylized',
     octaves: 3, // lower detail — stylized
     celShaded: true,
-    colorBands: 3,
+    colorBands: 4,
     // Moss/grass texture blending: altitude-based
     textureBlendLevels: [20, 50, 60, 85],
   },
@@ -52,7 +52,8 @@ export default {
   flowers: {
     enabled: true,
     count: 600,
-    palette: ['#4a8d7e', '#377f6a', '#184f52', '#143b36'], // Ghibli greens
+    // Vivid Miyazaki palette — not dark greens. Think Totoro meadow, Howl's garden
+    palette: ['#e85d75', '#f0a830', '#5bc0eb', '#fde74c', '#ff6b6b', '#7dcfb6'],
     celShading: true,
   },
 
