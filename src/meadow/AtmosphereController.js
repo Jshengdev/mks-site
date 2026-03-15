@@ -64,6 +64,10 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.2,
+    waveWindStrength: 0.0,   // frozen — held breath
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack
@@ -103,6 +107,10 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.2,
     godRayIntensity: 0.15,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.1,
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
@@ -142,6 +150,10 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.9,
     godRayIntensity: 0.5,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.6,
+    waveWindStrength: 0.3,   // gentle rolling waves
   },
   {
     t: 0.75, // DEEPENING — The Hidden Sun revealed, peak emotional climax
@@ -182,6 +194,10 @@ const KEYFRAMES = [
     dustMoteBrightness: 1.0,
     godRayIntensity: 1.0,     // max — "rays fan out and touch everything"
     kuwaharaStrength: 0.35,   // painterly glow at emotional peak
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.8,
+    waveWindStrength: 0.3,   // sustained waves at peak
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
@@ -221,6 +237,10 @@ const KEYFRAMES = [
     dustMoteBrightness: 0.3,
     godRayIntensity: 0.2,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.3,
+    waveWindStrength: 0.1,   // settling
   },
 ]
 
@@ -259,6 +279,7 @@ export default class AtmosphereController {
 
     // Reusable THREE objects for sun position calc
     this._sunPos = new THREE.Vector3()
+    this._waveWindDir = new THREE.Vector2()
 
     // Direct references (no per-frame scene traversal)
     this._ambientLight = this.sceneSetup.ambientLight ?? null
@@ -345,6 +366,11 @@ export default class AtmosphereController {
       gm.setUniform('uAmbientStrength', c.grassAmbientStrength)
       gm.setUniform('uTranslucencyStrength', c.grassTranslucency)
       gm.setUniform('uFogFade', c.grassFogFade)
+      // Wave wind
+      gm.setUniform('uWaveWindSpeed', c.waveWindSpeed)
+      gm.setUniform('uWaveWindStrength', c.waveWindStrength)
+      this._waveWindDir.set(c.waveWindDirX, c.waveWindDirY)
+      gm.setUniform('uWaveWindDir', this._waveWindDir)
     }
 
     // ─── Cloud shadows ───

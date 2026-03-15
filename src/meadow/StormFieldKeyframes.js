@@ -48,6 +48,10 @@ export const STORM_FIELD_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     rainBrightness: 0.3,   // light rain starting
+    waveWindDirX: 0.8,
+    waveWindDirY: 0.6,
+    waveWindSpeed: 0.6,
+    waveWindStrength: 0.4,   // wind building
   },
   {
     t: 0.25, // PURSUIT — running now, wind howling, rain intensifying
@@ -88,6 +92,10 @@ export const STORM_FIELD_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     rainBrightness: 0.6,
+    waveWindDirX: 0.85,
+    waveWindDirY: 0.53,
+    waveWindSpeed: 1.0,
+    waveWindStrength: 0.9,
   },
   {
     t: 0.50, // TEMPEST — peak storm, maximum darkness and wind
@@ -128,6 +136,10 @@ export const STORM_FIELD_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     rainBrightness: 0.9,    // peak rain
+    waveWindDirX: 0.9,
+    waveWindDirY: 0.44,
+    waveWindSpeed: 1.5,
+    waveWindStrength: 1.5,   // violent — grass flattened
   },
   {
     t: 0.75, // BREAK — storm begins to crack, first rays of hope
@@ -168,6 +180,10 @@ export const STORM_FIELD_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     rainBrightness: 0.4,    // rain slowing
+    waveWindDirX: 0.85,
+    waveWindDirY: 0.53,
+    waveWindSpeed: 0.8,
+    waveWindStrength: 0.8,   // easing
   },
   {
     t: 1.0, // REVELATION — you found what you were searching for
@@ -208,5 +224,9 @@ export const STORM_FIELD_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     rainBrightness: 0.1,    // last drops
+    waveWindDirX: 0.8,
+    waveWindDirY: 0.6,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.3,   // calm after storm
   },
 ]

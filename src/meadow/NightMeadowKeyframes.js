@@ -46,6 +46,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.1,
+    waveWindStrength: 0.0,   // frozen stillness
   },
   {
     t: 0.25, // REMEMBRANCE — fireflies stir, memories surface
@@ -86,6 +90,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.1,
+    waveWindStrength: 0.02,  // whisper
   },
   {
     t: 0.50, // GRIEF — peak emotion, fireflies everywhere like tears of light
@@ -126,6 +134,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.15,
+    waveWindStrength: 0.05,  // gentle sigh
   },
   {
     t: 0.75, // PEACE — grief settling, a deep exhale, warmth acknowledged
@@ -166,6 +178,10 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.12,
+    waveWindStrength: 0.03,
   },
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed
@@ -206,5 +222,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.707,
+    waveWindDirY: 0.707,
+    waveWindSpeed: 0.08,
+    waveWindStrength: 0.0,   // still again
   },
 ]

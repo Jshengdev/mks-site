@@ -46,6 +46,10 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.0,
+    waveWindDirY: 1.0,       // from the ocean
+    waveWindSpeed: 0.3,
+    waveWindStrength: 0.1,   // gentle sea breeze
   },
   {
     t: 0.25, // RECOGNITION — the ocean comes into view, vastness registers
@@ -86,6 +90,10 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.0,
+    waveWindDirY: 1.0,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.15,
   },
   {
     t: 0.50, // CONTEMPLATION — beside the figure, looking at the horizon together
@@ -126,6 +134,10 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.0,
+    waveWindDirY: 1.0,
+    waveWindSpeed: 0.5,
+    waveWindStrength: 0.2,   // peak sea breeze
   },
   {
     t: 0.75, // UNDERSTANDING — the goodbye becomes real, beauty in the sadness
@@ -166,6 +178,10 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.0,
+    waveWindDirY: 1.0,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.15,
   },
   {
     t: 1.0, // RELEASE — letting go, the horizon dissolves into darkness
@@ -206,5 +222,9 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    waveWindDirX: 0.0,
+    waveWindDirY: 1.0,
+    waveWindSpeed: 0.25,
+    waveWindStrength: 0.08,  // dying breeze
   },
 ]

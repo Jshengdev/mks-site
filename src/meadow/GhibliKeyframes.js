@@ -46,6 +46,10 @@ export const GHIBLI_KEYFRAMES = [
     godRayIntensity: 0.2,
     kuwaharaStrength: 0.3,    // painterly from the start
     petalBrightness: 0.4,     // petals drifting
+    waveWindDirX: 0.6,
+    waveWindDirY: 0.8,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.1,
   },
   {
     t: 0.25, // IMMERSION — deeper into the world, Kuwahara intensifying
@@ -86,6 +90,10 @@ export const GHIBLI_KEYFRAMES = [
     godRayIntensity: 0.4,
     kuwaharaStrength: 0.45,
     petalBrightness: 0.7,
+    waveWindDirX: 0.6,
+    waveWindDirY: 0.8,
+    waveWindSpeed: 0.6,
+    waveWindStrength: 0.2,
   },
   {
     t: 0.50, // RADIANCE — peak vividity, the world is impossibly beautiful
@@ -126,6 +134,10 @@ export const GHIBLI_KEYFRAMES = [
     godRayIntensity: 0.7,     // dramatic rays
     kuwaharaStrength: 0.6,    // peak painterly
     petalBrightness: 1.0,     // petals everywhere
+    waveWindDirX: 0.6,
+    waveWindDirY: 0.8,
+    waveWindSpeed: 0.8,
+    waveWindStrength: 0.3,   // flowing waves
   },
   {
     t: 0.75, // TRANSFIGURATION — the falling begins, beauty becoming bittersweet
@@ -166,6 +178,10 @@ export const GHIBLI_KEYFRAMES = [
     godRayIntensity: 0.9,
     kuwaharaStrength: 0.55,
     petalBrightness: 0.9,
+    waveWindDirX: 0.6,
+    waveWindDirY: 0.8,
+    waveWindSpeed: 0.7,
+    waveWindStrength: 0.35,  // peak whimsical waves
   },
   {
     t: 1.0, // TRANSCENDENCE — his life has never felt brighter
@@ -206,5 +222,9 @@ export const GHIBLI_KEYFRAMES = [
     godRayIntensity: 0.4,
     kuwaharaStrength: 0.4,
     petalBrightness: 0.5,    // petals softening
+    waveWindDirX: 0.6,
+    waveWindDirY: 0.8,
+    waveWindSpeed: 0.4,
+    waveWindStrength: 0.15,  // settling
   },
 ]
