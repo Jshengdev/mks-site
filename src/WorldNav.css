@@ -1,0 +1,65 @@
+/* WorldNav — fixed top nav, invisible until hover, gallery restraint */
+.world-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  pointer-events: none;
+  /* Fade in on hover via parent — nav itself is always present */
+}
+
+.world-nav__list {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.world-nav__item {
+  pointer-events: auto;
+}
+
+.world-nav__link {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #c8d4e8;
+  opacity: 0.35;
+  text-decoration: none;
+  transition: opacity 0.6s ease;
+  padding: 0.25rem 0;
+  position: relative;
+}
+
+.world-nav__link:hover {
+  opacity: 0.7;
+}
+
+.world-nav__link--active {
+  opacity: 0.9;
+}
+
+/* Active indicator — thin line beneath, fades in */
+.world-nav__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--env-color, #c8d4e8);
+  opacity: 0.6;
+}
+
+/* Reduced motion: no transitions */
+@media (prefers-reduced-motion: reduce) {
+  .world-nav__link {
+    transition: none;
+  }
+}

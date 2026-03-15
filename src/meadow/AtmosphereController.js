@@ -219,19 +219,21 @@ const ARRAY_KEYS = new Set(
   PARAM_KEYS.filter(k => Array.isArray(KEYFRAMES[0][k]))
 )
 
+export { KEYFRAMES as MEADOW_KEYFRAMES }
+
 export default class AtmosphereController {
-  constructor(sceneSetup, grassManager, fireflies, cloudShadows, postProcessing) {
+  constructor(sceneSetup, grassManager, fireflies, cloudShadows, postProcessing, keyframes = null) {
     this.sceneSetup = sceneSetup
-    this.grassManager = grassManager
-    this.fireflies = fireflies
-    this.cloudShadows = cloudShadows
+    this.grassManager = grassManager ?? null
+    this.fireflies = fireflies ?? null
+    this.cloudShadows = cloudShadows ?? null
     this.postProcessing = postProcessing
-    // Optional subsystems — set after construction by MeadowEngine
+    // Optional subsystems — set after construction by engine
     this.dustMotes = null
     this.godRayPass = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
-    this.keyframes = KEYFRAMES
+    this.keyframes = keyframes ?? KEYFRAMES
     this.current = {}
 
     // Initialize current to first keyframe
@@ -311,24 +313,30 @@ export default class AtmosphereController {
     }
 
     // ─── Grass (uses setUniform to propagate to base + all chunk clones) ───
-    const gm = this.grassManager
-    gm.material.uniforms.uBaseColor.value.setRGB(...c.grassBaseColor)
-    gm.material.uniforms.uTipColor.value.setRGB(...c.grassTipColor)
-    gm.setUniform('uBaseColor', gm.material.uniforms.uBaseColor.value)
-    gm.setUniform('uTipColor', gm.material.uniforms.uTipColor.value)
-    gm.setUniform('uSpeed', c.grassWindSpeed)
-    gm.setUniform('uAmbientStrength', c.grassAmbientStrength)
-    gm.setUniform('uTranslucencyStrength', c.grassTranslucency)
-    gm.setUniform('uFogFade', c.grassFogFade)
+    if (this.grassManager) {
+      const gm = this.grassManager
+      gm.material.uniforms.uBaseColor.value.setRGB(...c.grassBaseColor)
+      gm.material.uniforms.uTipColor.value.setRGB(...c.grassTipColor)
+      gm.setUniform('uBaseColor', gm.material.uniforms.uBaseColor.value)
+      gm.setUniform('uTipColor', gm.material.uniforms.uTipColor.value)
+      gm.setUniform('uSpeed', c.grassWindSpeed)
+      gm.setUniform('uAmbientStrength', c.grassAmbientStrength)
+      gm.setUniform('uTranslucencyStrength', c.grassTranslucency)
+      gm.setUniform('uFogFade', c.grassFogFade)
+    }
 
     // ─── Cloud shadows ───
-    this.cloudShadows.material.opacity = c.cloudShadowOpacity
-    this.cloudShadows._driftSpeed = c.cloudDriftSpeed
+    if (this.cloudShadows) {
+      this.cloudShadows.material.opacity = c.cloudShadowOpacity
+      this.cloudShadows._driftSpeed = c.cloudDriftSpeed
+    }
 
     // ─── Fireflies ───
-    this.fireflies.material.uniforms.uSize.value = c.fireflySize
-    this.fireflies.material.uniforms.uBrightness.value = c.fireflyBrightness
-    this.fireflies.points.visible = c.fireflyBrightness > 0.01
+    if (this.fireflies) {
+      this.fireflies.material.uniforms.uSize.value = c.fireflySize
+      this.fireflies.material.uniforms.uBrightness.value = c.fireflyBrightness
+      this.fireflies.points.visible = c.fireflyBrightness > 0.01
+    }
 
     // ─── Post-processing ───
     const pp = this.postProcessing
