@@ -2,19 +2,20 @@
 // 2D photographic cutout of Michael Kim Sheng projected as a billboard in 3D space
 // Positioned at the far end of the meadow, looking up, feeling the music
 import * as THREE from 'three'
-import { getTerrainHeight } from './TerrainPlane.js'
+import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 
 const _lookTarget = new THREE.Vector3()
 
 export default class ArtistFigure {
-  constructor(scene) {
+  constructor(scene, getTerrainHeight) {
     this._scene = scene
+    const heightFn = getTerrainHeight ?? defaultGetTerrainHeight
 
     // Position at the far end of the camera spline path
     // The spline ends at approximately z = -160, so place the figure at z = -145
     // (visible from the Deepening zone onward, you scroll toward him)
     const worldPos = new THREE.Vector3(2, 0, -145)
-    worldPos.y = getTerrainHeight(worldPos.x, worldPos.z)
+    worldPos.y = heightFn(worldPos.x, worldPos.z)
 
     // Tall, narrow plane — roughly human proportions
     const geometry = new THREE.PlaneGeometry(1.2, 2.4)

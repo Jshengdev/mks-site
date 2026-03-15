@@ -1,7 +1,7 @@
 // src/meadow/PortalHint.js
 // Shimmering portal spots in the meadow that hint at future worlds
 import * as THREE from 'three'
-import { getTerrainHeight } from './TerrainPlane.js'
+import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 import vertexShader from './shaders/portal.vert.glsl?raw'
 import fragmentShader from './shaders/portal.frag.glsl?raw'
 
@@ -26,9 +26,10 @@ const PORTAL_CONFIGS = [
 const _mouse = new THREE.Vector2()
 
 export default class PortalHint {
-  constructor(scene, camera) {
+  constructor(scene, camera, getTerrainHeight) {
     this.scene = scene
     this.camera = camera
+    this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
     this.portals = []
     this.raycaster = new THREE.Raycaster()
 
@@ -53,7 +54,7 @@ export default class PortalHint {
 
       const mesh = new THREE.Mesh(geometry, material)
       const [x, , z] = config.worldPos
-      const y = getTerrainHeight(x, z)
+      const y = this._getTerrainHeight(x, z)
       mesh.position.set(x, y, z)
       mesh.userData.label = config.label
 

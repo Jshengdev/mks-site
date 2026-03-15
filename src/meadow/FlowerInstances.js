@@ -1,7 +1,7 @@
 // Instanced flowers with toon shading — BotW-inspired
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import { getTerrainHeight } from './TerrainPlane.js'
+import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 import flowerVertexShader from './shaders/flower.vert.glsl?raw'
 import flowerFragmentShader from './shaders/flower.frag.glsl?raw'
 
@@ -22,7 +22,8 @@ const SUN_DIR = new THREE.Vector3(0.0, 0.21, -1.0).normalize()
 const SUN_COLOR = new THREE.Color(1.0, 1.0, 0.99)
 
 export default class FlowerInstances {
-  constructor(scene, cameraRig, count = 800) {
+  constructor(scene, cameraRig, count = 800, getTerrainHeight) {
+    this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
     this.meshes = []
 
     // Simple procedural flower geometry (cylinder stem + sphere head)
@@ -62,7 +63,7 @@ export default class FlowerInstances {
         // Skip clearings
         if (this._inClearing(x, z, cameraRig)) continue
 
-        const y = getTerrainHeight(x, z)
+        const y = this._getTerrainHeight(x, z)
         dummy.position.set(x, y, z)
         dummy.rotation.y = Math.random() * Math.PI * 2
         dummy.scale.setScalar(0.6 + Math.random() * 0.8)

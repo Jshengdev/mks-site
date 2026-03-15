@@ -1,7 +1,7 @@
 // CameraRig — Spline camera path driven by scroll progress
 // Accepts config from environment definitions for per-world camera behavior
 import * as THREE from 'three'
-import { getTerrainHeight } from './TerrainPlane.js'
+import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 
 // Default control points (golden meadow S-curve)
 const DEFAULT_CONTROL_POINTS = [
@@ -15,7 +15,7 @@ const DEFAULT_CONTROL_POINTS = [
 ]
 
 export default class CameraRig {
-  constructor(camera, config = {}) {
+  constructor(camera, config = {}, getTerrainHeight) {
     this.camera = camera
     this.currentT = 0
     this.targetT = 0
@@ -27,6 +27,9 @@ export default class CameraRig {
     camera.updateProjectionMatrix()
     this.fovMaxBoost = 20
     this.fovLerpBack = 0.04
+
+    // Per-world terrain height function
+    this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
 
     // Camera shake (storm field etc)
     this._shake = config.shake ?? null
@@ -56,10 +59,10 @@ export default class CameraRig {
     this.currentT += (this.targetT - this.currentT) * this.lerpFactor
 
     this.curve.getPoint(this.currentT, this._cachedPos)
-    this._cachedPos.y = getTerrainHeight(this._cachedPos.x, this._cachedPos.z) + this.heightOffset
+    this._cachedPos.y = this._getTerrainHeight(this._cachedPos.x, this._cachedPos.z) + this.heightOffset
 
     this.curve.getPoint(Math.min(this.currentT + 0.01, 1.0), this._lookTarget)
-    this._lookTarget.y = getTerrainHeight(this._lookTarget.x, this._lookTarget.z) + this.heightOffset
+    this._lookTarget.y = this._getTerrainHeight(this._lookTarget.x, this._lookTarget.z) + this.heightOffset
 
     this.camera.position.copy(this._cachedPos)
     this.camera.lookAt(this._lookTarget)

@@ -134,16 +134,20 @@ export default class WorldEngine {
 
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     this.scrollEngine = new ScrollEngine()
-    this.cameraRig = new CameraRig(this.camera, envConfig.camera)
-    this._contentSections = []
-    this._sectionPositions = SECTION_T_VALUES.map(t => this.cameraRig.curve.getPoint(t))
-    this.clock = new THREE.Clock()
 
     // ─── Scene (sky + lights from config) ───
     this.sceneSetup = setupScene(this.scene, envConfig)
 
-    // ─── Terrain (always — color from config) ───
-    this.terrain = createTerrain(this.scene, envConfig)
+    // ─── Terrain (per-world geometry + height function) ───
+    const terrainResult = createTerrain(this.scene, envConfig)
+    this.terrain = terrainResult.mesh
+    this.getTerrainHeight = terrainResult.getHeight
+
+    // ─── Camera (wired to per-world terrain height) ───
+    this.cameraRig = new CameraRig(this.camera, envConfig.camera, this.getTerrainHeight)
+    this._contentSections = []
+    this._sectionPositions = SECTION_T_VALUES.map(t => this.cameraRig.curve.getPoint(t))
+    this.clock = new THREE.Clock()
 
     // ─── Stylized ocean (conditional) ───
     this.ocean = null
@@ -164,7 +168,7 @@ export default class WorldEngine {
         ...this.config,
         grassCount: Math.floor(envBlades * tierScale),
       }
-      this.grassManager = new GrassChunkManager(this.scene, scaledConfig, this.cloudShadows.texture)
+      this.grassManager = new GrassChunkManager(this.scene, scaledConfig, this.cloudShadows.texture, this.getTerrainHeight)
     }
 
     // ─── Cel-shading on grass (conditional — ghibli-painterly) ───
@@ -187,7 +191,7 @@ export default class WorldEngine {
     this.flowers = null
     if (envConfig.flowers?.enabled) {
       const count = envConfig.flowers.count ?? 800
-      this.flowers = new FlowerInstances(this.scene, this.cameraRig, count)
+      this.flowers = new FlowerInstances(this.scene, this.cameraRig, count, this.getTerrainHeight)
     }
 
     // ─── Post-processing ───
@@ -235,14 +239,14 @@ export default class WorldEngine {
     // ─── Artist figure (conditional) ───
     this.artistFigure = null
     if (envConfig.figure?.enabled) {
-      this.artistFigure = new ArtistFigure(this.scene)
+      this.artistFigure = new ArtistFigure(this.scene, this.getTerrainHeight)
       this.artistFigure.loadTexture(mksPortraitUrl)
     }
 
     // ─── Portals (conditional — golden meadow only for now) ───
     this.portals = null
     if (envConfig.id === 'golden-meadow') {
-      this.portals = new PortalHint(this.scene, this.camera)
+      this.portals = new PortalHint(this.scene, this.camera, this.getTerrainHeight)
     }
 
     // ─── Star field (conditional — night/dusk skies) ───

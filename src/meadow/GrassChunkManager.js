@@ -1,7 +1,7 @@
 // src/meadow/GrassChunkManager.js
 import * as THREE from 'three'
 import { createBladeGeometry, generateInstanceMatrices } from './GrassGeometry.js'
-import { getTerrainHeight } from './TerrainPlane.js'
+import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 import grassVertexShader from './shaders/grass.vert.glsl?raw'
 import grassFragmentShader from './shaders/grass.frag.glsl?raw'
 
@@ -17,8 +17,9 @@ const SUN_COLOR = new THREE.Color(1.0, 0.92, 0.75)
 const SUN_DIR = new THREE.Vector3(0.0, 0.21, -1.0).normalize() // ~12° elevation
 
 export default class GrassChunkManager {
-  constructor(scene, config, cloudTexture) {
+  constructor(scene, config, cloudTexture, getTerrainHeight) {
     this.scene = scene
+    this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
     this.maxChunks = config.grassChunks
     this.bladesPerChunk = Math.floor(config.grassCount / this.maxChunks)
 
@@ -113,7 +114,7 @@ export default class GrassChunkManager {
 
     // Generate instance matrices (stored for LOD swap reuse)
     const matrices = generateInstanceMatrices(
-      this.bladesPerChunk, CHUNK_SIZE, 0, offsetZ, getTerrainHeight
+      this.bladesPerChunk, CHUNK_SIZE, 0, offsetZ, this._getTerrainHeight
     )
 
     // Determine initial LOD based on camera distance
