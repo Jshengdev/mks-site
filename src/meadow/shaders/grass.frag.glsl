@@ -11,6 +11,8 @@ uniform float uAmbientStrength;       // 0.7
 uniform float uTranslucencyStrength;  // 1.5
 uniform float uFogFade;               // 0.005
 uniform sampler2D uCloudTexture;
+uniform vec3 uFogColorNear;   // per-world fog near-sun (warm haze)
+uniform vec3 uFogColorFar;    // per-world fog far-sun (cool haze)
 
 // Cel-shading uniforms (research winner: craftzdog 4-band technique)
 // thresholds [0.6, 0.35, 0.001], multipliers [1.2, 0.9, 0.5, 0.25]
@@ -66,8 +68,8 @@ vec3 applyFog(vec3 rgb, vec3 rayDir, vec3 sunDir) {
     * (1.0 - exp(-dist * rd * uFogFade)) / rd;
   float sunAmount = max(dot(rayDir, sunDir), 0.0);
   // Near-sun haze warm, far-sun haze cool (from al-ro)
-  // BotW warm golden haze: amber near-sun, soft warm blue far-sun
-  vec3 fogColor = mix(vec3(0.45, 0.50, 0.65), vec3(1.0, 0.90, 0.60), pow(sunAmount, 8.0));
+  // Per-world fog colors driven by AtmosphereController
+  vec3 fogColor = mix(uFogColorFar, uFogColorNear, pow(sunAmount, 8.0));
   return mix(rgb, fogColor, clamp(fogAmount, 0.0, 1.0));
 }
 

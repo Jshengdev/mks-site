@@ -97,6 +97,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     oceanColorFar: [0.01, 0.06, 0.12],   // water tint far
     oceanFoamBrightness: 0.5,            // caustic light brightness on surfaces
     oceanWaveLineIntensity: 0.4,          // ripple pattern on surfaces
+    caDistortion: 0.003,                   // subtle water refraction
+    cloudCoverage: 0,                      // no volumetric clouds underwater
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.25, // DESCENT — passing through the first light shafts, pillars emerge
@@ -169,6 +173,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     oceanColorFar: [0.01, 0.05, 0.10],
     oceanFoamBrightness: 0.65,            // caustics most vivid at mid-depth
     oceanWaveLineIntensity: 0.55,
+    caDistortion: 0.005,                   // light refracts more at depth
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.50, // NAVE — heart of the cathedral, surrounded by pillars and coral
@@ -245,6 +253,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     oceanColorFar: [0.01, 0.04, 0.08],
     oceanFoamBrightness: 0.50,          // caustics dimming with depth
     oceanWaveLineIntensity: 0.40,
+    caDistortion: 0.008,                   // peak refraction distortion at nave depth
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.75, // CRYPT — deep cathedral, bioluminescence is primary light
@@ -322,6 +334,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     oceanColorFar: [0.005, 0.03, 0.06],
     oceanFoamBrightness: 0.20,          // caustics almost invisible at this depth
     oceanWaveLineIntensity: 0.15,
+    caDistortion: 0.006,                   // refraction eases in the deep
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 1.0, // ABYSS — near the floor, looking up at fading light far above
@@ -402,5 +418,9 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     oceanColorFar: [0.003, 0.02, 0.04], // near-black
     oceanFoamBrightness: 0.05,          // caustics are a distant memory
     oceanWaveLineIntensity: 0.05,       // the surface is another world
+    caDistortion: 0.004,                   // settling — the deep is still
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
 ]

@@ -55,8 +55,8 @@ export default {
   grass: {
     enabled: true,
     bladeCount: 20000,     // cliff-top only, sparse
-    baseColor: [0.03, 0.10, 0.03],
-    tipColor: [0.12, 0.30, 0.08],
+    baseColor: [0.02, 0.06, 0.06],   // dark teal-grey cliff grass
+    tipColor: [0.06, 0.14, 0.12],    // muted teal tips
     windSpeed: 0.5,
   },
 

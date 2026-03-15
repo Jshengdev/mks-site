@@ -265,6 +265,49 @@ function frozenTundraHeight(x, z) {
   return dune1 + dune2 + sastrugi + river + ripple
 }
 
+// Void — flat plane (sonic void, abstract worlds)
+function voidHeight() {
+  return 0
+}
+
+// Cathedral Nave — worn stone floor with pillar bases
+// Very flat with subtle worn-stone undulation + column mound positions
+function cathedralNaveHeight(x, z) {
+  // Worn stone floor — very low-amplitude undulation
+  const floor = Math.sin(x * 0.04) * Math.cos(z * 0.035) * 0.15
+    + Math.sin(x * 0.08 + z * 0.06) * 0.05
+
+  // Pillar bases — gaussian mounds on an irregular grid along z-axis
+  const mound = (mx, mz, r, h) => {
+    const md = (x - mx) * (x - mx) + (z - mz) * (z - mz)
+    return h * Math.exp(-md / (2 * r * r))
+  }
+  // Two rows of pillars along the nave, offset from center
+  const pillars =
+    mound(-8, -15, 2, 3) + mound(8, -15, 2, 3) +
+    mound(-8, -35, 2, 3.5) + mound(8, -35, 2, 3.5) +
+    mound(-8, -55, 2, 3) + mound(8, -55, 2, 3) +
+    mound(-8, -75, 2, 3.5) + mound(8, -75, 2, 3.5) +
+    mound(-8, -95, 2, 3) + mound(8, -95, 2, 3)
+
+  // Worn grooves between pillar rows (shallow channels)
+  const groove = Math.abs(x) < 6 ? -0.08 : 0
+
+  return floor + pillars + groove
+}
+
+// Abyssal floor — mostly flat with gentle ridges and crevasses
+function abyssalFloorHeight(x, z) {
+  // Very gentle undulation — silt-covered abyss
+  const base = Math.sin(x * 0.008) * Math.cos(z * 0.006) * 0.6
+  const ridge = Math.sin(x * 0.016 + z * 0.012) * 0.3
+  // Occasional crevasse — sharp narrow dips
+  const crevasse = Math.sin(x * 0.04 + z * 0.03) > 0.92
+    ? -2.0 * (Math.sin(x * 0.04 + z * 0.03) - 0.92) * 12.5
+    : 0
+  return base + ridge + crevasse
+}
+
 // ─── Height function factory ───
 
 const HEIGHT_FN_MAP = {
@@ -279,6 +322,9 @@ const HEIGHT_FN_MAP = {
   'clockwork-forest': clockworkForestHeight,
   'frozen-tundra': frozenTundraHeight,
   'infinite-staircase': infiniteStaircaseHeight,
+  'void': voidHeight,
+  'cathedral-nave': cathedralNaveHeight,
+  'abyssal-floor': abyssalFloorHeight,
 }
 
 function getHeightFn(terrainType) {
@@ -310,6 +356,38 @@ export function createTerrain(scene, envConfig = {}) {
     pos.setY(i, heightFn(pos.getX(i), pos.getZ(i)))
   }
   geometry.computeVertexNormals()
+
+  // ─── Height-driven terrain vertex colors (opt-in via terrainConfig.colorPalette) ───
+  // Each world using simplex-layers can define its own 3-color palette:
+  //   [valleyColor, hillColor, peakColor] as RGB arrays
+  // Golden Meadow: warm earthy tones visible between grass blades
+  if (terrainConfig.colorPalette && terrainConfig.colorPalette.length >= 3) {
+    const colors = new Float32Array(pos.count * 3)
+    const [valleyRGB, hillRGB, peakRGB] = terrainConfig.colorPalette
+    const valleyColor = new THREE.Color().setRGB(...valleyRGB)
+    const hillColor = new THREE.Color().setRGB(...hillRGB)
+    const peakColor = new THREE.Color().setRGB(...peakRGB)
+
+    let minH = Infinity, maxH = -Infinity
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i)
+      if (y < minH) minH = y
+      if (y > maxH) maxH = y
+    }
+    const range = maxH - minH || 1
+
+    for (let i = 0; i < pos.count; i++) {
+      const heightT = (pos.getY(i) - minH) / range
+      const c = new THREE.Color().copy(valleyColor).lerp(hillColor, heightT)
+      if (heightT > 0.6) {
+        c.lerp(peakColor, (heightT - 0.6) * 2.5)
+      }
+      colors[i * 3] = c.r
+      colors[i * 3 + 1] = c.g
+      colors[i * 3 + 2] = c.b
+    }
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+  }
 
   // ─── Ghibli: quantized vertex colors (3-4 bands) ───
   if (terrainConfig.type === 'simplex-layers-stylized' && terrainConfig.celShaded) {
@@ -355,6 +433,51 @@ export function createTerrain(scene, envConfig = {}) {
       // Steepness from normal.y (1 = flat, 0 = vertical)
       const steepness = 1 - normals.getY(i)
       const c = steepness > 0.3 ? cliffColor : topColor
+      colors[i * 3] = c.r
+      colors[i * 3 + 1] = c.g
+      colors[i * 3 + 2] = c.b
+    }
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
+  }
+
+  // ─── Storm Field: dark rock with height-based ridge highlights ───
+  // Sharp angular peaks — ridgelines catch faint lightning-blue, valleys are near-black
+  if (terrainConfig.type === 'diamond-square') {
+    const colors = new Float32Array(pos.count * 3)
+    const normals = geometry.attributes.normal
+
+    // Storm palette: near-black valleys, dark slate ridges, faint blue-grey peaks
+    const valleyDark = new THREE.Color(0.02, 0.02, 0.02)    // near-black earth
+    const slateMid = new THREE.Color(0.05, 0.05, 0.06)      // dark blue-grey slate
+    const ridgeLight = new THREE.Color(0.08, 0.08, 0.10)     // faint blue-grey ridgeline
+    const steepFace = new THREE.Color(0.03, 0.03, 0.04)      // dark cliff face
+
+    let minH = Infinity, maxH = -Infinity
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i)
+      if (y < minH) minH = y
+      if (y > maxH) maxH = y
+    }
+    const range = maxH - minH || 1
+
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i)
+      const heightT = (y - minH) / range
+      const steepness = 1 - Math.abs(normals.getY(i))
+
+      // Height-driven: dark valleys → slightly lighter ridgelines
+      const c = new THREE.Color().copy(valleyDark).lerp(slateMid, heightT)
+
+      // Ridge peaks get faint blue-grey highlight (lightning-illuminated feel)
+      if (heightT > 0.65) {
+        c.lerp(ridgeLight, (heightT - 0.65) * 2.5)
+      }
+
+      // Steep faces are darkest (shadow in V-shaped crevices)
+      if (steepness > 0.35) {
+        c.lerp(steepFace, Math.min(1, (steepness - 0.35) * 2.0))
+      }
+
       colors[i * 3] = c.r
       colors[i * 3 + 1] = c.g
       colors[i * 3 + 2] = c.b

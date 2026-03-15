@@ -74,13 +74,13 @@ const KEYFRAMES = [
     splitToneWarm: [0.925, 0.706, 0.518],  // default amber
     splitToneCool: [0.831, 0.769, 0.894],  // default lavender
     // Ocean defaults (zeros — meadow has no water)
-    // MUST be in KEYFRAMES[0] so PARAM_KEYS includes them for interpolation
+    // Present in KEYFRAMES[0] as base defaults for all worlds
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
     // Volumetric cloud defaults (zeros — meadow has no clouds)
-    // MUST be in KEYFRAMES[0] so PARAM_KEYS includes them for interpolation
+    // Present in KEYFRAMES[0] as base defaults for all worlds
     // Winner: volumetric-cumulus-3d-noise (49/70)
     cloudCoverage: 0,
     cloudDensity: 0,
@@ -309,11 +309,8 @@ const KEYFRAMES = [
   },
 ]
 
-// All scalar/array param keys (exclude 't')
-const PARAM_KEYS = Object.keys(KEYFRAMES[0]).filter(k => k !== 't')
-const ARRAY_KEYS = new Set(
-  PARAM_KEYS.filter(k => Array.isArray(KEYFRAMES[0][k]))
-)
+// Base param keys from hardcoded KEYFRAMES (used as fallback set)
+const BASE_PARAM_KEYS = Object.keys(KEYFRAMES[0]).filter(k => k !== 't')
 
 export { KEYFRAMES as MEADOW_KEYFRAMES }
 
@@ -337,9 +334,23 @@ export default class AtmosphereController {
     this.keyframes = keyframes ?? KEYFRAMES
     this.current = {}
 
+    // ─── Instance-level param keys: union of hardcoded base + world-specific keys ───
+    // Each world may define unique parameters (e.g. ocean worlds have oceanColorNear,
+    // storm worlds have cloudCoverage). Using module-level PARAM_KEYS from KEYFRAMES[0]
+    // would silently ignore any world-specific keys not in the hardcoded set.
+    const worldKeys = Object.keys(this.keyframes[0]).filter(k => k !== 't')
+    const allKeys = new Set([...BASE_PARAM_KEYS, ...worldKeys])
+    this.paramKeys = [...allKeys]
+    this.arrayKeys = new Set(
+      this.paramKeys.filter(k => {
+        const val = this.keyframes[0][k] ?? KEYFRAMES[0][k]
+        return Array.isArray(val)
+      })
+    )
+
     // Initialize current to first keyframe of the active world's keyframes
     const initKf = this.keyframes[0]
-    for (const key of PARAM_KEYS) {
+    for (const key of this.paramKeys) {
       const val = initKf[key] ?? KEYFRAMES[0][key]
       this.current[key] = Array.isArray(val) ? [...val] : val
     }
@@ -350,7 +361,15 @@ export default class AtmosphereController {
 
     // Direct references (no per-frame scene traversal)
     this._ambientLight = this.sceneSetup.ambientLight ?? null
+    // sky?.parent works for Preetham worlds but is null for cel-dome/void worlds.
+    // Fall back to skyMesh?.parent or sunLight?.parent (always in the scene).
     this._scene = this.sceneSetup.sky?.parent
+      ?? this.sceneSetup.skyMesh?.parent
+      ?? this.sceneSetup.sunLight?.parent
+
+    // Push initial keyframe values to all available subsystems immediately.
+    // Prevents one-frame flash of setupScene defaults before atmosphere takes over.
+    this._pushToSubsystems()
   }
 
   update(scrollProgress) {
@@ -370,11 +389,15 @@ export default class AtmosphereController {
     const eased = smoothstep(localT)
 
     // Interpolate all params (array values written in-place to avoid allocations)
-    for (const key of PARAM_KEYS) {
-      if (ARRAY_KEYS.has(key)) {
-        lerpArrayInto(this.current[key], prev[key], next[key], eased)
+    // Uses instance-level paramKeys so each world's unique params are interpolated.
+    // Fallback to current value for any key missing from a specific keyframe.
+    for (const key of this.paramKeys) {
+      const prevVal = prev[key] ?? this.current[key]
+      const nextVal = next[key] ?? this.current[key]
+      if (this.arrayKeys.has(key)) {
+        lerpArrayInto(this.current[key], prevVal, nextVal, eased)
       } else {
-        this.current[key] = lerpScalar(prev[key], next[key], eased)
+        this.current[key] = lerpScalar(prevVal, nextVal, eased)
       }
     }
 
@@ -438,6 +461,15 @@ export default class AtmosphereController {
       gm.setUniform('uWaveWindStrength', c.waveWindStrength)
       this._waveWindDir.set(c.waveWindDirX, c.waveWindDirY)
       gm.setUniform('uWaveWindDir', this._waveWindDir)
+      // Sync sun direction + color to grass shader (otherwise stays at golden-hour defaults)
+      gm.setUniform('uSunDirection', this._sunPos)
+      gm.material.uniforms.uSunColor.value.setRGB(...c.sunLightColor)
+      gm.setUniform('uSunColor', gm.material.uniforms.uSunColor.value)
+      // Sync per-world fog colors to grass shader (otherwise hardcoded golden-meadow fog)
+      gm.material.uniforms.uFogColorNear.value.setRGB(...c.fogMidColor)
+      gm.setUniform('uFogColorNear', gm.material.uniforms.uFogColorNear.value)
+      gm.material.uniforms.uFogColorFar.value.setRGB(...c.fogFarColor)
+      gm.setUniform('uFogColorFar', gm.material.uniforms.uFogColorFar.value)
     }
 
     // ─── Cloud shadows ───

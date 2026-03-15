@@ -27,8 +27,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     sunLightColor: [0.40, 0.45, 0.60],  // cool blue-steel
     sunLightIntensity: 0.6,              // exp-081 V5: +0.1 ambient lift
     ambientIntensity: 0.12,              // exp-081 V5: 0.08→0.12 (visibility lift)
-    grassBaseColor: [0.03, 0.08, 0.03],
-    grassTipColor: [0.10, 0.25, 0.08],
+    grassBaseColor: [0.02, 0.06, 0.06],   // dark teal-grey — cliff grass, not meadow
+    grassTipColor: [0.06, 0.14, 0.12],    // muted teal tips — cold ocean wind
     grassWindSpeed: 0.20,   // exp-082 V5: 0.3→0.20 (barely any breeze on arrival)
     grassAmbientStrength: 0.22,          // exp-081 V5: 0.18→0.22
     grassTranslucency: 0.6,
@@ -86,8 +86,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     sunLightColor: [0.42, 0.48, 0.62],
     sunLightIntensity: 0.75,             // exp-081 V5: 0.65→0.75
     ambientIntensity: 0.15,              // exp-081 V5: 0.09→0.15
-    grassBaseColor: [0.03, 0.09, 0.03],
-    grassTipColor: [0.10, 0.28, 0.08],
+    grassBaseColor: [0.02, 0.07, 0.07],   // dark teal deepening
+    grassTipColor: [0.06, 0.16, 0.14],    // teal tips — ocean recognition
     grassWindSpeed: 0.35,                 // exp-082 V5: 0.4→0.35 (wind building gradually)
     grassAmbientStrength: 0.26,          // exp-081 V5: 0.20→0.26
     grassTranslucency: 0.7,
@@ -145,8 +145,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     sunLightColor: [0.45, 0.50, 0.65],  // moonlight + lingering dusk
     sunLightIntensity: 1.0,              // exp-081 V5: 0.8→1.0
     ambientIntensity: 0.18,              // exp-081 V5: 0.10→0.18 (see the goodbye)
-    grassBaseColor: [0.03, 0.10, 0.03],
-    grassTipColor: [0.12, 0.30, 0.08],
+    grassBaseColor: [0.03, 0.08, 0.08],   // peak teal — contemplation at cliff edge
+    grassTipColor: [0.08, 0.18, 0.16],    // teal-silver tips — moonlight on ocean grass
     grassWindSpeed: 0.60,  // exp-082 V5: 0.5→0.60 (world alive with someone — peak wind)
     grassAmbientStrength: 0.30,          // exp-081 V5: 0.22→0.30
     grassTranslucency: 0.8,
@@ -204,8 +204,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     sunLightColor: [0.38, 0.42, 0.58],
     sunLightIntensity: 0.75,             // exp-081 V5: 0.6→0.75
     ambientIntensity: 0.15,              // exp-081 V5: 0.08→0.15 (see the goodbye)
-    grassBaseColor: [0.02, 0.08, 0.03],
-    grassTipColor: [0.08, 0.22, 0.06],
+    grassBaseColor: [0.02, 0.06, 0.06],   // darkening teal — the goodbye
+    grassTipColor: [0.06, 0.14, 0.12],    // muted teal — warmth fading
     grassWindSpeed: 0.38,                // exp-082 V5: 0.4→0.38 (wind subsiding, goodbye)
     grassAmbientStrength: 0.26,          // exp-081 V5: 0.18→0.26
     grassTranslucency: 0.6,
@@ -267,8 +267,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     sunLightColor: [0.32, 0.36, 0.52],
     sunLightIntensity: 0.4,              // exp-081 V5: 0.35→0.4 (last visibility)
     ambientIntensity: 0.10,              // exp-081 V5: 0.06→0.10 (still visible)
-    grassBaseColor: [0.02, 0.06, 0.02],
-    grassTipColor: [0.06, 0.18, 0.05],
+    grassBaseColor: [0.01, 0.04, 0.04],   // near-black teal — dissolution
+    grassTipColor: [0.04, 0.10, 0.09],    // barely visible — the release
     grassWindSpeed: 0.08,                // exp-082 V5: 0.2→0.08 (world stopped breathing)
     grassAmbientStrength: 0.18,          // exp-081 V5: 0.14→0.18
     grassTranslucency: 0.4,

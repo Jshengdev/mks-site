@@ -59,6 +59,9 @@ export default class GrassChunkManager {
         uCursorRadius: { value: 4.0 },
         uCursorStrength: { value: 1.2 },
         uCursorVelocity: { value: new THREE.Vector2(0, 0) },
+        // Per-world fog colors (driven by AtmosphereController)
+        uFogColorNear: { value: new THREE.Color(1.0, 0.90, 0.60) },
+        uFogColorFar: { value: new THREE.Color(0.45, 0.50, 0.65) },
       },
       side: THREE.DoubleSide,
     })

@@ -23,6 +23,13 @@ export default {
     smoothSigma: 2,
     heightRatio: 0.06,
     size: 400,
+    // Warm earthy vertex colors — visible between grass blades and on distant hills
+    // [valley, hillside, hilltop] — amber/gold identity
+    colorPalette: [
+      [0.08, 0.06, 0.03],   // dark warm soil (valleys)
+      [0.18, 0.14, 0.06],   // golden-brown hillside
+      [0.22, 0.18, 0.08],   // amber hilltop catching light
+    ],
   },
 
   sky: {

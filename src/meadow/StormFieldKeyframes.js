@@ -55,8 +55,8 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindStrength: 0.4,   // wind building
     dofFocusDistance: 0,
     dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    splitToneWarm: [0.45, 0.45, 0.52],   // cold steel-blue (storm has no warmth)
+    splitToneCool: [0.30, 0.32, 0.42],   // deep slate-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -112,8 +112,8 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindStrength: 0.9,
     dofFocusDistance: 0,
     dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    splitToneWarm: [0.45, 0.45, 0.52],   // cold steel-blue (storm has no warmth)
+    splitToneCool: [0.30, 0.32, 0.42],   // deep slate-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -168,8 +168,8 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindStrength: 1.5,   // violent — grass flattened
     dofFocusDistance: 0,
     dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    splitToneWarm: [0.45, 0.45, 0.52],   // cold steel-blue (storm has no warmth)
+    splitToneCool: [0.30, 0.32, 0.42],   // deep slate-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -224,8 +224,8 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindStrength: 0.8,   // easing
     dofFocusDistance: 0,
     dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    splitToneWarm: [0.45, 0.45, 0.52],   // cold steel-blue (storm has no warmth)
+    splitToneCool: [0.30, 0.32, 0.42],   // deep slate-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -280,8 +280,8 @@ export const STORM_FIELD_KEYFRAMES = [
     waveWindStrength: 0.3,   // calm after storm
     dofFocusDistance: 0,
     dofBokehScale: 3.0,
-    splitToneWarm: [0.925, 0.706, 0.518],
-    splitToneCool: [0.831, 0.769, 0.894],
+    splitToneWarm: [0.45, 0.45, 0.52],   // cold steel-blue (storm has no warmth)
+    splitToneCool: [0.30, 0.32, 0.42],   // deep slate-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,

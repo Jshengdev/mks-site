@@ -50,6 +50,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     dustMoteBrightness: 0.2,        // volcanic ash drifting
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.0,              // no lens stress in darkness
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -106,6 +107,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     dustMoteBrightness: 0.4,        // more ash visible in lava light
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.005,            // slight tension — the revelation
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -164,6 +166,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     dustMoteBrightness: 0.6,        // ash clearly visible, rising through the glow
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.015,            // peak — visual tension from fire/ice contrast
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -222,6 +225,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     dustMoteBrightness: 0.5,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.01,             // settling — contemplation
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -279,6 +283,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     dustMoteBrightness: 0.2,        // ash still drifts
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
+    caDistortion: 0.003,            // residual — fading with the warmth
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,

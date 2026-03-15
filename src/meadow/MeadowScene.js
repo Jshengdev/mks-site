@@ -68,6 +68,29 @@ export function setupScene(scene, envConfig = {}) {
   if (skyConfig.type === 'cel-dome') {
     // Ghibli: gradient dome — not Preetham
     skyMesh = createGradientSky(scene, skyConfig)
+  } else if (skyConfig.type === 'night-atmosphere') {
+    // Night sky: no Preetham dome — dark background lets StarField show through.
+    // Preetham at sunElevation < -10 produces a near-black opaque mesh that
+    // overwrites star particles (renderOrder -100 < sky's 0). Skip it entirely.
+    const bgColor = fogConfig.color ? new THREE.Color(fogConfig.color) : new THREE.Color(0x060610)
+    scene.background = bgColor
+  } else if (skyConfig.type === 'cavern-void' || skyConfig.type === 'void' || skyConfig.type === 'void-dark') {
+    // Underground / void worlds — dark hemisphere, no atmospheric sky
+    // The "sky" is absence: near-black dome matching the cavern void
+    const bgHex = skyConfig.backgroundColor
+    const voidColor = bgHex
+      ? (() => { const c = new THREE.Color(bgHex); return [c.r, c.g, c.b] })()
+      : (skyConfig.voidColor ?? [0.01, 0.01, 0.02])
+    const geometry = new THREE.SphereGeometry(5000, 16, 12)
+    const material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color(...voidColor),
+      side: THREE.BackSide,
+      fog: false,
+    })
+    skyMesh = new THREE.Mesh(geometry, material)
+    scene.add(skyMesh)
+    // Also set scene background to match void — prevents any Preetham bleed
+    scene.background = new THREE.Color(...voidColor)
   } else {
     // Default: Preetham atmospheric model
     sky = new Sky()

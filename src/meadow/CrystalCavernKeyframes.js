@@ -55,6 +55,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     dustMoteBrightness: 0.3,   // dust motes in the entrance shaft
     godRayIntensity: 0.8,      // strong — the shaft is visible, volumetric
     kuwaharaStrength: 0.0,     // crystals need sharp facets
+    caDistortion: 0.003,       // subtle prismatic fringing — matches crystal dispersion theme
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -113,6 +114,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     dustMoteBrightness: 0.5,   // crystal dust catching refracted light
     godRayIntensity: 0.5,      // shaft still visible but weakening
     kuwaharaStrength: 0.0,
+    caDistortion: 0.005,       // prismatic fringing increasing — light splitting through crystals
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -172,6 +174,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     dustMoteBrightness: 0.8,   // crystal dust fully prismatic
     godRayIntensity: 0.2,      // shaft barely visible — distant memory
     kuwaharaStrength: 0.0,
+    caDistortion: 0.008,       // peak prismatic — light fractures everywhere
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -231,6 +234,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     dustMoteBrightness: 1.0,   // crystal dust at maximum — prismatic cloud
     godRayIntensity: 0.05,     // shaft gone — only ghost remains
     kuwaharaStrength: 0.0,
+    caDistortion: 0.012,       // maximum prismatic CA — cathedral blazes with refraction
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -291,6 +295,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     dustMoteBrightness: 0.2,   // fading crystal dust
     godRayIntensity: 0.0,      // shaft gone completely
     kuwaharaStrength: 0.0,
+    caDistortion: 0.006,       // settling — prismatic fringing softens in communion
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,

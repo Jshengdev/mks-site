@@ -12,6 +12,18 @@ const NAV_LABELS = {
   'night-meadow': 'Story',
   'ghibli-painterly': 'Collect',
   'storm-field': 'Witness',
+  'volcanic-observatory': 'Observe',
+  'floating-library': 'Archive',
+  'crystal-cavern': 'Resonate',
+  'memory-garden': 'Remember',
+  'tide-pool': 'Wonder',
+  'clockwork-forest': 'Awaken',
+  'aurora-tundra': 'Wander',
+  'infinite-staircase': 'Ascend',
+  'bioluminescent-deep': 'Immerse',
+  'paper-world': 'Fold',
+  'sonic-void': 'Dissolve',
+  'underwater-cathedral': 'Devotion',
 }
 
 export default function WorldNav() {

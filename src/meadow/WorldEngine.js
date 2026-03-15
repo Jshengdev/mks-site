@@ -29,6 +29,10 @@ import { TIDE_POOL_KEYFRAMES } from './TidePoolKeyframes.js'
 import { CLOCKWORK_FOREST_KEYFRAMES } from './ClockworkForestKeyframes.js'
 import { AURORA_TUNDRA_KEYFRAMES } from './AuroraTundraKeyframes.js'
 import { INFINITE_STAIRCASE_KEYFRAMES } from './InfiniteStaircaseKeyframes.js'
+import { UNDERWATER_CATHEDRAL_KEYFRAMES } from './UnderwaterCathedralKeyframes.js'
+import { BIOLUMINESCENT_DEEP_KEYFRAMES } from './BioluminescentDeepKeyframes.js'
+import { PAPER_WORLD_KEYFRAMES } from './PaperWorldKeyframes.js'
+import { SONIC_VOID_KEYFRAMES } from './SonicVoidKeyframes.js'
 import PetalSystem from './PetalSystem.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
@@ -172,6 +176,17 @@ export default class WorldEngine {
       this.ocean = new StylizedOcean(this.scene, envConfig.ocean)
     }
 
+    // ─── Lava point light (conditional — volcanic observatory) ───
+    // Warm PointLight rising from crater floor, the only warmth in the scene
+    this.lavaLight = null
+    if (envConfig.lighting?.lavaLight) {
+      const ll = envConfig.lighting.lavaLight
+      const lavaColor = new THREE.Color().setRGB(...ll.color)
+      this.lavaLight = new THREE.PointLight(lavaColor, ll.intensity ?? 2.0, ll.distance ?? 60)
+      this.lavaLight.position.set(...(ll.position ?? [0, -5, -60]))
+      this.scene.add(this.lavaLight)
+    }
+
     // ─── Cloud shadows (optional) ───
     this.cloudShadows = new CloudShadows(this.scene)
 
@@ -233,6 +248,10 @@ export default class WorldEngine {
       'clockwork-forest': CLOCKWORK_FOREST_KEYFRAMES,
       'aurora-tundra': AURORA_TUNDRA_KEYFRAMES,
       'infinite-staircase': INFINITE_STAIRCASE_KEYFRAMES,
+      'underwater-cathedral': UNDERWATER_CATHEDRAL_KEYFRAMES,
+      'bioluminescent-deep': BIOLUMINESCENT_DEEP_KEYFRAMES,
+      'paper-world': PAPER_WORLD_KEYFRAMES,
+      'sonic-void': SONIC_VOID_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
@@ -508,6 +527,10 @@ export default class WorldEngine {
     this.godRayPass?.dispose()
     this.starField?.dispose()
     this.ocean?.dispose()
+    if (this.lavaLight) {
+      this.scene.remove(this.lavaLight)
+      this.lavaLight.dispose()
+    }
     this.rain?.dispose()
     this.petals?.dispose()
     this.lightning?.dispose()

@@ -53,8 +53,8 @@ export default {
   grass: {
     enabled: true,
     bladeCount: 45000,       // less dense than meadow — garden, not field
-    baseColor: [0.03, 0.08, 0.05],   // cool dark green-teal
-    tipColor: [0.15, 0.30, 0.18],    // muted green tips — not vivid, remembered
+    baseColor: [0.05, 0.02, 0.05],   // purple-brown earth — NOT green
+    tipColor: [0.12, 0.07, 0.13],    // grey-lavender tips — faded, remembered, not vivid
     windSpeed: 0.4,          // gentle — a garden is sheltered
     // FUTURE: dissolve config for noise-based fade in/out
     // dissolve: {
