@@ -13,6 +13,7 @@ import FireflySystem from './FireflySystem.js'
 import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
 import AtmosphereController, { MEADOW_KEYFRAMES } from './AtmosphereController.js'
+import { NIGHT_MEADOW_KEYFRAMES } from './NightMeadowKeyframes.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
@@ -21,6 +22,7 @@ import DustMotes from './DustMotes.js'
 import GodRayPass from './GodRayPass.js'
 import AudioReactive from './AudioReactive.js'
 import CursorInteraction from './CursorInteraction.js'
+import StarField from './StarField.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -76,6 +78,7 @@ function staticAtmosphereFromConfig(env) {
     dustMoteBrightness: dustEnabled ? 0.5 : 0.0,
     godRayIntensity: postFX.godRays?.enabled ? 0.5 : 0.0,
     kuwaharaStrength: postFX.kuwahara?.enabled ? (postFX.kuwahara.radius ?? 4) / 10 : 0.0,
+    starBrightness: env.sky?.stars?.enabled ? 1.0 : 0.0,
   }
 
   return [
@@ -130,8 +133,8 @@ export default class WorldEngine {
     // ─── Scene (sky + lights from config) ───
     this.sceneSetup = setupScene(this.scene, envConfig)
 
-    // ─── Terrain (always — future: type from config) ───
-    this.terrain = createTerrain(this.scene)
+    // ─── Terrain (always — color from config) ───
+    this.terrain = createTerrain(this.scene, envConfig)
 
     // ─── Cloud shadows (optional) ───
     this.cloudShadows = new CloudShadows(this.scene)
@@ -169,10 +172,12 @@ export default class WorldEngine {
       this.config.postFX
     )
 
-    // ─── Atmosphere (keyframes from config or generated from static values) ───
-    const keyframes = envConfig.id === 'golden-meadow'
-      ? MEADOW_KEYFRAMES
-      : staticAtmosphereFromConfig(envConfig)
+    // ─── Atmosphere (keyframes: hand-tuned per world, or auto-generated) ───
+    const KEYFRAME_MAP = {
+      'golden-meadow': MEADOW_KEYFRAMES,
+      'night-meadow': NIGHT_MEADOW_KEYFRAMES,
+    }
+    const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
     this.atmosphere = new AtmosphereController(
       this.sceneSetup,
@@ -213,6 +218,15 @@ export default class WorldEngine {
       this.portals = new PortalHint(this.scene, this.camera)
     }
 
+    // ─── Star field (conditional — night/dusk skies) ───
+    this.starField = null
+    if (envConfig.sky?.stars?.enabled) {
+      this.starField = new StarField(this.scene, {
+        ...envConfig.sky.stars,
+        moon: envConfig.sky.moon,
+      })
+    }
+
     // ─── Dust motes (conditional) ───
     this.dustMotes = null
     if (envConfig.particles?.dust?.enabled) {
@@ -238,6 +252,7 @@ export default class WorldEngine {
     // Wire optional subsystems into atmosphere
     this.atmosphere.dustMotes = this.dustMotes
     this.atmosphere.godRayPass = this.godRayPass
+    this.atmosphere.starField = this.starField
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -275,6 +290,7 @@ export default class WorldEngine {
     this.artistFigure?.update(camPos)
     this.portals?.update(animElapsed)
     this.dustMotes?.update(animElapsed)
+    this.starField?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -352,6 +368,7 @@ export default class WorldEngine {
       portals: this.portals,
       dustMotes: this.dustMotes,
       godRayPass: this.godRayPass,
+      starField: this.starField,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -376,6 +393,7 @@ export default class WorldEngine {
     this.portals?.dispose()
     this.dustMotes?.dispose()
     this.godRayPass?.dispose()
+    this.starField?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()

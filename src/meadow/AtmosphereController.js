@@ -27,6 +27,7 @@ function lerpArrayInto(out, a, b, t) {
 const KEYFRAMES = [
   {
     t: 0.0, // STILLNESS — cold world, sacred anticipation, held breath
+    starBrightness: 0.0,   // no stars in golden meadow
     sunElevation: 2,       // slightly above horizon — hints of color
     sunAzimuth: 250,       // far from artist direction
     turbidity: 12,         // slightly cleaner for more color in sky
@@ -64,6 +65,7 @@ const KEYFRAMES = [
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack
+    starBrightness: 0.0,
     sunElevation: 6,
     sunAzimuth: 245,       // starting to shift toward artist
     turbidity: 13,
@@ -101,6 +103,7 @@ const KEYFRAMES = [
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
+    starBrightness: 0.0,
     sunElevation: 12,
     sunAzimuth: 235,       // rotating toward artist
     turbidity: 8,          // cleaner sky = more saturated golden hour
@@ -139,6 +142,7 @@ const KEYFRAMES = [
   {
     t: 0.75, // DEEPENING — The Hidden Sun revealed, peak emotional climax
     // "A source of light hidden behind something massive, whose rays fan out"
+    starBrightness: 0.0,
     sunElevation: 3,       // sun dropping = long shadows, dramatic rays
     sunAzimuth: 200,       // rotated behind artist figure (z=-145, x=2)
     turbidity: 12,         // slightly cleaner for richer colors
@@ -176,6 +180,7 @@ const KEYFRAMES = [
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
+    starBrightness: 0.0,
     sunElevation: 8,
     sunAzimuth: 220,       // settling
     turbidity: 11,
@@ -231,6 +236,7 @@ export default class AtmosphereController {
     // Optional subsystems — set after construction by engine
     this.dustMotes = null
     this.godRayPass = null
+    this.starField = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -373,6 +379,11 @@ export default class AtmosphereController {
     // ─── Kuwahara painterly (activates at emotional peak) ───
     if (pp.kuwahara) {
       pp.kuwahara.uniforms.get('uStrength').value = c.kuwaharaStrength
+    }
+
+    // ─── Stars (night/dusk skies) ───
+    if (this.starField && c.starBrightness !== undefined) {
+      this.starField.setBrightness(c.starBrightness)
     }
 
   }
