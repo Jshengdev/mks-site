@@ -66,6 +66,9 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     oceanColorFar: [0.02, 0.05, 0.10],   // deep midnight
     oceanFoamBrightness: 0.15,           // exp-082 V5: 0.3→0.15 (foam barely a whisper)
     oceanWaveLineIntensity: 0.1,         // exp-082 V5: 0.2→0.1 (wave lines almost invisible)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.25, // RECOGNITION — the ocean comes into view, vastness registers
@@ -122,6 +125,9 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     oceanColorFar: [0.02, 0.08, 0.14],   // deep blue
     oceanFoamBrightness: 0.70,           // exp-082 V5: 0.6→0.70 (foam dots emerging)
     oceanWaveLineIntensity: 0.6,         // exp-082 V5: 0.5→0.6 (wave lines appearing)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.50, // CONTEMPLATION — beside the figure, looking at the horizon together
@@ -178,6 +184,9 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     oceanColorFar: [0.02, 0.10, 0.16],   // midnight blue
     oceanFoamBrightness: 1.0,            // full foam — the feeling reveals itself
     oceanWaveLineIntensity: 0.95,        // exp-082 V5: 0.8→0.95 (wave lines clearest — the ocean breathes)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.75, // UNDERSTANDING — the goodbye becomes real, the most intimate moment
@@ -234,6 +243,9 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     oceanColorFar: [0.02, 0.08, 0.14],
     oceanFoamBrightness: 0.75,           // exp-082 V5: 0.8→0.75 (foam softening)
     oceanWaveLineIntensity: 0.65,        // exp-082 V5: 0.7→0.65 (wave lines fading)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 1.0, // RELEASE — 7-dimensional sensory dissolution
@@ -294,5 +306,8 @@ export const OCEAN_CLIFF_KEYFRAMES = [
     oceanColorFar: [0.01, 0.04, 0.08],   // deep void
     oceanFoamBrightness: 0.05,           // exp-082 V5: 0.2→0.05 (one last white dot, then nothing)
     oceanWaveLineIntensity: 0.03,        // exp-082 V5: 0.15→0.03 (wave lines vanished)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
 ]

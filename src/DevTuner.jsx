@@ -9,7 +9,7 @@ import './DevTuner.css'
 function buildParamGroups(api) {
   if (!api) return []
 
-  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets, ocean } = api
+  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets, ocean, volumetricClouds } = api
   const sky = sceneSetup?.sky
   const sunLight = sceneSetup?.sunLight
   const fogDepth = postProcessing.fogDepth
@@ -363,6 +363,44 @@ function buildParamGroups(api) {
           key: 'oceanColorFar', label: 'Far Color', type: 'color',
           get: () => '#' + ocean.material.uniforms.uColorFar.value.getHexString(),
           set: v => { ocean.material.uniforms.uColorFar.value.set(v) },
+        },
+      ],
+    }] : []),
+    // ─── Volumetric Clouds (ray-marched cumulus, 49/70) ───
+    ...(volumetricClouds ? [{
+      id: 'volumetricClouds',
+      title: 'Volumetric Clouds',
+      badge: 'live',
+      params: [
+        {
+          key: 'cloudCoverage', label: 'Coverage',
+          min: 0, max: 1.0, step: 0.05,
+          get: () => volumetricClouds.material.uniforms.uCoverage.value,
+          set: v => { volumetricClouds.material.uniforms.uCoverage.value = v },
+        },
+        {
+          key: 'cloudDensity', label: 'Density Scale',
+          min: 0, max: 1.0, step: 0.05,
+          get: () => volumetricClouds.material.uniforms.uDensityScale.value,
+          set: v => { volumetricClouds.material.uniforms.uDensityScale.value = v },
+        },
+        {
+          key: 'cloudIntensity', label: 'Composite Intensity',
+          min: 0, max: 1.5, step: 0.05,
+          get: () => postProcessing.cloudComposite.uniforms.get('uIntensity').value,
+          set: v => { postProcessing.cloudComposite.uniforms.get('uIntensity').value = v },
+        },
+        {
+          key: 'cloudBottom', label: 'Cloud Bottom',
+          min: 1, max: 10, step: 0.5,
+          get: () => volumetricClouds.material.uniforms.uCloudBottom.value,
+          set: v => { volumetricClouds.material.uniforms.uCloudBottom.value = v },
+        },
+        {
+          key: 'cloudTop', label: 'Cloud Top',
+          min: 5, max: 30, step: 1.0,
+          get: () => volumetricClouds.material.uniforms.uCloudTop.value,
+          set: v => { volumetricClouds.material.uniforms.uCloudTop.value = v },
         },
       ],
     }] : []),

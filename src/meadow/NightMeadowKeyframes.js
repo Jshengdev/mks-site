@@ -59,6 +59,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.25, // REMEMBRANCE — fireflies stir, memories surface
@@ -112,6 +115,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.50, // GRIEF — peak emotion, fireflies everywhere like tears of light
@@ -165,6 +171,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.75, // PEACE — ground-level among fireflies, the intimate peak
@@ -220,6 +229,9 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 1.0, // ACCEPTANCE — stillness returns, deeper now, transformed
@@ -273,5 +285,8 @@ export const NIGHT_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
 ]

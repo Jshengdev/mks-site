@@ -19,6 +19,7 @@ import { RadialCAEffect } from './RadialCAEffect.js'
 import { MotionBlurEffect } from './MotionBlurEffect.js'
 import { KuwaharaEffect } from './KuwaharaEffect.js'
 import { GodRayCompositeEffect } from './GodRayCompositeEffect.js'
+import { CloudCompositeEffect } from './CloudCompositeEffect.js'
 
 export default class PostProcessingStack {
   constructor(renderer, scene, camera, tier, dofConfig = {}) {
@@ -55,6 +56,10 @@ export default class PostProcessingStack {
     this.vignette = new VignetteEffect({ darkness: 0.5, offset: 0.3 })
     this.dof = isReduced ? null : createDOF(camera, dofConfig)
     this.godRayComposite = new GodRayCompositeEffect()
+    // Volumetric cloud composite (half-res FBO blended behind scene via depth)
+    // Winner: volumetric-cumulus-3d-noise (49/70)
+    this.cloudComposite = new CloudCompositeEffect()
+
     // Research winner: 8-sector anisotropic, radius=6, alpha=25, 16-level quantize, 1.5x sat
     this.kuwahara = new KuwaharaEffect({
       kernelSize: 6,
@@ -67,10 +72,11 @@ export default class PostProcessingStack {
     // Film grain MUST be last (DOF must not blur grain)
     this.grain = new FilmGrainEffect({ grainIntensity: 0.06 })
 
-    // Stack order: SSAO → GodRays → Bloom → MotionBlur → ToneMapping → FogDepth
+    // Stack order: SSAO → Clouds → GodRays → Bloom → MotionBlur → ToneMapping → FogDepth
     // → ColorGrade → Kuwahara → Radial CA → Vignette → [DOF] → Film Grain
     const effects = [
       this.ssao.effect,
+      this.cloudComposite,
       this.godRayComposite,
       this.bloom,
       this.motionBlur,
@@ -91,6 +97,11 @@ export default class PostProcessingStack {
   setGodRayTexture(texture, intensity) {
     this.godRayComposite.uniforms.get('tGodRays').value = texture
     this.godRayComposite.uniforms.get('uIntensity').value = texture ? intensity : 0
+  }
+
+  setCloudTexture(texture, intensity) {
+    this.cloudComposite.uniforms.get('tClouds').value = texture
+    this.cloudComposite.uniforms.get('uIntensity').value = texture ? intensity : 0
   }
 
   update(scrollVelocity, cameraPos, sectionPositions) {
@@ -126,6 +137,7 @@ export default class PostProcessingStack {
     this.motionBlur?.dispose()
     this.vignette?.dispose()
     this.godRayComposite?.dispose()
+    this.cloudComposite?.dispose()
     this.kuwahara?.dispose()
     this.grain?.dispose()
     this.composer.dispose()

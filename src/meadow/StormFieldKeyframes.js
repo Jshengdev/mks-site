@@ -61,6 +61,10 @@ export const STORM_FIELD_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    // Volumetric clouds (49/70) — heavy overcast, builds to peak at TEMPEST
+    cloudCoverage: 0.55,    // gathering — ominous but not yet overwhelming
+    cloudDensity: 0.35,     // thin — you can still see through gaps
+    cloudIntensity: 0.85,   // clouds visible but not total cover
   },
   {
     t: 0.25, // PURSUIT — running now, wind howling, rain intensifying
@@ -114,6 +118,9 @@ export const STORM_FIELD_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0.65,    // building — gaps closing
+    cloudDensity: 0.45,     // thickening
+    cloudIntensity: 0.90,
   },
   {
     t: 0.50, // TEMPEST — peak storm, maximum darkness and wind
@@ -167,6 +174,9 @@ export const STORM_FIELD_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0.75,    // PEAK — maximum overcast, sky swallowed
+    cloudDensity: 0.60,     // thickest — towering cumulus at storm peak
+    cloudIntensity: 1.0,    // fully visible
   },
   {
     t: 0.75, // BREAK — storm begins to crack, first rays of hope
@@ -220,6 +230,9 @@ export const STORM_FIELD_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0.50,    // breaking apart — gaps forming, light pushing through
+    cloudDensity: 0.40,     // thinning
+    cloudIntensity: 0.80,   // fading as storm breaks
   },
   {
     t: 1.0, // REVELATION — you found what you were searching for
@@ -273,5 +286,8 @@ export const STORM_FIELD_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0.30,    // clearing — you found what you were searching for
+    cloudDensity: 0.25,     // thin wisps remaining
+    cloudIntensity: 0.60,   // mostly gone — revelation
   },
 ]

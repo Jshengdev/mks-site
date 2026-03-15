@@ -28,6 +28,7 @@ import { MEMORY_GARDEN_KEYFRAMES } from './MemoryGardenKeyframes.js'
 import { TIDE_POOL_KEYFRAMES } from './TidePoolKeyframes.js'
 import { CLOCKWORK_FOREST_KEYFRAMES } from './ClockworkForestKeyframes.js'
 import { AURORA_TUNDRA_KEYFRAMES } from './AuroraTundraKeyframes.js'
+import { INFINITE_STAIRCASE_KEYFRAMES } from './InfiniteStaircaseKeyframes.js'
 import PetalSystem from './PetalSystem.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
@@ -38,6 +39,7 @@ import GodRayPass from './GodRayPass.js'
 import AudioReactive from './AudioReactive.js'
 import CursorInteraction from './CursorInteraction.js'
 import StarField from './StarField.js'
+import VolumetricCloudSystem from './VolumetricCloudSystem.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -100,6 +102,9 @@ function staticAtmosphereFromConfig(env) {
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   }
 
   return [
@@ -227,6 +232,7 @@ export default class WorldEngine {
       'tide-pool': TIDE_POOL_KEYFRAMES,
       'clockwork-forest': CLOCKWORK_FOREST_KEYFRAMES,
       'aurora-tundra': AURORA_TUNDRA_KEYFRAMES,
+      'infinite-staircase': INFINITE_STAIRCASE_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
@@ -314,6 +320,15 @@ export default class WorldEngine {
       )
     }
 
+    // ─── Volumetric clouds (conditional — storm field) ───
+    // Winner: volumetric-cumulus-3d-noise (49/70)
+    this.volumetricClouds = null
+    if (envConfig.sky?.clouds?.type === 'volumetric') {
+      this.volumetricClouds = new VolumetricCloudSystem(
+        this.renderer, this.camera, envConfig.sky.clouds
+      )
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -327,6 +342,7 @@ export default class WorldEngine {
     this.atmosphere.rain = this.rain
     this.atmosphere.petals = this.petals
     this.atmosphere.ocean = this.ocean
+    this.atmosphere.volumetricClouds = this.volumetricClouds
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -390,6 +406,12 @@ export default class WorldEngine {
       this.postProcessing.setGodRayTexture(this.godRayPass.render(), this.godRayPass.intensity)
     }
 
+    // Volumetric clouds render to half-res FBO before post-processing composites them
+    if (this.volumetricClouds) {
+      const cloudTex = this.volumetricClouds.render(elapsed)
+      this.postProcessing.setCloudTexture(cloudTex, this.atmosphere.current.cloudIntensity ?? 0)
+    }
+
     this.postProcessing.update(this.scrollEngine.velocity, camPos, this._sectionPositions)
 
     // Atmosphere-driven DOF overrides auto-focus (Ocean Cliff intimate DOF v3)
@@ -433,6 +455,7 @@ export default class WorldEngine {
     this.renderer.setSize(w, h)
     this.postProcessing.setSize(w, h)
     this.godRayPass?.setSize(w, h)
+    this.volumetricClouds?.setSize(w, h)
   }
 
   getDevAPI() {
@@ -458,6 +481,7 @@ export default class WorldEngine {
       rain: this.rain,
       petals: this.petals,
       lightning: this.lightning,
+      volumetricClouds: this.volumetricClouds,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -487,6 +511,7 @@ export default class WorldEngine {
     this.rain?.dispose()
     this.petals?.dispose()
     this.lightning?.dispose()
+    this.volumetricClouds?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()

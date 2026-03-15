@@ -79,6 +79,12 @@ const KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    // Volumetric cloud defaults (zeros — meadow has no clouds)
+    // MUST be in KEYFRAMES[0] so PARAM_KEYS includes them for interpolation
+    // Winner: volumetric-cumulus-3d-noise (49/70)
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack
@@ -131,6 +137,9 @@ const KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
@@ -183,6 +192,9 @@ const KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.75, // DEEPENING — The Hidden Sun revealed, peak emotional climax
@@ -236,6 +248,9 @@ const KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
@@ -288,6 +303,9 @@ const KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
 ]
 
@@ -313,6 +331,7 @@ export default class AtmosphereController {
     this.rain = null
     this.petals = null
     this.ocean = null
+    this.volumetricClouds = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -497,6 +516,16 @@ export default class AtmosphereController {
     // ─── Petals (ghibli painterly) ───
     if (this.petals && c.petalBrightness !== undefined) {
       this.petals.setBrightness(c.petalBrightness)
+    }
+
+    // ─── Volumetric clouds (storm field — atmosphere-driven coverage + density) ───
+    // Winner: volumetric-cumulus-3d-noise (49/70)
+    if (this.volumetricClouds) {
+      this.volumetricClouds.setCoverage(c.cloudCoverage)
+      this.volumetricClouds.setDensityScale(c.cloudDensity)
+      // Sync sun direction + color from atmosphere
+      this.volumetricClouds.setSunDirection(this._sunPos)
+      this.volumetricClouds.setSunColor(...c.sunLightColor)
     }
 
     // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───

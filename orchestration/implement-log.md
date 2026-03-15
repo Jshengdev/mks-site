@@ -1,5 +1,134 @@
 # Implement Log
 
+## 2026-03-15: Volumetric Cumulus Clouds — Ray-Marched 3D Perlin-Worley (exp-011, 49/70)
+
+**Winner:** exp-011 volumetric-cumulus-3d-noise — 3D Perlin-Worley ray-marched clouds at half resolution
+**Score:** 49/70 (highest unintegrated research winner)
+**Target World:** Storm Field ("The Search")
+**Performance Cost:** +3 draw calls, ~78 FPS at 1080p (half-res optimization). 3D noise texture ~8MB one-time.
+
+### What Was Integrated
+
+**The Problem:** Storm Field had overcast sky atmosphere values (high turbidity, low rayleigh) but NO actual volumetric clouds. The sky was just a flat tinted gradient. For "Searching Through Chaos," the storm needs visible towering cumulus clouds that build, peak, and break apart with the scroll arc.
+
+**The Fix:** Full volumetric cloud rendering pipeline using ray-marched 3D Perlin-Worley noise, Beer-Lambert extinction, dual-lobe Henyey-Greenstein phase function, and multi-scattering approximation. Rendered at half resolution to a separate FBO, composited into the post-processing pipeline via depth-aware blending.
+
+**1. 3D Noise Texture (NoiseGenerator3D.js)**
+- CPU-generated 128^3 RGBA texture (~8MB)
+- R: Perlin-Worley shape (Schneider GDC 2015 remap)
+- G: Worley F1 (cellular billowy edges)
+- B: Detail Worley (high-freq erosion)
+- A: Worley FBM (secondary detail)
+- Perlin freq=4, 4 octaves; Worley freq=6; Detail freq=12; FBM freq=8
+
+**2. Cloud Ray-March Shader (GLSL3 + sampler3D)**
+- 48 march steps + 6 light steps per pixel
+- Beer-Lambert extinction for realistic light absorption
+- Dual-lobe Henyey-Greenstein phase (g1=0.7 forward, g2=-0.2 back, 50/50)
+- 8-octave multi-scatter approximation (Oz Volumes)
+- Beer-Powder effect (scale=0.8, exponent=150)
+- Energy-conserving integration (from takram extraction)
+- Height profile: flat base, rounded top (cumulus shape)
+- Atmospheric perspective fade on distant clouds
+
+**3. Half-Resolution Rendering (VolumetricCloudSystem.js)**
+- Clouds ray-marched at 50% resolution → 4x fewer fragment evaluations
+- Bilinear filtering on upscale smooths the difference
+- Separate FBO with HalfFloatType for HDR headroom
+- Camera inverse matrix reconstruction for ray directions
+
+**4. Depth-Aware Compositing (CloudCompositeEffect.js)**
+- pmndrs Effect that reads depth buffer + cloud FBO texture
+- Clouds only visible where depth = far plane (sky)
+- Terrain, grass, particles occlude clouds naturally
+- Inserted before bloom in the post-processing chain → clouds get all post-FX
+
+**5. Atmosphere-Driven Cloud Arc (5 keyframes)**
+
+| Position | Coverage | Density | Intensity | Emotional Logic |
+|----------|----------|---------|-----------|-----------------|
+| UNEASE (0.0) | 0.55 | 0.35 | 0.85 | Gathering — ominous but gaps remain |
+| PURSUIT (0.25) | 0.65 | 0.45 | 0.90 | Building — gaps closing |
+| TEMPEST (0.50) | **0.75** | **0.60** | **1.0** | PEAK — sky swallowed, towering cumulus |
+| BREAK (0.75) | 0.50 | 0.40 | 0.80 | Breaking apart — light pushing through |
+| REVELATION (1.0) | 0.30 | 0.25 | 0.60 | Clearing — you found what you searched for |
+
+**6. DevTuner Cloud Section (5 sliders)**
+- Coverage (0–1), Density Scale (0–1), Composite Intensity (0–1.5)
+- Cloud Bottom (1–10), Cloud Top (5–30)
+
+### Key Insight from exp-011
+
+"Volumetric clouds aren't just sky decoration — they're the emotional ceiling. At TEMPEST, the towering cumulus IS the weight pressing down. At REVELATION, the gaps in the clouds ARE the answer breaking through. The scroll-driven coverage arc makes the sky a narrative element, not a backdrop."
+
+### Architecture
+
+```
+VolumetricCloudSystem                    CloudCompositeEffect
+┌──────────────────────┐                ┌────────────────────────┐
+│ 128^3 3D noise tex   │                │ pmndrs Effect          │
+│ GLSL3 ray-march      │──→ cloudFBO ──→│ depth-aware composite  │
+│ Half-res FBO         │   (texture)    │ sky = clouds, near = scene
+│ 48 steps + 6 light   │                └────────────────────────┘
+└──────────────────────┘                         ↓
+         ↑                              PostProcessingStack
+    AtmosphereController                (bloom, CA, vignette etc
+    drives coverage,                     all applied to clouds)
+    density, sun dir
+```
+
+### Files Created (4 new files)
+
+| File | Purpose |
+|------|---------|
+| `src/meadow/NoiseGenerator3D.js` | CPU 128^3 3D Perlin-Worley RGBA noise texture |
+| `src/meadow/shaders/cloud-march.vert.glsl` | Fullscreen quad + ray direction reconstruction |
+| `src/meadow/shaders/cloud-march.frag.glsl` | Ray-march, Beer-Lambert, HG phase, multi-scatter |
+| `src/meadow/VolumetricCloudSystem.js` | Half-res cloud FBO management + rendering |
+| `src/meadow/CloudCompositeEffect.js` | pmndrs depth-aware cloud compositing effect |
+
+### Files Modified (16 files)
+
+| File | Change |
+|------|--------|
+| `src/meadow/PostProcessingStack.js` | CloudCompositeEffect added to effect chain + setCloudTexture() |
+| `src/meadow/WorldEngine.js` | VolumetricCloudSystem creation, tick, resize, dispose, getDevAPI |
+| `src/meadow/AtmosphereController.js` | 3 new cloud params (cloudCoverage, cloudDensity, cloudIntensity) in all 5 MEADOW_KEYFRAMES + push logic |
+| `src/meadow/StormFieldKeyframes.js` | Storm cloud arc: 0.55→0.65→0.75→0.50→0.30 coverage |
+| `src/meadow/GoldenMeadowKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/NightMeadowKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/OceanCliffKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/GhibliKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/VolcanicObservatoryKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/FloatingLibraryKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/CrystalCavernKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/MemoryGardenKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/TidePoolKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/ClockworkForestKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/AuroraTundraKeyframes.js` | Cloud defaults (zeros) |
+| `src/meadow/InfiniteStaircaseKeyframes.js` | Cloud defaults (zeros) |
+| `src/DevTuner.jsx` | Volumetric Clouds section: 5 sliders |
+
+### Performance Profile
+
+| Metric | Value |
+|--------|-------|
+| FPS @ 1080p | ~78 (half-res clouds) |
+| Draw calls | +3 (cloud scene + upscale composite) |
+| 3D texture memory | ~8MB (128^3 RGBA) |
+| FBO memory | 1x half-res HalfFloat = ~5MB |
+| Noise gen time | ~3-5s one-time at init |
+| Other worlds | Zero cost (cloudIntensity=0 → early return in composite) |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+- NPR cross-hatching portal transitions (spite extraction, +2 estimated)
+
+---
+
 ## 2026-03-15: Golden Meadow GOLDEN RUINS Atmosphere Arc (exp-058, 67/70)
 
 **Winner:** exp-058 GOLDEN RUINS — multiplicative convergence atmosphere arc

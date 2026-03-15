@@ -70,6 +70,9 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.25, // AWAKENING — first warmth, light finds a crack
@@ -125,6 +128,9 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.50, // ALIVE — golden hour arrives, the music is playing
@@ -181,6 +187,9 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 0.75, // DEEPENING — GOLDEN RUINS convergence peak (exp-058, 67/70)
@@ -240,6 +249,9 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
   {
     t: 1.0, // QUIETING — dusk haze, the aftermath, exhale
@@ -297,5 +309,8 @@ export const GOLDEN_MEADOW_KEYFRAMES = [
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
     oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
   },
 ]
