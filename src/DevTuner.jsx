@@ -200,7 +200,7 @@ function buildParamGroups(api) {
         },
         {
           key: 'grassTranslucency', label: 'Translucency',
-          min: 0, max: 4, step: 0.1,
+          min: 0, max: 6, step: 0.1,
           get: () => grassManager.material.uniforms.uTranslucencyStrength.value,
           set: v => grassManager.setUniform('uTranslucencyStrength', v),
         },

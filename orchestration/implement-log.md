@@ -1,5 +1,130 @@
 # Implement Log
 
+## 2026-03-15: Golden Meadow GOLDEN RUINS Atmosphere Arc (exp-058, 67/70)
+
+**Winner:** exp-058 GOLDEN RUINS — multiplicative convergence atmosphere arc
+**Score:** 67/70 (highest unintegrated winner for Golden Meadow, up from ~48/70 base)
+**Target World:** Golden Meadow ("Innocent Awakening")
+**Performance Cost:** Zero — pure keyframe values, no new draw calls or textures
+
+### What Was Integrated
+
+**The Problem:** Golden Meadow was using the BASE `MEADOW_KEYFRAMES` in AtmosphereController.js — generic values not tuned for the "multiplicative convergence" emotional arc. Bloom peaked at 1.0, godrays at 1.0, translucency at 3.0. The Hidden Sun revelation at DEEPENING (t=0.75) was understated. Score: ~48/70.
+
+**The Fix:** Golden Meadow now has its own dedicated keyframe file (`GoldenMeadowKeyframes.js`) with 5 hand-tuned keyframes translating the GOLDEN RUINS experimental preset into a proper scroll-driven atmosphere arc.
+
+**1. GOLDEN RUINS convergence at DEEPENING (t=0.75) — "everything peaks simultaneously"**
+
+| Param | Base Value | RUINS Value | Emotional Logic |
+|-------|-----------|-------------|-----------------|
+| bloomIntensity | 1.0 | **1.8** | Cinematic overexposure — light overflowing |
+| bloomThreshold | 0.4 | **0.25** | Everything blooms — not just bright spots |
+| godRayIntensity | 1.0 | **1.8** | Rays fan out and touch everything |
+| grassTranslucency | 3.0 | **4.0** | Extreme backlit glow — "the music IS the light" |
+| grassWindSpeed | 2.2 | **3.5** | Cymatics wind — field alive with energy |
+| kuwaharaStrength | 0.35 | **0.65** | World becomes a painting at peak |
+| colorGradeVibrance | 0.9 | **1.4** | Hyper-vivid — impossible colors that feel real |
+| colorGradeWarmth | 0.10 | **0.20** | Strong warm split-tone |
+| caDistortion | 0.02 | **0.30** | Lens stress — the lens can barely hold the image |
+| turbidity | 12 | **14** | Thick amber haze — the world is GOLDEN |
+| sunElevation | 3 | **1** | Sun nearly kissing horizon — maximum ray length |
+| sunLightIntensity | 2.2 | **2.5** | Blazing peak |
+| fireflyBrightness | 1.0 | **1.5** | Golden convergence particles |
+| fireflySize | 100 | **140** | Large, close, intimate |
+
+**2. Deeper STILLNESS (t=0.0) for maximum contrast**
+- fogDensity 0.018→0.020, ambientIntensity 0.04→0.03, grassWindSpeed 0.1→0.05
+- Darker, colder start creates bigger emotional payoff at DEEPENING
+
+**3. Steeper build at ALIVE (t=0.50)**
+- bloomIntensity 0.65→0.75, godRayIntensity 0.5→0.55, kuwahara 0.0→0.15
+- The convergence is accelerating — you can FEEL it building
+
+**4. Warm residue at QUIETING (t=1.0)**
+- kuwaharaStrength 0.0→0.08, fogColor warmer [0.50,0.45,0.38]
+- "The light changed everything, and now everything rests"
+
+**5. DevTuner range extension**
+- Translucency slider max extended 4→6 (tuning room above RUINS peak of 4.0)
+
+### Key Insight from exp-058 GOLDEN RUINS
+"The revelation isn't ONE thing getting brighter. It's EVERYTHING converging simultaneously — bloom, godrays, translucency, wind, warmth, painterly softening, vibrance, lens stress. The multiplicative convergence IS the Hidden Sun. No single parameter creates it. The convergence creates it."
+
+### Files Modified (3 files)
+
+| File | Change |
+|------|--------|
+| `src/meadow/GoldenMeadowKeyframes.js` | **NEW** — 5 hand-tuned keyframes with GOLDEN RUINS convergence arc |
+| `src/meadow/WorldEngine.js` | Import + map `'golden-meadow'` → `GOLDEN_MEADOW_KEYFRAMES` (was `MEADOW_KEYFRAMES`) |
+| `src/DevTuner.jsx` | Translucency slider max 4→6 (tuning room for RUINS peak) |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- KINTSUGI golden cracks → Ghibli (experimental preset, 73/70, needs new shader)
+- Volumetric Cumulus 3D Noise (49/70) → Storm Field (3-4 hrs, needs worker thread)
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+
+---
+
+## 2026-03-15: Atmosphere-Driven Chromatic Aberration — Per-World Lens Distortion (exp-059, 71/70)
+
+**Winner:** exp-059 Storm Field PERCOLATION — atmosphere-driven chromatic aberration (lens stress)
+**Score:** 71/70 (highest unintegrated experimental preset)
+**Target:** All 5 worlds (Storm Field gets heaviest values)
+**Performance Cost:** Zero — pure uniform updates on existing RadialCAEffect
+
+### What Was Integrated
+
+**The Problem:** Chromatic Aberration was velocity-only (`0.3 + |scrollVelocity| * 0.2`). Every world got the same CA regardless of emotional arc or scroll position. Storm Field's TEMPEST had the same lens distortion as Golden Meadow's STILLNESS.
+
+**The Fix:** CA is now a full atmosphere keyframe parameter (`caDistortion`), interpolated between 5 scroll positions per world. Velocity boost is additive on top of the atmosphere base (not absolute).
+
+**1. Per-world CA arcs — "the lens tells the emotional story"**
+
+| World | Arc | Peak | Emotional Logic |
+|-------|-----|------|----------------|
+| Storm Field | 0.05→0.15→**0.50**→0.25→0.05 | TEMPEST (t=0.50) | Maximum lens stress — vision splitting at storm peak |
+| Ghibli Painterly | 0.05→0.08→0.12→**0.15**→0.10 | TRANSFIGURATION (t=0.75) | Reality bending as the fall intensifies |
+| Ocean Cliff | 0.02→0.03→0.05→0.08→**0.15** | RELEASE (t=1.0) | 8th dimension of dissolution — lens can't hold image |
+| Night Meadow | 0.0→0.01→**0.03**→0.01→0.02 | GRIEF (t=0.50) | Subtle — emotion, not violence |
+| Golden Meadow | 0.0→0.0→**0.01**→0.02→0.01 | DEEPENING (t=0.75) | Innocence = clean lens |
+
+**2. Velocity boost is now additive, not absolute**
+- Old: `caIntensity = min(1.0, 0.3 + |velocity| * 0.2)` — always 0.3 base regardless of world
+- New: `caDistortion = min(1.5, atmosphere_base + |velocity| * 0.15)` — Storm TEMPEST at 0.50 + fast scroll = 0.65+
+
+**3. New keyframe parameter (51st param)**
+- `caDistortion` added to KEYFRAMES[0] in AtmosphereController.js → automatically included in PARAM_KEYS
+- All 5 keyframe files updated (25 keyframe values total)
+- Interpolated via smoothstep like all other atmosphere params
+
+### Key Insight from exp-059 PERCOLATION
+"The lens IS the viewer. When the storm hits, vision splits — chromatic dispersion = the world fracturing. When the night is still, the lens is still. The CA arc is the emotional distress arc."
+
+### Files Modified (6 files)
+
+| File | Change |
+|------|--------|
+| `src/meadow/AtmosphereController.js` | `caDistortion` in all 5 MEADOW_KEYFRAMES + push logic to `pp.ca` |
+| `src/meadow/StormFieldKeyframes.js` | Storm CA arc: 0.05→0.15→0.50→0.25→0.05 |
+| `src/meadow/NightMeadowKeyframes.js` | Night CA arc: 0.0→0.01→0.03→0.01→0.02 |
+| `src/meadow/OceanCliffKeyframes.js` | Ocean CA arc: 0.02→0.03→0.05→0.08→0.15 |
+| `src/meadow/GhibliKeyframes.js` | Ghibli CA arc: 0.05→0.08→0.12→0.15→0.10 |
+| `src/meadow/PostProcessingStack.js` | `update()` changed from absolute to additive velocity boost |
+
+### Remaining from Research Winners
+
+Next highest unintegrated winners:
+- Volumetric Cumulus 3D Noise (49/70) → Storm Field (3-4 hrs, needs worker thread)
+- Full 3-pass Anisotropic Kuwahara (48/70) → Ghibli (+2 pts, 2-3 hrs, 48MB FBO)
+- Bezier flower geometry (6 archetypes prototyped, drop-in ready)
+- GOLDEN RUINS multiplicative convergence → Golden Meadow (experimental preset, 67/70)
+- KINTSUGI golden cracks → Ghibli (experimental preset, 73/70, needs new shader)
+
+---
+
 ## 2026-03-15: Ocean Cliff exp-082 V5 Composite — 7-Dimensional Dissolution (67/70)
 
 **Winner:** exp-082 V5 — Ocean vividity arc + star emergence + wind death + multi-dimensional dissolution

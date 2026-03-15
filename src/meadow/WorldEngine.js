@@ -13,6 +13,7 @@ import FireflySystem from './FireflySystem.js'
 import FlowerInstances from './FlowerInstances.js'
 import PostProcessingStack from './PostProcessingStack.js'
 import AtmosphereController, { MEADOW_KEYFRAMES } from './AtmosphereController.js'
+import { GOLDEN_MEADOW_KEYFRAMES } from './GoldenMeadowKeyframes.js'
 import { NIGHT_MEADOW_KEYFRAMES } from './NightMeadowKeyframes.js'
 import { OCEAN_CLIFF_KEYFRAMES } from './OceanCliffKeyframes.js'
 import StylizedOcean from './StylizedOcean.js'
@@ -20,6 +21,13 @@ import RainSystem from './RainSystem.js'
 import LightningSystem from './LightningSystem.js'
 import { STORM_FIELD_KEYFRAMES } from './StormFieldKeyframes.js'
 import { GHIBLI_KEYFRAMES } from './GhibliKeyframes.js'
+import { VOLCANIC_OBSERVATORY_KEYFRAMES } from './VolcanicObservatoryKeyframes.js'
+import { FLOATING_LIBRARY_KEYFRAMES } from './FloatingLibraryKeyframes.js'
+import { CRYSTAL_CAVERN_KEYFRAMES } from './CrystalCavernKeyframes.js'
+import { MEMORY_GARDEN_KEYFRAMES } from './MemoryGardenKeyframes.js'
+import { TIDE_POOL_KEYFRAMES } from './TidePoolKeyframes.js'
+import { CLOCKWORK_FOREST_KEYFRAMES } from './ClockworkForestKeyframes.js'
+import { AURORA_TUNDRA_KEYFRAMES } from './AuroraTundraKeyframes.js'
 import PetalSystem from './PetalSystem.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
@@ -207,11 +215,18 @@ export default class WorldEngine {
 
     // ─── Atmosphere (keyframes: hand-tuned per world, or auto-generated) ───
     const KEYFRAME_MAP = {
-      'golden-meadow': MEADOW_KEYFRAMES,
+      'golden-meadow': GOLDEN_MEADOW_KEYFRAMES,
       'night-meadow': NIGHT_MEADOW_KEYFRAMES,
       'ocean-cliff': OCEAN_CLIFF_KEYFRAMES,
       'storm-field': STORM_FIELD_KEYFRAMES,
       'ghibli-painterly': GHIBLI_KEYFRAMES,
+      'volcanic-observatory': VOLCANIC_OBSERVATORY_KEYFRAMES,
+      'floating-library': FLOATING_LIBRARY_KEYFRAMES,
+      'crystal-cavern': CRYSTAL_CAVERN_KEYFRAMES,
+      'memory-garden': MEMORY_GARDEN_KEYFRAMES,
+      'tide-pool': TIDE_POOL_KEYFRAMES,
+      'clockwork-forest': CLOCKWORK_FOREST_KEYFRAMES,
+      'aurora-tundra': AURORA_TUNDRA_KEYFRAMES,
     }
     const keyframes = KEYFRAME_MAP[envConfig.id] ?? staticAtmosphereFromConfig(envConfig)
 
