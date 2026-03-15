@@ -1,9 +1,10 @@
-// Star fragment shader — soft glow point stars
+// Star fragment shader — soft glow point stars with spectral colors
 // Adapted from Nugget8/Three.js-Ocean-Scene star rendering
-// Uses inverse-distance glow similar to Alex-DG firefly pattern
+// 6 spectral types passed per-vertex (O/B blue → M red)
 uniform float uBrightness;
 
 varying float vBrightness;
+varying vec3 vStarColor;
 
 void main() {
   float dist = distance(gl_PointCoord, vec2(0.5));
@@ -12,11 +13,7 @@ void main() {
   float strength = 0.03 / dist - 0.06;
   if (strength < 0.005) discard;
 
-  // Cool blue-white star color with slight warmth variation per star
-  // Brighter stars lean warmer (like real stellar classification)
-  vec3 coolWhite = vec3(0.75, 0.82, 1.0);   // blue-white (most stars)
-  vec3 warmWhite = vec3(1.0, 0.92, 0.80);   // warm white (bright stars)
-  vec3 color = mix(coolWhite, warmWhite, vBrightness * 0.5);
-
-  gl_FragColor = vec4(color, strength * vBrightness * uBrightness);
+  // Per-star spectral color from vertex attribute
+  // Bright stars are hot blue-white, dim stars are cool red
+  gl_FragColor = vec4(vStarColor, strength * vBrightness * uBrightness);
 }

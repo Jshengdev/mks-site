@@ -13,11 +13,23 @@ function seededRandom(seed) {
   return x - Math.floor(x)
 }
 
+// 6 spectral color types — stolen from Nugget8 stellar classification
+// O/B (blue-white), A (white), F (yellow-white), G (yellow), K (orange), M (red)
+// Each star gets a spectral class based on brightness (bright = hot = blue)
+const SPECTRAL_COLORS = [
+  [0.65, 0.72, 1.00],  // O/B — hot blue-white (brightest)
+  [0.80, 0.85, 1.00],  // A — white with blue tint
+  [0.95, 0.93, 0.88],  // F — yellow-white
+  [1.00, 0.92, 0.70],  // G — warm yellow (sun-like)
+  [1.00, 0.78, 0.50],  // K — orange
+  [1.00, 0.60, 0.40],  // M — cool red (dimmest)
+]
+
 export default class StarField {
   constructor(scene, config = {}) {
     const radius = config.radius ?? 800
-    const gridSize = config.gridSize ?? 48 // stars per grid axis on hemisphere
-    const brightnessExp = config.brightnessExp ?? 6 // pow(random, exp) — higher = fewer bright stars
+    const gridSize = config.gridSize ?? 90 // ~8100 stars on hemisphere (90x90)
+    const brightnessExp = config.brightnessExp ?? 3 // pow(random, 3) — more visible bright stars
     const maxOffset = config.maxOffset ?? 0.43 // jitter within grid cell
     const moonEnabled = config.moon?.enabled ?? false
 
@@ -25,6 +37,7 @@ export default class StarField {
     // Stolen from Nugget8: grid ensures coverage, jitter prevents patterns
     const starPositions = []
     const starBrightnesses = []
+    const starColors = [] // RGB per star — 6 spectral types
     let seed = 42
 
     for (let i = 0; i < gridSize; i++) {
@@ -47,11 +60,17 @@ export default class StarField {
 
         starPositions.push(x, y, z)
 
-        // Brightness: pow(random, exp) gives natural distribution
-        // Most stars dim, few bright — stolen from Nugget8
+        // Brightness: pow(random, 3) gives natural distribution
+        // More visible bright stars than exp=6 — stolen from Nugget8
         const brightness = Math.pow(seededRandom(seed++), brightnessExp)
         // Remap so even "dim" stars are somewhat visible
         starBrightnesses.push(0.15 + brightness * 0.85)
+
+        // Spectral color: bright stars are hotter (bluer), dim stars cooler (redder)
+        // Map brightness to spectral index: 0 (bright=blue) → 5 (dim=red)
+        const spectralIdx = Math.min(5, Math.floor((1.0 - brightness) * 5.99))
+        const color = SPECTRAL_COLORS[spectralIdx]
+        starColors.push(color[0], color[1], color[2])
       }
     }
 
@@ -75,6 +94,7 @@ export default class StarField {
     const geometry = new THREE.BufferGeometry()
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3))
     geometry.setAttribute('aStarBrightness', new THREE.Float32BufferAttribute(starBrightnesses, 1))
+    geometry.setAttribute('aStarColor', new THREE.Float32BufferAttribute(starColors, 3))
 
     this.points = new THREE.Points(geometry, this.material)
     this.points.renderOrder = -100 // Render before everything else

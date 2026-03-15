@@ -1,17 +1,20 @@
 // Star vertex shader — procedural stars on sky sphere
 // Adapted from Nugget8/Three.js-Ocean-Scene SkyboxShader.js star rendering
-// Stars are Points on a large sphere, brightness-based sizing
+// 6 spectral colors (O/B/A/F/G/K/M stellar classification)
 uniform float uPixelRatio;
 uniform float uBaseSize;
 uniform float uBrightness;
 uniform float uTime;
 
 attribute float aStarBrightness;
+attribute vec3 aStarColor;
 
 varying float vBrightness;
+varying vec3 vStarColor;
 
 void main() {
   vBrightness = aStarBrightness;
+  vStarColor = aStarColor;
 
   vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
   gl_Position = projectionMatrix * mvPosition;

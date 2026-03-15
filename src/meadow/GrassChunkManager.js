@@ -43,6 +43,11 @@ export default class GrassChunkManager {
         uTranslucencyStrength: { value: 2.0 },
         uFogFade: { value: 0.0015 },
         uCloudTexture: { value: cloudTexture },
+        // Cel-shading (research winner: 4-band brightness, craftzdog technique)
+        // thresholds [0.6, 0.35, 0.001], multipliers [1.2, 0.9, 0.5, 0.25]
+        uCelEnabled: { value: 0.0 },
+        uCelThresholds: { value: new THREE.Vector3(0.6, 0.35, 0.001) },
+        uCelMultipliers: { value: new THREE.Vector4(1.2, 0.9, 0.5, 0.25) },
         // Cursor wind push
         uCursorPos: { value: new THREE.Vector3(0, -100, 0) },
         uCursorRadius: { value: 4.0 },

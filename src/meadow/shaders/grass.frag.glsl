@@ -1,6 +1,7 @@
 // src/meadow/shaders/grass.frag.glsl
 // Combines: Nitash-Biswas (gradient), al-ro (lighting, fog, ACES),
 // James-Smyth (cloud shadows), spacejack/terra (color palette)
+// + craftzdog 4-band cel-shading for Ghibli Painterly world
 
 uniform vec3 uBaseColor;    // (0.45, 0.46, 0.19) — spacejack GRASS_COLOR
 uniform vec3 uTipColor;     // (0.77, 0.76, 0.59) — warm BotW tip
@@ -11,12 +12,43 @@ uniform float uTranslucencyStrength;  // 1.5
 uniform float uFogFade;               // 0.005
 uniform sampler2D uCloudTexture;
 
+// Cel-shading uniforms (research winner: craftzdog 4-band technique)
+// thresholds [0.6, 0.35, 0.001], multipliers [1.2, 0.9, 0.5, 0.25]
+uniform float uCelEnabled;       // 0.0 = off (standard), 1.0 = on (Ghibli)
+uniform vec3 uCelThresholds;     // brightness step thresholds
+uniform vec4 uCelMultipliers;    // brightness multipliers per band
+
 varying float vElevation;
 varying float vSideGradient;
 varying vec3 vNormal;
 varying vec3 vFakeNormal;
 varying vec3 vPosition;
 varying vec2 vCloudUV;
+
+// ITU-R BT.601 luminance
+float getLuminance(vec3 color) {
+  return dot(color, vec3(0.299, 0.587, 0.114));
+}
+
+// 4-band cel-shading — stolen from craftzdog technique
+// Step-function brightness quantization for flat anime/Ghibli look
+vec3 applyCelShading(vec3 color, float dotNL) {
+  float brightness = max(dotNL, 0.0);
+  float multiplier;
+
+  // 4-band step function: bright → shadow
+  if (brightness > uCelThresholds.x) {
+    multiplier = uCelMultipliers.x; // 1.2 — brightest band
+  } else if (brightness > uCelThresholds.y) {
+    multiplier = uCelMultipliers.y; // 0.9 — mid-bright
+  } else if (brightness > uCelThresholds.z) {
+    multiplier = uCelMultipliers.z; // 0.5 — mid-shadow
+  } else {
+    multiplier = uCelMultipliers.w; // 0.25 — deepest shadow
+  }
+
+  return color * multiplier;
+}
 
 // ACES Film tonemapping (from al-ro)
 vec3 ACESFilm(vec3 x) {
@@ -52,6 +84,38 @@ void main() {
   // Directional light
   float dotNL = dot(normal, lightDir);
   float diff = max(dotNL, 0.0);
+
+  // ─── Cel-shading path (Ghibli Painterly world) ───
+  if (uCelEnabled > 0.5) {
+    // Cel-shaded: flat color bands, no specular/translucency
+    vec3 celColor = applyCelShading(baseColor, dotNL);
+
+    // Simplified ambient for cel look
+    vec3 ambient = uAmbientStrength * 0.8 * baseColor;
+
+    // Cloud shadows still apply (softer)
+    vec3 cloudSample = texture2D(uCloudTexture, vCloudUV).rgb;
+    float shadowFactor = mix(0.8, 1.0, cloudSample.r);
+
+    // Rim light for Ghibli edge glow (daniel-ilett technique)
+    float rim = 1.0 - max(dot(viewDir, normal), 0.0);
+    rim = smoothstep(0.55, 1.0, rim);
+    vec3 rimColor = uSunColor * 0.4 * rim * vElevation;
+
+    vec3 col = (celColor + ambient + rimColor) * shadowFactor;
+
+    // Root shadow — darken toward base
+    col = mix(0.4 * uBaseColor, col, smoothstep(0.0, 0.35, vElevation));
+
+    // Fog
+    vec3 rayDir = normalize(vPosition - cameraPosition);
+    col = applyFog(col, rayDir, lightDir);
+
+    gl_FragColor = vec4(col, 1.0);
+    return;
+  }
+
+  // ─── Standard lighting path (all other worlds) ───
   vec3 diffuse = diff * uSunColor * baseColor;
 
   // Ambient

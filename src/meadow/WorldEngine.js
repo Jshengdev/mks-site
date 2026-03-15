@@ -167,6 +167,15 @@ export default class WorldEngine {
       this.grassManager = new GrassChunkManager(this.scene, scaledConfig, this.cloudShadows.texture)
     }
 
+    // ─── Cel-shading on grass (conditional — ghibli-painterly) ───
+    if (this.grassManager && envConfig.grass?.celShading?.enabled) {
+      this.grassManager.setUniform('uCelEnabled', 1.0)
+      if (envConfig.grass.celShading.thresholds) {
+        const t = envConfig.grass.celShading.thresholds
+        this.grassManager.material.uniforms.uCelThresholds.value.set(t[0], t[1], t[2])
+      }
+    }
+
     // ─── Fireflies (conditional) ───
     this.fireflies = null
     if (envConfig.particles?.fireflies?.enabled) {

@@ -95,9 +95,16 @@ void main() {
   float n2 = snoise(vec3(vUv * noiseScale * 1.5 + 3.0, uTime * 0.12));
   float noise = (n1 + n2 * 0.5) * 0.67;
 
-  // Foam — binary threshold on noise
-  // Stolen from thaslle: smoothstep for crisp foam edges
-  float foam = smoothstep(uFoamThreshold.x, uFoamThreshold.y, noise);
+  // Foam — binary cartoon hardness
+  // Research winner trick: smoothstep → step(0.5) for hard cartoon edges
+  // "smoothstep(0.08, 0.001, noise) → step(0.5, result) = binary cartoon hardness"
+  float foamSoft = smoothstep(uFoamThreshold.x, uFoamThreshold.y, noise);
+  float foam = step(0.5, foamSoft); // binary snap — the cartoon trick
+
+  // Foam dots at higher frequency (freq * 2.8 from winner)
+  float dotNoise = snoise(vec3(vUv * noiseScale * 2.8, uTime * 0.08));
+  float foamDots = step(0.5, smoothstep(0.08, 0.001, dotNoise));
+  foam = max(foam, foamDots * 0.7);
 
   // Breathing wave contour lines
   // Stolen from thaslle: threshold oscillates with time

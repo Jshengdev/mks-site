@@ -389,15 +389,77 @@ mod: src/environments/index.js (TRACK_LIST, audio import)
 
 ---
 
+## Step 9: Research Winner Integration — COMPLETE
+
+### What was done
+
+Integrated 5 research winners from Window 2's AutoResearch Pipeline into the environment worlds. Each winner brought specific magic values and shader techniques that upgrade the existing subsystems.
+
+#### 1. Night Stars+Fireflies → Night Meadow StarField (exp-008, score 56/70)
+- **StarField.js**: Upgraded from ~2300 stars (48x48 grid, brightnessExp=6) to ~8100 stars (90x90 grid, brightnessExp=3)
+- **6 spectral colors**: O/B blue-white, A white, F yellow-white, G yellow, K orange, M red — per-vertex `aStarColor` attribute mapped from brightness (hot bright stars are blue, cool dim stars are red)
+- **star.vert.glsl + star.frag.glsl**: Now passes per-vertex spectral color instead of hardcoded 2-color mix
+- **firefly.frag.glsl**: Updated to amber #d4c968 (research winner value — "Stars are cool (hope), fireflies are warm (comfort)")
+
+#### 2. Stylized Water → Ocean Cliff StylizedOcean (exp-007, score 47/70)
+- **ocean.frag.glsl**: Added binary cartoon hardness — `smoothstep(0.08, 0.001, noise)` → `step(0.5, result)` snaps foam to hard edges
+- **Foam dots**: Added second noise layer at freq×2.8 for scattered foam dots (winner technique)
+- Zero textures, fully procedural, +0 draw calls
+
+#### 3. Rain Particles → Storm Field RainSystem (exp-009, score 39/70)
+- **RainSystem.js**: Updated default values — velocity `[3.0, -15.0, 0.5]` (windX=3), lengthFactor=30 (was 3)
+- **rain.vert.glsl**: Added cross-product stretch technique from three.quarks — `cross(mvPosition.xyz, viewVelocity)` for perpendicular billboard width, streak length from velocity magnitude × dropWidth (0.04)
+- Faster cycle time (2s) for windier feel
+
+#### 4. Cel-Shading → Ghibli Grass Shader (exp-004, score 42/70)
+- **grass.frag.glsl**: Added 4-band step-function lighting path (craftzdog technique)
+  - Thresholds: `[0.6, 0.35, 0.001]`, Multipliers: `[1.2, 0.9, 0.5, 0.25]`
+  - Cel path has: flat color bands, no specular/translucency, rim light (daniel-ilett), simplified ambient
+  - Standard lighting path unchanged for other worlds
+- **GrassChunkManager.js**: Added `uCelEnabled`, `uCelThresholds`, `uCelMultipliers` uniforms
+- **WorldEngine.js**: Wires cel-shading enable from `envConfig.grass.celShading` (ghibli-painterly config already has it)
+
+#### 5. Kuwahara Pipeline → Ghibli PostProcessingStack (exp-006, score 48/70)
+- **KuwaharaEffect.js**: Upgraded from 4-quadrant to **8-sector circular** Kuwahara (Papari variant, adapted from MaximeHeckel)
+  - Circular kernel (skips corners), angle-based sector assignment
+  - Exponential variance weighting with `alpha=25.0` (near winner-takes-all)
+  - **16-level color quantization** for painterly banding
+  - **1.5x saturation boost** (function named `boostSaturation` to avoid Three.js `saturate()` macro conflict)
+  - Clamp to 0.08–0.92 (breathing blacks aesthetic preserved)
+- **PostProcessingStack.js**: Now constructs KuwaharaEffect with full winner params (kernelSize=6, alpha=25, quantizeLevels=16, saturationBoost=1.5)
+
+### Files changed (Step 9)
+```
+mod: src/meadow/StarField.js (8K stars, 6 spectral colors, brightnessExp=3)
+mod: src/meadow/shaders/star.vert.glsl (per-vertex color attribute)
+mod: src/meadow/shaders/star.frag.glsl (spectral colors from vertex)
+mod: src/meadow/shaders/firefly.frag.glsl (amber #d4c968)
+mod: src/meadow/shaders/ocean.frag.glsl (binary step foam + foam dots)
+mod: src/meadow/RainSystem.js (windX=3, lengthFactor=30)
+mod: src/meadow/shaders/rain.vert.glsl (cross-product stretch)
+mod: src/meadow/shaders/grass.frag.glsl (4-band cel-shading path)
+mod: src/meadow/GrassChunkManager.js (cel-shading uniforms)
+mod: src/meadow/WorldEngine.js (cel-shading wiring from config)
+mod: src/meadow/KuwaharaEffect.js (8-sector anisotropic, winner values)
+mod: src/meadow/PostProcessingStack.js (Kuwahara winner params)
+```
+
+### Build status
+- `npx vite build` passes (125 modules, 1.16s)
+- Chunk size warning expected (Three.js)
+
+---
+
 ## What's NOT Done Yet (Future Polish)
 - Different terrain generators per world (diamond-square for storm, cliff for ocean)
-- Volumetric clouds (Beer Shadow Maps — storm field)
+- Volumetric clouds (exp-010 proven but 44 FPS — needs half-res + TAAU for production)
 - Billboard clouds (ghibli painterly)
 - Cel-shaded sky dome (ghibli — currently uses Preetham)
+- Full 3-pass anisotropic Kuwahara (tensor pass → kuwahara pass → composite — current is single-pass 8-sector)
 - Wave-like grass wind (directional coherence for storm)
 - Bezier flower geometry (glflower reference)
 - Full dual-engine transition integration with EnvironmentScene
 - .glb model assets (seated figure, walking figure, cliff geometry)
 - Per-world content overlays (album cards, bio text, tour dates)
 - Audio integration (ocean ambient, storm wind, night crickets)
-- Window 2 winner technique integration (waiting for research pipeline outputs)
+- Remaining MP3s for non-meadow tracks (4 of 5 tracks have null src)

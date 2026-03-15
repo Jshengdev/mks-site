@@ -55,7 +55,14 @@ export default class PostProcessingStack {
     this.vignette = new VignetteEffect({ darkness: 0.5, offset: 0.3 })
     this.dof = isReduced ? null : createDOF(camera)
     this.godRayComposite = new GodRayCompositeEffect()
-    this.kuwahara = new KuwaharaEffect({ kernelSize: 4, strength: 0.0 })
+    // Research winner: 8-sector anisotropic, radius=6, alpha=25, 16-level quantize, 1.5x sat
+    this.kuwahara = new KuwaharaEffect({
+      kernelSize: 6,
+      strength: 0.0,
+      alpha: 25.0,
+      quantizeLevels: 16,
+      saturationBoost: 1.5,
+    })
 
     // Film grain MUST be last (DOF must not blur grain)
     this.grain = new FilmGrainEffect({ grainIntensity: 0.06 })

@@ -8,8 +8,9 @@ import fragmentShader from './shaders/rain.frag.glsl?raw'
 export default class RainSystem {
   constructor(scene, config = {}) {
     const count = config.count ?? 2000
-    const velocity = config.velocity ?? [0.5, -15.0, 0.5]
-    const lengthFactor = config.lengthFactor ?? 3.0
+    // Research winner values: rainSpeed=15, windX=3, lengthFactor=30
+    const velocity = config.velocity ?? [3.0, -15.0, 0.5]
+    const lengthFactor = config.lengthFactor ?? 30.0
 
     this.material = new THREE.ShaderMaterial({
       transparent: true,
