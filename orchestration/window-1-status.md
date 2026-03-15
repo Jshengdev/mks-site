@@ -312,6 +312,83 @@ WorldEngine(canvas, config)
 
 ---
 
+## Step 8: Music-Driven Routing + Entry Page — COMPLETE
+
+### Architecture Change: Music is the Router
+
+**Removed:** react-router-dom URL routing (BrowserRouter, Routes, NavLink)
+**Added:** WorldContext state machine driven by MiniPlayer track selection
+
+1. **WorldContext** (`src/WorldContext.jsx`)
+   - `currentWorld` — active environment ID
+   - `navigateToWorld(id)` — triggers world transition
+   - `entryComplete` — gates WebGL rendering behind entry page
+   - `completeEntry()` — confirms AudioContext + enters meadow
+   - `ensureAudioContext()` — shared AudioContext creation
+   - Sequential navigation: `nextWorld()`, `prevWorld()`
+
+2. **MiniPlayer refactored as router**
+   - Track list built from `TRACK_LIST` (derived from env configs)
+   - Selecting a track navigates to its world
+   - Auto-advance to next world when track ends
+   - Track list UI: numbered list with title + emotion
+   - Hidden until entry page completes (`entryComplete` gate)
+
+3. **Environment configs — track association**
+   - Each env config now has `audio.track: { title, artist, album, src }`
+   - Golden Meadow: "In a Field of Silence" (wired via ES import)
+   - Others: placeholder titles (src=null until MP3s available)
+   - `TRACK_LIST` export: ordered list for MiniPlayer
+
+4. **WorldNav** — buttons instead of NavLink, uses `navigateToWorld()`
+
+5. **App.jsx** — no Routes, renders `EntryPage` or `EnvironmentScene` based on context
+
+6. **main.jsx** — no BrowserRouter wrapper
+
+### Entry Page
+
+**EntryPage** (`src/entry/EntryPage.jsx` + `EntryPage.css`)
+
+Techniques stolen from flower-reference.html specification:
+- **Bezier curve petals** — `drawPetal()` with cubic bezier left/right edges
+- **Bayer 4x4 dithering** — full-frame dither post-process, 4-tone palette
+- **4-tone palette**: `#ededea`, `#a8a8a4`, `#545250`, `#111110`
+- **Half-resolution render** — `scale=0.5`, `image-rendering: pixelated`
+- **6-layer cursor parallax** — stem, back petals, front petals, center, stamen, text
+- **Breathing animation** — petal scale oscillation, flutter skew
+- **Procedural generation** — `createFlowerSeed()` randomizes petal count, width, curve, stems
+- **Dissolve transition** — dither-threshold dissolve (pixels fade to black via Bayer matrix)
+- **AudioContext confirmation** — click triggers `completeEntry()` which creates AudioContext
+
+### Audio Wiring
+- `src/assets/audio/In a Field of Silence.mp3` — Golden Meadow track
+- Imported via ES module in `environments/index.js` (Vite hashes for production)
+- MiniPlayer auto-plays track when world changes
+
+### Files created (Step 8)
+```
+new: src/WorldContext.jsx
+new: src/entry/EntryPage.jsx
+new: src/entry/EntryPage.css
+mod: src/App.jsx (no Routes, context-driven)
+mod: src/main.jsx (no BrowserRouter)
+mod: src/EnvironmentScene.jsx (no route dependency)
+mod: src/MiniPlayer.jsx (track list, world navigation)
+mod: src/MiniPlayer.css (track list styles)
+mod: src/WorldNav.jsx (buttons, context-driven)
+mod: src/WorldNav.css (button reset styles)
+mod: src/environments/*.js (audio.track configs)
+mod: src/environments/index.js (TRACK_LIST, audio import)
+```
+
+### Build status
+- `npx vite build` passes (125 modules, 1.82s)
+- MP3 asset bundled (11.1MB)
+- Chunk size warning expected (Three.js)
+
+---
+
 ## What's NOT Done Yet (Future Polish)
 - Different terrain generators per world (diamond-square for storm, cliff for ocean)
 - Volumetric clouds (Beer Shadow Maps — storm field)
@@ -323,3 +400,4 @@ WorldEngine(canvas, config)
 - .glb model assets (seated figure, walking figure, cliff geometry)
 - Per-world content overlays (album cards, bio text, tour dates)
 - Audio integration (ocean ambient, storm wind, night crickets)
+- Window 2 winner technique integration (waiting for research pipeline outputs)
