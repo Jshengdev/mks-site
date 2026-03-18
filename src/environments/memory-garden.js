@@ -175,33 +175,49 @@ export default {
     enabled: false,                  // you ARE the one remembering
   },
 
-  // FUTURE: Memory-specific systems (need new subsystem code)
-  // dissolve: {
-  //   // Noise-based dissolve on ALL vegetation
-  //   // cnoise(position * freq) * amp compared against scrolling threshold
-  //   // Technique: Codrops 2025 dissolve tutorial + Ashima cnoise
-  //   noiseFunction: 'cnoise',       // 3D Perlin (Stefan Gustavson / Ashima Arts)
-  //   frequency: 3.5,                // spatial frequency of dissolve pattern
-  //   amplitude: 0.8,
-  //   edgeWidth: 0.08,               // transition band width
-  //   edgeColor: [0.6, 0.4, 0.7],   // lavender glow at dissolve boundary
-  //   // Scroll-adaptive dissolve arc (from exp-049 mapping-mode-change pattern):
-  //   // t=0.0: threshold=0.8 (most hidden, trying to appear)
-  //   // t=0.25: threshold=0.5 (surfacing)
-  //   // t=0.50: threshold=0.15 (almost everything visible)
-  //   // t=0.75: threshold=0.55 (fading back)
-  //   // t=1.0: threshold=0.85 (nearly all dissolved)
-  // },
-  //
-  // depthFade: {
-  //   // Objects become transparent with distance from camera
-  //   // Technique: linearize depth + smoothstep transition
-  //   enabled: true,
-  //   nearFull: 5,                   // fully opaque within 5 units
-  //   farGone: 40,                   // fully transparent beyond 40 units
-  //   curve: 'smoothstep',           // easing function
-  //   // "You can only hold so much memory at once"
-  // },
+  // ─── Dissolving flowers (bloom → dissolve → respawn lifecycle) ───
+  // Dissolve technique: fragment shader discard based on Quiléz noise threshold
+  // Edge glow from Harry Alisavakis dissolve shader
+  // 200 instances cycling asynchronously — constant bloom/death rhythm
+  dissolvingFlowers: {
+    enabled: true,
+    count: 200,
+    // Muted warm palette — faded golds, dried botanicals, dusty memory
+    palette: ['#c4a060', '#b8a078', '#c0a880', '#a89878', '#b0a090', '#c4b898'],
+    edgeColor: [0.6, 0.4, 0.7],    // lavender glow at dissolve boundary
+    edgeWidth: 0.08,               // transition band width (from Alisavakis)
+  },
+
+  // ─── Wilting grass (drooping golden-brown blades — dying garden) ───
+  // Heavy quadratic droop physics + golden-brown color gradient
+  // Wind from Nitash-Biswas, translucent lighting from al-ro
+  wiltingGrass: {
+    enabled: true,
+    count: 8000,                    // sparse patches, not dense field
+    baseColor: [0.12, 0.09, 0.03], // dark warm brown at roots (soil)
+    tipColor: [0.30, 0.22, 0.08],  // golden amber tips (dying warmth)
+    windSpeed: 0.3,                // slow sighing wind
+    droopStrength: 0.6,            // heavy droop — grass weighed down by gravity/grief
+    translucency: 1.5,             // backlit amber glow through blades
+    fogDensity: 0.025,             // match world fog density
+    fogColor: [0.18, 0.14, 0.06],  // match world fog color
+  },
+
+  // ─── Fog wisps (drifting billboard sprites — heavy patches of moving fog) ───
+  // Billboard technique from three.js sprite shader
+  // Radial gradient + Quiléz noise for internal wispy churning
+  fogWisps: {
+    enabled: true,
+    count: 30,                     // sparse but large — patches, not particles
+    color: [0.22, 0.17, 0.08],    // warm amber fog matching world palette
+    opacity: 0.35,                 // translucent — fog, not smoke
+    spreadX: 120,                  // horizontal spread
+    spreadZ: 120,
+    minHeight: 0.5,                // just above ground — ground fog
+    maxHeight: 4.0,                // up to eye level
+    minScale: 8,                   // 8-25 world units — LARGE soft blobs
+    maxScale: 25,
+  },
 
   audio: {
     ambient: 'garden',               // distant wind chimes, faint birdsong, silence

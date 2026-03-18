@@ -397,6 +397,30 @@ export default class WorldEngine {
       this.fogWisps = new FogWisp(this.scene, count, envConfig.fogWisps)
     }
 
+    // ─── Origami grass (conditional — paper world) ───
+    this.origamiGrass = null
+    if (envConfig.origamiGrass?.enabled) {
+      this.origamiGrass = new OrigamiGrass(
+        this.scene, envConfig.origamiGrass, this.getTerrainHeight
+      )
+    }
+
+    // ─── Paper trees (conditional — paper world) ───
+    this.paperTrees = null
+    if (envConfig.paperTrees?.enabled) {
+      this.paperTrees = new PaperTree(
+        this.scene, envConfig.paperTrees, this.getTerrainHeight, this.cameraRig
+      )
+    }
+
+    // ─── Fold lines (conditional — paper world) ───
+    this.foldLines = null
+    if (envConfig.foldLines?.enabled) {
+      this.foldLines = new FoldLine(
+        this.scene, envConfig.foldLines, this.getTerrainHeight
+      )
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -459,6 +483,8 @@ export default class WorldEngine {
     this.dissolvingFlowers?.update(animElapsed)
     this.wiltingGrass?.update(animElapsed)
     this.fogWisps?.update(animElapsed)
+    this.origamiGrass?.update(animElapsed)
+    this.paperTrees?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -561,6 +587,9 @@ export default class WorldEngine {
       dissolvingFlowers: this.dissolvingFlowers,
       wiltingGrass: this.wiltingGrass,
       fogWisps: this.fogWisps,
+      origamiGrass: this.origamiGrass,
+      paperTrees: this.paperTrees,
+      foldLines: this.foldLines,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -600,6 +629,9 @@ export default class WorldEngine {
     this.dissolvingFlowers?.dispose()
     this.wiltingGrass?.dispose()
     this.fogWisps?.dispose()
+    this.origamiGrass?.dispose()
+    this.paperTrees?.dispose()
+    this.foldLines?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
