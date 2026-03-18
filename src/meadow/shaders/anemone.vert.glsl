@@ -62,18 +62,20 @@ void main() {
   vec4 worldPos4 = instanceMatrix * vec4(position, 1.0);
 
   // Height along tentacle: Y position relative to base (0=base, 1=tip)
-  // The geometry is a tube along Y axis, so position.y is the local height
-  float heightRatio = clamp(position.y / aHeight, 0.0, 1.0);
+  // Geometry is a unit tube (0→1 in Y), instanceMatrix Y-scales to actual height.
+  // position.y is always 0→1 in local space regardless of instance scale.
+  float heightRatio = clamp(position.y, 0.0, 1.0);
   vElevation = heightRatio;
 
   // --- 3-layer sine deformation (underwater current sway) ---
   // Layer 1: Primary current sway (large, slow)
+  // aHeight modulates spatial frequency — taller tentacles wave at longer periods
   float t = uTime * uSwaySpeed;
-  float sway1 = sin(t * 0.7 + aPhase) * 0.6;
+  float sway1 = sin(t * 0.7 + aPhase + heightRatio * aHeight * 0.5) * 0.6;
   // Layer 2: Secondary oscillation (medium, faster, perpendicular)
-  float sway2 = sin(t * 1.3 + aPhase * 2.0 + 1.57) * 0.25;
+  float sway2 = sin(t * 1.3 + aPhase * 2.0 + heightRatio * aHeight * 1.0 + 1.57) * 0.25;
   // Layer 3: Fine tremor (small, fast — organic jitter from turbulence)
-  float sway3 = cnoise(vec2(t * 0.5, aPhase * 3.0)) * 0.15;
+  float sway3 = cnoise(vec2(t * 0.5 + heightRatio * aHeight, aPhase * 3.0)) * 0.15;
 
   float totalSway = (sway1 + sway2 + sway3) * uSwayAmplitude;
 

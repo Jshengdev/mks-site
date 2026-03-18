@@ -110,7 +110,7 @@ export default {
   // Starfish — macro-scale "continents" on the pool floor
   starfish: {
     enabled: true,
-    count: 5,               // few, huge, slow
+    count: 25,              // 20-30 — continental-scale stars on the pool floor
     size: [3.0, 6.0],       // world units — continental scale
     color: [0.65, 0.25, 0.12],   // orange-red ochre
     textureFrequency: 8.0,       // surface bump detail
