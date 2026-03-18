@@ -305,6 +305,30 @@ export default class WorldEngine {
       }
     }
 
+    // ─── Kelp forest (conditional — underwater cathedral) ───
+    this.kelpStrands = null
+    if (envConfig.kelp?.enabled) {
+      this.kelpStrands = new KelpStrand(
+        this.scene, this.cameraRig, this.getTerrainHeight, envConfig.kelp
+      )
+    }
+
+    // ─── Coral clusters (conditional — underwater cathedral) ───
+    this.coralClusters = null
+    if (envConfig.coral?.enabled) {
+      this.coralClusters = new CoralCluster(
+        this.scene, this.getTerrainHeight, envConfig.coral
+      )
+    }
+
+    // ─── Anemone field (conditional — underwater cathedral) ───
+    this.anemoneField = null
+    if (envConfig.anemoneField?.enabled) {
+      this.anemoneField = new AnemoneField(
+        this.scene, envConfig.anemoneField, this.getTerrainHeight
+      )
+    }
+
     // ─── Post-processing ───
     this.postProcessing = new PostProcessingStack(
       this.renderer, this.scene, this.camera,
@@ -671,6 +695,9 @@ export default class WorldEngine {
     this.anemones?.update(animElapsed)
     this.starfish?.update(animElapsed)
     this.causticProjector?.update(animElapsed)
+    this.kelpStrands?.update(animElapsed)
+    this.coralClusters?.update(animElapsed)
+    this.anemoneField?.update(animElapsed)
 
     if (!this.atmosphere.paused) {
       this.atmosphere.update(this.scrollEngine.progress)
@@ -852,6 +879,9 @@ export default class WorldEngine {
       anemones: this.anemones,
       starfish: this.starfish,
       causticProjector: this.causticProjector,
+      kelpStrands: this.kelpStrands,
+      coralClusters: this.coralClusters,
+      anemoneField: this.anemoneField,
       jellyfish: this.jellyfish,
       anglerLights: this.anglerLights,
       marineSnow: this.marineSnow,
@@ -918,6 +948,9 @@ export default class WorldEngine {
     this.anemones?.dispose()
     this.starfish?.dispose()
     this.causticProjector?.dispose()
+    this.kelpStrands?.dispose()
+    this.coralClusters?.dispose()
+    this.anemoneField?.dispose()
     this.jellyfish?.dispose()
     this.anglerLights?.dispose()
     this.marineSnow?.dispose()

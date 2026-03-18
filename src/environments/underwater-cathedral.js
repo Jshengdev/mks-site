@@ -101,13 +101,9 @@ export default {
     stars: { enabled: false },
   },
 
-  // Grass system repurposed as kelp fronds
+  // DISABLED — underwater cathedral has kelp, not grass
   grass: {
-    enabled: true,
-    bladeCount: 8000,                 // sparse kelp patches near pillars
-    baseColor: [0.01, 0.06, 0.03],   // dark green kelp
-    tipColor: [0.03, 0.14, 0.06],    // slightly brighter tips
-    windSpeed: 0.10,                  // slow underwater current sway
+    enabled: false,
   },
 
   // No flowers — replaced by coral formations
@@ -115,16 +111,38 @@ export default {
     enabled: false,
   },
 
-  // Kelp forest as substitute vegetation (uses grass system with different params)
+  // Kelp forest — tall instanced ribbon blades with underwater current sway
+  // (KelpStrand.js — adapted from GrassGeometry 5x taller, al-ro/spacejack sway)
   kelp: {
     enabled: true,
-    // Uses grass blade system but with longer, slower, fewer blades
-    bladeCount: 8000,                 // sparse — only on floor near pillars
-    baseColor: [0.02, 0.08, 0.04],   // dark green
-    tipColor: [0.05, 0.18, 0.08],    // slightly brighter green tips
-    bladeHeight: 6.0,                 // tall kelp fronds
-    swaySpeed: 0.15,                  // slow underwater sway (current, not wind)
+    bladeCount: 2000,                 // 2000 kelp strands across the nave floor
+    baseColor: [0.01, 0.06, 0.03],   // dark green kelp base
+    tipColor: [0.05, 0.18, 0.08],    // lighter translucent green tips
+    bladeHeight: 12.0,               // TALL — 5x grass, reaches toward surface
+    swaySpeed: 0.15,                  // slow underwater current (3-5x slower than wind)
     swayAmplitude: 1.5,               // large, lazy movements
+    currentDir: [0.6, 0.8],          // prevailing current direction (diagonal drift)
+  },
+
+  // Anemone field — tube tentacles waving in current
+  // (AnemoneSystem.js — boytchev tentacle technique, instanced)
+  anemoneField: {
+    enabled: true,
+    count: 100,                       // 100 anemone clusters on the floor
+    palette: [
+      [0.08, 0.30, 0.35],           // deep teal (matches cathedral water)
+      [0.15, 0.45, 0.40],           // jade green
+      [0.20, 0.25, 0.50],           // indigo-blue
+      [0.40, 0.20, 0.45],           // purple (bioluminescent accent)
+      [0.10, 0.50, 0.30],           // emerald
+      [0.30, 0.15, 0.35],           // dark amethyst
+    ],
+    tentaclesPerAnemone: [4, 8],     // fewer tentacles than tide pool (sacred, sparse)
+    tentacleHeight: [1.5, 3.5],      // shorter — cathedral floor ornaments
+    tentacleRadius: 0.06,
+    swaySpeed: 0.3,                  // gentle underwater current
+    swayAmplitude: 0.25,
+    currentDirection: [0.6, 0.0, 0.8],
   },
 
   particles: {
