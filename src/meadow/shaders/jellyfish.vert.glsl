@@ -1,7 +1,8 @@
 // Jellyfish bell + tentacle animation
 // Adapted from arodic/Chrysaora asymmetric pulse technique
 // Bell: radial contraction/expansion modulated by Y (rim moves more)
-// Tentacles: depth-dependent wave propagation
+// Tentacles: pulse-coupled trailing physics (splay on contraction, droop on expansion)
+// + jpweeks/particulate-medusae depth-dependent trailing delay
 // Phase offset per instance from instanceMatrix position
 
 uniform float uTime;
@@ -52,13 +53,42 @@ void main() {
   float riffle = sin(azimuth * 8.0 + phase) * 0.03 * rimFactor * bellFactor;
   pos.xz += radialDir * riffle;
 
-  // --- TENTACLE WAVE (y < 0) ---
-  // Adapted from particulate-medusae: depth-dependent wave propagation
-  // Deeper = more displacement (tentacle tips swing wider)
+  // --- TENTACLE TRAILING PHYSICS (y < 0) ---
+  // Coupled to bell pulse — tentacles react to contraction/expansion
+  // Adapted from arodic/Chrysaora wave propagation down appendages
+  // + jpweeks/particulate-medusae depth-dependent trailing delay
+  //
+  // Real deep-sea jellyfish behavior:
+  //   Bell contracts → water jet pushes tentacles outward (splay)
+  //   Bell relaxes → tentacles hang/trail downward (droop)
+  //   Deeper segments lag behind base → trailing ribbon ripple
+  //   Subtle cross-current twist → corkscrew, not planar
   float depth = max(0.0, -pos.y);
-  float tentWave = sin(uTime * 1.2 + phase + depth * 2.5) * 0.12 * depth;
-  pos.x += tentWave * (1.0 - bellFactor);
-  pos.z += cos(uTime * 0.9 + phase * 1.7 + depth * 1.8) * 0.08 * depth * (1.0 - bellFactor);
+  float tentFactor = 1.0 - bellFactor;
+
+  // Trailing delay: deeper segments respond later
+  // 0.35 rad/unit — tips lag ~0.5 cycle behind base for 1.5-unit tentacle
+  float trailDelay = depth * 0.35;
+  float coupledPulse = sin(t - trailDelay);
+
+  // Radial splay: contraction pushes tentacles outward (water jet)
+  // Asymmetric — contraction splay stronger than retraction
+  float splay = coupledPulse > 0.0 ? coupledPulse * 0.15 : coupledPulse * 0.06;
+  vec2 tentDir = normalize(pos.xz + vec2(0.001));
+  pos.xz += tentDir * splay * depth * tentFactor;
+
+  // Cross-current spiral — perpendicular to splay direction
+  // Creates twisting ribbon effect from deep-sea photography
+  // Slower than bell pulse (0.6x), offset by depth for corkscrew
+  float spiralPhase = t * 0.6 - depth * 0.5;
+  pos.x += sin(spiralPhase) * 0.04 * depth * tentFactor;
+  pos.z += cos(spiralPhase + phase * 0.7) * 0.03 * depth * tentFactor;
+
+  // Gravity droop: tips hang heavier when bell is relaxed
+  // Contraction → tentacles lift (jet pushes up) = droopFactor low
+  // Expansion → gravity pulls tips down (trailing arc) = droopFactor high
+  float droopFactor = max(0.0, -coupledPulse * 0.4 + 0.6);
+  pos.y -= depth * depth * 0.025 * droopFactor * tentFactor;
 
   // Apply instance transform
   vec4 worldPos = modelMatrix * instanceMatrix * vec4(pos, 1.0);
