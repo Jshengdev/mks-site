@@ -133,6 +133,22 @@ export default {
     enabled: false, // crystals ARE the flowers of the underground
   },
 
+  // Bioluminescent mushrooms — ground cover between crystal formations
+  // Small hemisphere caps on thin stems, pulsing with chemical light
+  // Purple-blue-teal palette — the cave floor's living carpet
+  mushrooms: {
+    enabled: true,
+    count: 300,
+    pulseSpeed: 1.5,       // breathing rate — slow chemical cycling
+    pulseIntensity: 0.4,   // max brightness swing per pulse
+    palette: [
+      { glow: [0.35, 0.10, 0.55], stem: [0.06, 0.03, 0.10] },  // deep purple
+      { glow: [0.15, 0.25, 0.65], stem: [0.04, 0.05, 0.10] },  // blue
+      { glow: [0.10, 0.45, 0.50], stem: [0.03, 0.08, 0.08] },  // teal
+      { glow: [0.45, 0.15, 0.60], stem: [0.08, 0.03, 0.10] },  // violet
+    ],
+  },
+
   particles: {
     fireflies: { enabled: false },
     dust: { enabled: false },

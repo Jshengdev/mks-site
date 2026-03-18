@@ -33,6 +33,8 @@ import { UNDERWATER_CATHEDRAL_KEYFRAMES } from './UnderwaterCathedralKeyframes.j
 import { BIOLUMINESCENT_DEEP_KEYFRAMES } from './BioluminescentDeepKeyframes.js'
 import { PAPER_WORLD_KEYFRAMES } from './PaperWorldKeyframes.js'
 import { SONIC_VOID_KEYFRAMES } from './SonicVoidKeyframes.js'
+import CrystalFormation from './CrystalFormation.js'
+import GlowMushroom from './GlowMushroom.js'
 import PetalSystem from './PetalSystem.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
@@ -44,6 +46,12 @@ import AudioReactive from './AudioReactive.js'
 import CursorInteraction from './CursorInteraction.js'
 import StarField from './StarField.js'
 import VolumetricCloudSystem from './VolumetricCloudSystem.js'
+import DissolvingFlower from './DissolvingFlower.js'
+import WiltingGrass from './WiltingGrass.js'
+import FogWisp from './FogWisp.js'
+import OrigamiGrass from './OrigamiGrass.js'
+import PaperTree from './PaperTree.js'
+import FoldLine from './FoldLine.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -226,6 +234,22 @@ export default class WorldEngine {
       this.flowers = new FlowerInstances(this.scene, this.cameraRig, count, this.getTerrainHeight, envConfig.flowers)
     }
 
+    // ─── Crystal formations (conditional — crystal cavern) ───
+    this.crystals = null
+    if (envConfig.crystals?.enabled) {
+      this.crystals = new CrystalFormation(
+        this.scene, this.cameraRig, envConfig.crystals, this.getTerrainHeight
+      )
+    }
+
+    // ─── Glow mushrooms (conditional — crystal cavern) ───
+    this.mushrooms = null
+    if (envConfig.mushrooms?.enabled) {
+      this.mushrooms = new GlowMushroom(
+        this.scene, this.cameraRig, envConfig.mushrooms, this.getTerrainHeight
+      )
+    }
+
     // ─── Post-processing ───
     this.postProcessing = new PostProcessingStack(
       this.renderer, this.scene, this.camera,
@@ -348,6 +372,31 @@ export default class WorldEngine {
       )
     }
 
+    // ─── Dissolving flowers (conditional — memory-garden) ───
+    this.dissolvingFlowers = null
+    if (envConfig.dissolvingFlowers?.enabled) {
+      const count = envConfig.dissolvingFlowers.count ?? 200
+      this.dissolvingFlowers = new DissolvingFlower(
+        this.scene, this.cameraRig, count, this.getTerrainHeight, envConfig.dissolvingFlowers
+      )
+    }
+
+    // ─── Wilting grass (conditional — memory-garden) ───
+    this.wiltingGrass = null
+    if (envConfig.wiltingGrass?.enabled) {
+      const count = envConfig.wiltingGrass.count ?? 8000
+      this.wiltingGrass = new WiltingGrass(
+        this.scene, count, this.getTerrainHeight, envConfig.wiltingGrass
+      )
+    }
+
+    // ─── Fog wisps (conditional — memory-garden) ───
+    this.fogWisps = null
+    if (envConfig.fogWisps?.enabled) {
+      const count = envConfig.fogWisps.count ?? 30
+      this.fogWisps = new FogWisp(this.scene, count, envConfig.fogWisps)
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -362,6 +411,7 @@ export default class WorldEngine {
     this.atmosphere.petals = this.petals
     this.atmosphere.ocean = this.ocean
     this.atmosphere.volumetricClouds = this.volumetricClouds
+    this.atmosphere.fogWisps = this.fogWisps
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -387,6 +437,8 @@ export default class WorldEngine {
     this.grassManager?.update(camPos, animElapsed)
     this.fireflies?.update(animElapsed)
     this.flowers?.update(animElapsed)
+    this.crystals?.update(animElapsed)
+    this.mushrooms?.update(animElapsed)
 
     if (!this.atmosphere.paused) {
       this.atmosphere.update(this.scrollEngine.progress)
@@ -404,6 +456,9 @@ export default class WorldEngine {
     this.rain?.update(animElapsed)
     this.petals?.update(animElapsed)
     this.lightning?.update(animElapsed, delta)
+    this.dissolvingFlowers?.update(animElapsed)
+    this.wiltingGrass?.update(animElapsed)
+    this.fogWisps?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -487,6 +542,8 @@ export default class WorldEngine {
       grassManager: this.grassManager,
       fireflies: this.fireflies,
       flowers: this.flowers,
+      crystals: this.crystals,
+      mushrooms: this.mushrooms,
       cloudShadows: this.cloudShadows,
       ocean: this.ocean,
       atmosphere: this.atmosphere,
@@ -501,6 +558,9 @@ export default class WorldEngine {
       petals: this.petals,
       lightning: this.lightning,
       volumetricClouds: this.volumetricClouds,
+      dissolvingFlowers: this.dissolvingFlowers,
+      wiltingGrass: this.wiltingGrass,
+      fogWisps: this.fogWisps,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -518,6 +578,8 @@ export default class WorldEngine {
     this.grassManager?.dispose()
     this.flowers?.dispose()
     this.fireflies?.dispose()
+    this.crystals?.dispose()
+    this.mushrooms?.dispose()
     this.postProcessing?.dispose()
     this.musicTrigger?.dispose()
     this.scoreSheets?.dispose()
@@ -535,6 +597,9 @@ export default class WorldEngine {
     this.petals?.dispose()
     this.lightning?.dispose()
     this.volumetricClouds?.dispose()
+    this.dissolvingFlowers?.dispose()
+    this.wiltingGrass?.dispose()
+    this.fogWisps?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
