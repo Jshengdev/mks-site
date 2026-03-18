@@ -14,18 +14,25 @@ varying float vCapMask;        // 1.0 for cap vertices, 0.0 for stem
 void main() {
   vec3 pos = position;
 
+  // Per-instance phase from world position — each mushroom pulses independently
+  // Chemical reactions don't synchronize across organisms
+  vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+  float instancePhase = fract(sin(dot(instancePos.xz, vec2(12.9898, 78.233))) * 43758.5453);
+
   // Cap mask — mushroom geometry: cap is top half (y > 0.15)
   vCapMask = smoothstep(0.12, 0.18, position.y);
 
   // Gentle cap sway — only top moves (same pattern as flower.vert.glsl)
-  float sway = sin(uTime * 0.6 + position.x * 3.0) * 0.03 * vCapMask;
+  // instancePhase offsets sway so neighbors don't move in lockstep
+  float sway = sin(uTime * 0.6 + position.x * 3.0 + instancePhase * 6.28318) * 0.03 * vCapMask;
   pos.x += sway;
   pos.z += sway * 0.7;
 
   // Bioluminescent pulse — layered sin waves for organic feel
   // Chemical reaction cycling: slow base + detuned harmonic
-  float pulse = 0.5 + 0.5 * sin(uTime * uPulseSpeed);
-  pulse *= 0.7 + 0.3 * sin(uTime * uPulseSpeed * 0.37 + 1.7);
+  // instancePhase gives each mushroom its own rhythm
+  float pulse = 0.5 + 0.5 * sin(uTime * uPulseSpeed + instancePhase * 6.28318);
+  pulse *= 0.7 + 0.3 * sin(uTime * uPulseSpeed * 0.37 + 1.7 + instancePhase * 3.14);
   vPulse = pulse;
 
   // Cap "breathing" — slight scale pulse on cap vertices

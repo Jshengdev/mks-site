@@ -35,23 +35,24 @@ export default class CrystalFormation {
       ...(crystalConfig._sunColor ?? [0.25, 0.12, 0.70])
     )
 
+    // Shared hexagonal prism geometry — all types use the same shape
+    // Per-instance scaling via instanceMatrix handles size variation
+    // CylinderGeometry with radialSegments=6 = hexagonal cross-section
+    // heightSegments=8 for smooth vertex displacement in shader
+    this._sharedGeo = new THREE.CylinderGeometry(
+      0.15,  // radiusTop — tapered tip
+      0.4,   // radiusBottom — wider base
+      1.0,   // height (scaled per instance)
+      6,     // radialSegments = hexagonal
+      8,     // heightSegments for vertex displacement
+      false  // openEnded
+    )
+    // Shift origin to base so crystals grow upward from placement point
+    this._sharedGeo.translate(0, 0.5, 0)
+
     for (const type of types) {
       const [minSize, maxSize] = type.sizeRange ?? [0.3, 2.5]
       const count = type.count ?? 100
-
-      // Hexagonal prism geometry — CylinderGeometry with radialSegments=6
-      // Tapered top for crystalline point
-      // heightSegments=8 for smooth vertex displacement in shader
-      const geo = new THREE.CylinderGeometry(
-        0.15,  // radiusTop — tapered tip
-        0.4,   // radiusBottom — wider base
-        1.0,   // height (scaled per instance)
-        6,     // radialSegments = hexagonal
-        8,     // heightSegments for vertex displacement
-        false  // openEnded
-      )
-      // Shift origin to base so crystals grow upward from placement point
-      geo.translate(0, 0.5, 0)
 
       const material = new THREE.ShaderMaterial({
         vertexShader: crystalVertexShader,
@@ -69,7 +70,7 @@ export default class CrystalFormation {
         side: THREE.DoubleSide,
       })
 
-      const mesh = new THREE.InstancedMesh(geo, material, count)
+      const mesh = new THREE.InstancedMesh(this._sharedGeo, material, count)
       let placed = 0
 
       for (let i = 0; i < count * 4 && placed < count; i++) {
@@ -134,8 +135,8 @@ export default class CrystalFormation {
 
   dispose() {
     for (const { mesh, material } of this.meshes) {
-      mesh.geometry.dispose()
       material.dispose()
     }
+    this._sharedGeo.dispose()
   }
 }

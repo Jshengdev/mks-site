@@ -31,13 +31,19 @@ float noise3D(vec3 p) {
 void main() {
   vec3 pos = position;
 
+  // Per-instance phase from world position — each crystal hums differently
+  // Derived from instanceMatrix translation (unique per placement)
+  vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+  float instancePhase = fract(sin(dot(instancePos.xz, vec2(12.9898, 78.233))) * 43758.5453);
+
   // Crystal hum — layered sine displacement along normal
   // Two detuned frequencies create organic resonance (spite pattern)
-  float hum = sin(pos.y * uHumFrequency + uTime * 12.0) * uHumIntensity;
-  hum += sin(pos.y * uHumFrequency * 2.3 + uTime * 7.0) * uHumIntensity * 0.5;
+  // instancePhase offsets each crystal's resonance cycle
+  float hum = sin(pos.y * uHumFrequency + uTime * 12.0 + instancePhase * 6.28318) * uHumIntensity;
+  hum += sin(pos.y * uHumFrequency * 2.3 + uTime * 7.0 + instancePhase * 3.14) * uHumIntensity * 0.5;
 
   // Low-frequency turbulence wobble — slow crystal breathing
-  float turb = noise3D(pos * 0.5 + uTime * 0.3) * 0.02;
+  float turb = noise3D(pos * 0.5 + uTime * 0.3 + instancePhase) * 0.02;
   pos += normal * (hum + turb);
 
   // Normalized height for fragment shader gradient (0 = base, 1 = tip)
