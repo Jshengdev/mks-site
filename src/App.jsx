@@ -7,6 +7,7 @@ import MiniPlayer from './MiniPlayer.jsx'
 import MoonlightCursor from './MoonlightCursor.jsx'
 import WorldNav from './WorldNav.jsx'
 import EntryPage from './entry/EntryPage.jsx'
+import SiteLinks from './SiteLinks.jsx'
 
 function AppInner() {
   const { entryComplete, currentWorld } = useWorld()
@@ -28,6 +29,7 @@ function AppInner() {
 function App() {
   return (
     <WorldProvider>
+      <SiteLinks />
       <AppInner />
     </WorldProvider>
   )
