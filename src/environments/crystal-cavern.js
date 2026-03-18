@@ -285,6 +285,22 @@ export default {
     // The crystals are the figure. The cave is the body.
   },
 
+  // Prismatic caustics — rainbow refraction patterns on dark stone
+  // THE signature visual: "light refracting through crystals creates rainbow patterns"
+  // Uses existing CausticProjector with prismatic mode enabled.
+  // 3 noise layers → 3 spectral bands (warm/mid/cool) via iquilez cosine palette.
+  caustics: {
+    enabled: true,
+    prismatic: true,
+    frequency: 5.0,       // lower than tide pool (8.0) — larger patterns, more geological
+    speed: 0.08,          // VERY slow — underground air is still, patterns drift like geology
+    intensity: 0.6,       // base intensity, driven by keyframes (causticBrightness)
+    sharpness: 4.0,       // sharper than tide pool (3.0) — crisp prismatic lines
+    depthFade: 0.0,       // no depth fade — underground, not underwater
+    color: [0.7, 0.5, 0.9],  // purple-tinted base (overridden by prismatic spectral bands)
+    surfaceHeight: 70,    // full cave depth range for normalization
+  },
+
   // Still water pools on the cavern floor
   water: {
     enabled: true,

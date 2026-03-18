@@ -334,6 +334,7 @@ export default class AtmosphereController {
     this.auroraCurtain = null
     this.crystals = null
     this.mushrooms = null
+    this.causticProjector = null
     this.jellyfish = null
     this.anglerLights = null
     this.marineSnow = null
@@ -591,6 +592,11 @@ export default class AtmosphereController {
     // ─── Glow mushrooms (crystal cavern) ───
     if (this.mushrooms && c.mushroomBrightness !== undefined) {
       this.mushrooms.setBrightness(c.mushroomBrightness)
+    }
+
+    // ─── Caustic projector (tide pool + crystal cavern prismatic) ───
+    if (this.causticProjector && c.causticBrightness !== undefined) {
+      this.causticProjector.setIntensity(c.causticBrightness)
     }
 
     // ─── Jellyfish (bioluminescent deep) ───

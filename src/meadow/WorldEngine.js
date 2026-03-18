@@ -667,6 +667,7 @@ export default class WorldEngine {
     this.atmosphere.auroraCurtain = this.auroraCurtain
     this.atmosphere.crystals = this.crystals
     this.atmosphere.mushrooms = this.mushrooms
+    this.atmosphere.causticProjector = this.causticProjector
     this.atmosphere.jellyfish = this.jellyfish
     this.atmosphere.anglerLights = this.anglerLights
     this.atmosphere.marineSnow = this.marineSnow

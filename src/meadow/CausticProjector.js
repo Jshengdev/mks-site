@@ -37,6 +37,7 @@ export default class CausticProjector {
           config.absorptionGreen ?? 0.06,
           config.absorptionBlue ?? 0.02,
         )},
+        uPrismatic: { value: config.prismatic ? 1.0 : 0.0 },
       },
       vertexShader,
       fragmentShader,
