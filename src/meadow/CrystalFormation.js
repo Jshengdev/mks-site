@@ -84,6 +84,7 @@ export default class CrystalFormation {
           uSunDirection: { value: sunDir },
           uSunColor: { value: sunColor },
           uBrightness: { value: 1.0 },
+          uPulseIntensity: { value: 0.0 },
         },
         side: THREE.DoubleSide,
       })
@@ -218,6 +219,12 @@ export default class CrystalFormation {
   setBrightness(val) {
     for (const { material } of this.meshes) {
       material.uniforms.uBrightness.value = val
+    }
+  }
+
+  setPulseIntensity(val) {
+    for (const { material } of this.meshes) {
+      material.uniforms.uPulseIntensity.value = val
     }
   }
 

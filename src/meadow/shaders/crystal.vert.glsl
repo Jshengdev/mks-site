@@ -12,6 +12,7 @@ varying vec3 vPosition;
 varying vec3 vWorldNormal;
 varying float vFresnel;
 varying float vHeight;          // normalized height for color gradient
+varying float vInstancePhase;   // per-crystal phase offset for emissive pulsing
 
 // Simple hash noise — stolen from L16 fBM pattern (via firefly.vert.glsl)
 float hash(float n) { return fract(sin(n) * 43758.5453); }
@@ -35,6 +36,7 @@ void main() {
   // Derived from instanceMatrix translation (unique per placement)
   vec3 instancePos = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
   float instancePhase = fract(sin(dot(instancePos.xz, vec2(12.9898, 78.233))) * 43758.5453);
+  vInstancePhase = instancePhase;
 
   // Crystal hum — layered sine displacement along normal
   // Two detuned frequencies create organic resonance (spite pattern)

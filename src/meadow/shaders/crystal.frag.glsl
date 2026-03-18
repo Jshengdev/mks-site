@@ -11,12 +11,14 @@ uniform vec3 uSunDirection;
 uniform vec3 uSunColor;
 uniform float uTime;
 uniform float uBrightness;      // atmosphere-driven brightness multiplier
+uniform float uPulseIntensity;  // 0-1 emissive breathing depth (keyframe-driven)
 
 varying vec3 vNormal;
 varying vec3 vPosition;
 varying vec3 vWorldNormal;
 varying float vFresnel;
 varying float vHeight;
+varying float vInstancePhase;   // per-crystal phase offset
 
 // iquilez cosine palette — iridescent spectrum
 // Source: Varun Vachhar rhombic triacontahedron SDF
@@ -36,7 +38,18 @@ void main() {
 
   // Emissive core — brighter toward tip (crystals glow from within)
   float emissiveStrength = 0.5 + 0.5 * vHeight;
-  vec3 emissive = uEmissive * emissiveStrength * 2.0;
+
+  // Breathing pulse — two detuned sine layers for organic feel
+  // Source: creative-coding principle #1 — "perfect code feels dead, imperfection is the soul"
+  // Each crystal has its own phase (vInstancePhase) so formations breathe independently.
+  // At uPulseIntensity=0: static glow (entrance). At 1.0: full breath (RESONANCE).
+  // Frequencies 1.2 and 0.7 are non-harmonic — avoids mechanical metronome feel.
+  float pulse = sin(uTime * 1.2 + vInstancePhase * 6.28318) * 0.6
+              + sin(uTime * 0.7 + vInstancePhase * 4.18879) * 0.4;
+  pulse = pulse * 0.5 + 0.5; // remap -1..1 → 0..1
+  float breathe = mix(1.0, 0.35 + pulse * 0.65, uPulseIntensity);
+
+  vec3 emissive = uEmissive * emissiveStrength * 2.0 * breathe;
 
   // Fresnel edge glow (stemkoski: c=0.1, p=3.0)
   float fresnel = vFresnel;

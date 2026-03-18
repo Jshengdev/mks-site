@@ -22,6 +22,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     petalBrightness: 0.0,
     starBrightness: 0.0,     // underground — no stars
     crystalBrightness: 0.3,  // faint — barely visible at entrance
+    crystalPulseIntensity: 0.08, // barely breathing — almost imagined, not seen
     mushroomBrightness: 0.2, // dim bioluminescence — just hints
     causticBrightness: 0.0,  // no caustics at entrance — too dark, no crystals to refract
     sunElevation: -60,        // DEEP UNDERGROUND — sun far below horizon
@@ -83,6 +84,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     petalBrightness: 0.0,
     starBrightness: 0.0,
     crystalBrightness: 0.6,   // growing — first clusters catch refracted light
+    crystalPulseIntensity: 0.25, // first noticeable pulse — you realize the crystals are alive
     mushroomBrightness: 0.5,  // pulsing visible — floor coming alive
     causticBrightness: 0.25,  // first rainbow hints on stone — prismatic whispers
     sunElevation: -65,         // deeper underground
@@ -145,6 +147,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     petalBrightness: 0.0,
     starBrightness: 0.0,
     crystalBrightness: 1.0,   // full intensity — prismatic cathedral
+    crystalPulseIntensity: 0.55, // each formation breathes independently — the hum begins
     mushroomBrightness: 0.8,  // strong pulse — floor carpet glows
     causticBrightness: 0.7,   // rainbow patterns crawl across stone — the name says it all
     sunElevation: -70,         // deepest point underground
@@ -207,6 +210,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     petalBrightness: 0.0,
     starBrightness: 0.0,
     crystalBrightness: 1.4,   // PEAK — cathedral blazes
+    crystalPulseIntensity: 0.85, // PEAK — deep breathing, the cave itself is alive
     mushroomBrightness: 1.0,  // peak pulse — floor and ceiling alive
     causticBrightness: 1.0,   // PEAK — every surface painted with prismatic rainbows
     sunElevation: -65,         // still deep underground
@@ -269,6 +273,7 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     petalBrightness: 0.0,
     starBrightness: 0.0,
     crystalBrightness: 0.7,   // dimming — communion intimacy, not blaze
+    crystalPulseIntensity: 0.40, // softer breath — intimate, womb-like, the hum cradles you
     mushroomBrightness: 0.4,  // fading pulse — womb-like softness
     causticBrightness: 0.35,  // dimming — soft prismatic whispers in communion
     sunElevation: -55,         // still underground

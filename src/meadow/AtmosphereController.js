@@ -588,6 +588,9 @@ export default class AtmosphereController {
     if (this.crystals && c.crystalBrightness !== undefined) {
       this.crystals.setBrightness(c.crystalBrightness)
     }
+    if (this.crystals && c.crystalPulseIntensity !== undefined) {
+      this.crystals.setPulseIntensity(c.crystalPulseIntensity)
+    }
 
     // ─── Glow mushrooms (crystal cavern) ───
     if (this.mushrooms && c.mushroomBrightness !== undefined) {
