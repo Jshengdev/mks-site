@@ -1,7 +1,7 @@
 // Paper tree fragment shader — folded paper step lighting
-// Adapted from daniel-ilett/maya-ndljk toon shader
-// 3-band step lighting for trees (slightly more detail than grass)
-// Trunk gets slightly warmer shadow, crown stays cool
+// Adapted from lukysummer/7-Different-Shaders-Using-GLSL cel_shading_frag.glsl
+// 4-band thresholds for paper tree (trees need more depth than grass)
+// + Manurocker95/Toon-Shading silhouette edge detection
 
 uniform vec3 uColor;          // cream/white base
 uniform vec3 uShadowColor;    // fold shadow
@@ -16,23 +16,27 @@ void main() {
   vec3 lightDir = normalize(uSunDirection);
   vec3 viewDir = normalize(cameraPosition - vPosition);
 
-  // 3-band step lighting (daniel-ilett toon technique, adapted for paper)
+  // 4-band paper step lighting (lukysummer thresholds)
+  // Trees need slightly more contrast than grass — deeper shadows on trunk
   float NdotL = dot(normal, lightDir);
-  float brightness;
-  if (NdotL > 0.5) {
-    brightness = 1.0;     // fully lit paper face
-  } else if (NdotL > 0.0) {
-    brightness = 0.75;    // angled face — partial shadow
+  float lambertian;
+  if (NdotL < 0.01) {
+    lambertian = 0.45;     // deep fold shadow (trunk crevices)
+  } else if (NdotL < 0.17) {
+    lambertian = 0.62;     // shadow face
+  } else if (NdotL < 0.55) {
+    lambertian = 0.82;     // midtone crown face
   } else {
-    brightness = 0.55;    // back face — deep fold shadow
+    lambertian = 1.0;      // fully lit crown tip
   }
 
-  vec3 col = mix(uShadowColor, uColor, brightness);
+  vec3 col = mix(uShadowColor, uColor, lambertian);
 
-  // Paper edge silhouette — slight darkening at edges where paper folds
-  float rim = 1.0 - max(dot(viewDir, normal), 0.0);
-  float edgeDarken = step(0.88, rim) * 0.06;
-  col -= edgeDarken;
+  // Silhouette edge detection (Manurocker95/Toon-Shading)
+  // Paper fold edges where surface is perpendicular to view
+  float silhouette = dot(viewDir, normal);
+  float edgeDarken = 1.0 - smoothstep(0.0, 0.12, abs(silhouette));
+  col -= edgeDarken * 0.10;
 
   gl_FragColor = vec4(col, 1.0);
 }

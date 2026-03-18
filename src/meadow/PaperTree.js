@@ -1,5 +1,6 @@
 // Paper trees — low-poly folded paper tree instances
 // Trunk = rectangular prism (box), Crown = 5 intersecting triangular planes
+// Crown radius = treeHeight / 5 (cbotman/low-poly-fun pyramid ratio)
 // Looks like origami trees — everything is flat surfaces, no curves
 // Adapted from FlowerInstances.js InstancedMesh pattern
 import * as THREE from 'three'
