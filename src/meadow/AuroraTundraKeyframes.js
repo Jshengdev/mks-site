@@ -19,6 +19,9 @@ export const AURORA_TUNDRA_KEYFRAMES = [
     t: 0.0, // SILENCE — Empty white expanse. No aurora. Just stars and wind.
     // The held breath before the first note. You're standing on the edge of nothing.
     // The footprints stretch ahead into darkness. Who walked here?
+    snowBrightness: 0.3,       // gentle snow always present — the tundra breathes
+    auroraBrightness: 0.0,     // no aurora yet — darkness and stars
+    iceBrightness: 0.7,        // ice spikes visible in starlight — faint Fresnel glow
     starBrightness: 1.0,       // stars dominate — arctic clarity, dry air
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -78,6 +81,9 @@ export const AURORA_TUNDRA_KEYFRAMES = [
     // A single green curtain unfurls along the horizon. Faint, uncertain.
     // The snow beneath begins to blush green — you're standing on a mirror.
     // Ice crystals materialize, catching the first faint light.
+    snowBrightness: 0.5,       // snow picking up — aurora tints the flakes
+    auroraBrightness: 0.35,    // first aurora flicker — uncertain, flickering
+    iceBrightness: 0.85,       // ice spikes catching first aurora light
     starBrightness: 0.85,      // stars still strong, aurora competing
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -138,6 +144,9 @@ export const AURORA_TUNDRA_KEYFRAMES = [
     // The entire snow plain is a mirror — you're walking on the sky itself.
     // Ice crystals everywhere, each one a tiny prism splitting aurora light.
     // This is synesthesia — the music IS the light. You can SEE the instruments.
+    snowBrightness: 0.7,       // snow catching full aurora colors
+    auroraBrightness: 1.0,     // full aurora — the sky is on fire
+    iceBrightness: 1.0,        // ice spikes glowing with aurora SSS
     starBrightness: 0.50,      // dimmed by aurora brightness
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -199,6 +208,9 @@ export const AURORA_TUNDRA_KEYFRAMES = [
     // You realize: the footprints are yours. You've been here before.
     // The aurora responds to you — or you respond to it. The distinction dissolves.
     // Purple enters: the cello. The sky is playing the whole piece.
+    snowBrightness: 0.8,       // peak snow — being AMONG the falling flakes
+    auroraBrightness: 1.3,     // peak aurora — overwhelming, everywhere
+    iceBrightness: 1.0,        // ice at full glow — you're surrounded
     starBrightness: 0.35,
     rainBrightness: 0.0,
     petalBrightness: 0.0,
@@ -260,6 +272,9 @@ export const AURORA_TUNDRA_KEYFRAMES = [
     // in the light, even as the light withdraws. You're alone on the tundra,
     // but the sky remembers. And somewhere, someone else begins to follow
     // footprints that aren't there yet.
+    snowBrightness: 0.4,       // snow settling — fewer flakes, quieter
+    auroraBrightness: 0.15,    // aurora fading — ghost of green lingers
+    iceBrightness: 0.75,       // ice still faintly glowing — memory of light
     starBrightness: 0.90,      // stars returning as aurora fades
     rainBrightness: 0.0,
     petalBrightness: 0.0,

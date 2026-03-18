@@ -61,6 +61,9 @@ import PortalDoor from './PortalDoor.js'
 import FloatingBook from './FloatingBook.js'
 import ShelfSegment from './ShelfSegment.js'
 import WarmLightOrb from './WarmLightOrb.js'
+import EmberSystem from './EmberSystem.js'
+import LavaCrack from './LavaCrack.js'
+import AshSystem from './AshSystem.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -492,6 +495,34 @@ export default class WorldEngine {
       this.warmLightOrbs = new WarmLightOrb(this.scene, envConfig.warmLightOrbs)
     }
 
+    // ─── Embers (conditional — volcanic observatory) ───
+    this.embers = null
+    if (envConfig.particles?.embers?.enabled) {
+      this.embers = new EmberSystem(this.scene, {
+        ...envConfig.particles.embers,
+        spawnHeight: envConfig.lava?.lavaLevel ?? -5.0,
+        centerZ: envConfig.lighting?.lavaLight?.position?.[2] ?? -60,
+      })
+    }
+
+    // ─── Lava cracks (conditional — volcanic observatory) ───
+    this.lavaCracks = null
+    if (envConfig.lavaCracks?.enabled !== false && envConfig.lava?.enabled) {
+      this.lavaCracks = new LavaCrack(this.scene, this.getTerrainHeight, {
+        ...envConfig.lavaCracks,
+        crustColor: envConfig.lava?.crustColor,
+        moltenColor: envConfig.lava?.moltenColor,
+        glowColor: envConfig.lava?.glowColor,
+        centerZ: envConfig.lighting?.lavaLight?.position?.[2] ?? -60,
+      })
+    }
+
+    // ─── Ash (conditional — volcanic observatory) ───
+    this.ash = null
+    if (envConfig.particles?.ash?.enabled) {
+      this.ash = new AshSystem(this.scene, envConfig.particles.ash)
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -508,6 +539,9 @@ export default class WorldEngine {
     this.atmosphere.volumetricClouds = this.volumetricClouds
     this.atmosphere.fogWisps = this.fogWisps
     this.atmosphere.snowParticles = this.snowParticles
+    this.atmosphere.embers = this.embers
+    this.atmosphere.ash = this.ash
+    this.atmosphere.lavaCracks = this.lavaCracks
     this.atmosphere.iceSpikes = this.iceSpikes
     this.atmosphere.auroraCurtain = this.auroraCurtain
 
@@ -568,6 +602,9 @@ export default class WorldEngine {
     this.floatingBooks?.update(animElapsed)
     this.shelfSegments?.update(animElapsed)
     this.warmLightOrbs?.update(animElapsed)
+    this.embers?.update(animElapsed)
+    this.lavaCracks?.update(animElapsed)
+    this.ash?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {

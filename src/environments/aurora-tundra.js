@@ -133,6 +133,15 @@ export default {
     },
   },
 
+  // Ice spike formations — Minecraft Ice Spikes biome inspired
+  // Tall tapered hexagonal cones, translucent blue-white, SSS glow
+  iceSpikes: {
+    enabled: true,
+    count: 80,
+    color: [0.7, 0.8, 0.95],      // blue-white ice
+    sssColor: [0.4, 0.6, 0.9],    // subsurface blue glow
+  },
+
   grass: {
     enabled: true,
     bladeCount: 8000,          // sparse frozen grass tufts

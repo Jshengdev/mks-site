@@ -329,6 +329,9 @@ export default class AtmosphereController {
     this.petals = null
     this.ocean = null
     this.volumetricClouds = null
+    this.snowParticles = null
+    this.iceSpikes = null
+    this.auroraCurtain = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -558,6 +561,21 @@ export default class AtmosphereController {
       // Sync sun direction + color from atmosphere
       this.volumetricClouds.setSunDirection(this._sunPos)
       this.volumetricClouds.setSunColor(...c.sunLightColor)
+    }
+
+    // ─── Snow particles (aurora tundra) ───
+    if (this.snowParticles && c.snowBrightness !== undefined) {
+      this.snowParticles.setBrightness(c.snowBrightness)
+    }
+
+    // ─── Ice spikes (aurora tundra) ───
+    if (this.iceSpikes && c.iceBrightness !== undefined) {
+      this.iceSpikes.setBrightness(c.iceBrightness)
+    }
+
+    // ─── Aurora curtain (aurora tundra) ───
+    if (this.auroraCurtain && c.auroraBrightness !== undefined) {
+      this.auroraCurtain.setBrightness(c.auroraBrightness)
     }
 
     // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───
