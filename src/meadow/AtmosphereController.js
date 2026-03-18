@@ -550,6 +550,11 @@ export default class AtmosphereController {
       pp.ca.uniforms.get('uDistortion').value = c.caDistortion
     }
 
+    // ─── Heat distortion (volcanic observatory — screen-space UV shimmer above lava) ───
+    if (pp.heatDistortion && c.heatDistortionIntensity !== undefined) {
+      pp.heatDistortion.uniforms.get('uIntensity').value = c.heatDistortionIntensity
+    }
+
     // ─── Stars (night/dusk skies) ───
     if (this.starField && c.starBrightness !== undefined) {
       this.starField.setBrightness(c.starBrightness)

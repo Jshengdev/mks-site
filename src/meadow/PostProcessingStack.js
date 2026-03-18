@@ -20,6 +20,7 @@ import { MotionBlurEffect } from './MotionBlurEffect.js'
 import { KuwaharaEffect } from './KuwaharaEffect.js'
 import { GodRayCompositeEffect } from './GodRayCompositeEffect.js'
 import { CloudCompositeEffect } from './CloudCompositeEffect.js'
+import { HeatDistortionEffect } from './HeatDistortionEffect.js'
 
 export default class PostProcessingStack {
   constructor(renderer, scene, camera, tier, dofConfig = {}) {
@@ -60,6 +61,10 @@ export default class PostProcessingStack {
     // Winner: volumetric-cumulus-3d-noise (49/70)
     this.cloudComposite = new CloudCompositeEffect()
 
+    // Heat distortion — screen-space UV displacement above hot surfaces (volcanic observatory)
+    // Height-biased: strongest at bottom of screen, zero at top
+    this.heatDistortion = new HeatDistortionEffect()
+
     // Research winner: 8-sector anisotropic, radius=6, alpha=25, 16-level quantize, 1.5x sat
     this.kuwahara = new KuwaharaEffect({
       kernelSize: 6,
@@ -73,7 +78,7 @@ export default class PostProcessingStack {
     this.grain = new FilmGrainEffect({ grainIntensity: 0.06 })
 
     // Stack order: SSAO → Clouds → GodRays → Bloom → MotionBlur → ToneMapping → FogDepth
-    // → ColorGrade → Kuwahara → Radial CA → Vignette → [DOF] → Film Grain
+    // → ColorGrade → HeatDistortion → Kuwahara → Radial CA → Vignette → [DOF] → Film Grain
     const effects = [
       this.ssao.effect,
       this.cloudComposite,
@@ -83,6 +88,7 @@ export default class PostProcessingStack {
       this.toneMapping,
       this.fogDepth.effect,
       this.colorGrade.effect,
+      this.heatDistortion,
       this.kuwahara,
       this.ca,
       this.vignette,
@@ -116,6 +122,11 @@ export default class PostProcessingStack {
     if (this.dof && cameraPos && sectionPositions) {
       this.dof.updateFocus(cameraPos, sectionPositions)
     }
+
+    // Heat distortion needs time for animation
+    if (this.heatDistortion) {
+      this.heatDistortion.uniforms.get('uTime').value = performance.now() * 0.001
+    }
   }
 
   render(deltaTime) {
@@ -138,6 +149,7 @@ export default class PostProcessingStack {
     this.vignette?.dispose()
     this.godRayComposite?.dispose()
     this.cloudComposite?.dispose()
+    this.heatDistortion?.dispose()
     this.kuwahara?.dispose()
     this.grain?.dispose()
     this.composer.dispose()

@@ -53,6 +53,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.005,             // slight — heat shimmer tension
+    heatDistortionIntensity: 0.004,  // gentle shimmer on arrival — lava breathing below
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -112,6 +113,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.008,
+    heatDistortionIntensity: 0.006,  // building — closer to the lava, shimmer intensifies
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -171,6 +173,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.018,             // peak tension — heat distortion
+    heatDistortionIntensity: 0.012,  // PEAK — maximum shimmer, the lava ROARS beneath you
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -231,6 +234,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.010,
+    heatDistortionIntensity: 0.007,  // subsiding — pulling back from the rim, heat behind you
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
@@ -290,6 +294,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.003,
+    heatDistortionIntensity: 0.001,  // nearly gone — the glow is behind you, air cools
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
