@@ -174,11 +174,26 @@ export default {
       brightness: 1.5,
       bobSpeed: 0.2,                  // slow vertical drift (underwater)
       driftRadius: 5.0,              // wider drift — current carries them
+      // Depth-density gradient: plankton fills the full water column
+      // and grows denser (larger, brighter) with depth
+      // Real oceans: particle concentration increases below photic zone
+      heightRange: [3, 42],           // full water column (floor to near-surface)
+      surfaceY: 45,                   // water surface Y position
+      depthDensity: 1.5,              // quadratic size scaling (150% boost at max depth)
+      spreadRange: 120,               // narrower than meadow — confined within nave walls
     },
     dust: {
       // REPURPOSED as suspended sediment / marine snow
       enabled: true,
       count: 400,                     // heavy — water is full of particles
+      // Depth-density gradient: marine snow thickens with depth
+      // Smaller particles than plankton, catching scattered light
+      heightRange: [2, 44],           // fills entire water column + slight above surface
+      surfaceY: 45,                   // water surface Y position
+      depthDensity: 1.0,              // moderate scaling (100% boost at max depth)
+      color: [0.6, 0.75, 0.8],       // pale blue-grey — cold scattered light on sediment
+      spreadX: 120,                   // confined within nave
+      spreadZ: 120,
     },
     rain: { enabled: false },
     spray: { enabled: false },

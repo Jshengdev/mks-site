@@ -250,8 +250,9 @@ export default class WorldEngine {
     // ─── Fireflies (conditional) ───
     this.fireflies = null
     if (envConfig.particles?.fireflies?.enabled) {
-      const count = envConfig.particles.fireflies.count ?? 500
-      this.fireflies = new FireflySystem(this.scene, count)
+      const ffConfig = envConfig.particles.fireflies
+      const count = ffConfig.count ?? 500
+      this.fireflies = new FireflySystem(this.scene, count, ffConfig)
     }
 
     // ─── Flowers (conditional) ───
@@ -409,8 +410,9 @@ export default class WorldEngine {
     // ─── Dust motes (conditional) ───
     this.dustMotes = null
     if (envConfig.particles?.dust?.enabled) {
-      const count = envConfig.particles.dust.count ?? 300
-      this.dustMotes = new DustMotes(this.scene, count)
+      const dustConfig = envConfig.particles.dust
+      const count = dustConfig.count ?? 300
+      this.dustMotes = new DustMotes(this.scene, count, dustConfig)
     }
 
     // ─── God rays (conditional) ───

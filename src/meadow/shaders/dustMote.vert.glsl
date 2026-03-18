@@ -1,12 +1,16 @@
 // Slow drifting particles catching sunlight (stolen from L16 patterns)
+// + depth-density gradient for underwater marine snow
 uniform float uTime;
 uniform float uPixelRatio;
 uniform float uSize;
+uniform float uSurfaceY;       // water surface Y position (0 = not underwater)
+uniform float uDepthDensity;   // depth-density gradient strength (0 = no gradient)
 
 attribute float aScale;
 attribute float aPhase;
 
 varying float vAlpha;
+varying float vDepthFactor;
 
 float hash(float n) { return fract(sin(n) * 43758.5453); }
 
@@ -33,10 +37,23 @@ void main() {
   modelPosition.z += noise3D(modelPosition.zxy * 0.04 + time * 0.7) * 1.0;
 
   // Alpha: more visible mid-air, fade near ground and high up
-  vAlpha = smoothstep(0.0, 0.5, modelPosition.y) * smoothstep(4.0, 2.5, modelPosition.y);
+  // When underwater (uSurfaceY > 0), skip the low-height fade (particles fill water column)
+  if (uSurfaceY > 0.0) {
+    vAlpha = 1.0; // underwater: all marine snow visible regardless of height
+  } else {
+    vAlpha = smoothstep(0.0, 0.5, modelPosition.y) * smoothstep(4.0, 2.5, modelPosition.y);
+  }
+
+  // Depth-density gradient: deeper marine snow is denser
+  float depthFactor = 1.0;
+  if (uSurfaceY > 0.0) {
+    float normalizedDepth = clamp((uSurfaceY - modelPosition.y) / uSurfaceY, 0.0, 1.0);
+    depthFactor = 1.0 + uDepthDensity * normalizedDepth * normalizedDepth;
+  }
+  vDepthFactor = depthFactor;
 
   vec4 viewPosition = viewMatrix * modelPosition;
   gl_Position = projectionMatrix * viewPosition;
-  gl_PointSize = uSize * aScale * uPixelRatio;
+  gl_PointSize = uSize * aScale * uPixelRatio * depthFactor;
   gl_PointSize *= (1.0 / -viewPosition.z);
 }

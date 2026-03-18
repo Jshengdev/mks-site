@@ -1,9 +1,14 @@
 // Upgraded from Alex-DG — phase fix + turbulence (stolen from L16)
+// + depth-density gradient for underwater plankton (more plankton deeper)
 uniform float uPixelRatio;
 uniform float uSize;
 uniform float uTime;
+uniform float uSurfaceY;       // water surface Y position (0 = not underwater)
+uniform float uDepthDensity;   // depth-density gradient strength (0 = no gradient)
 
 attribute float aScale;
+
+varying float vDepthFactor;    // passed to fragment for depth-glow enhancement
 
 // Simple hash noise for turbulence (stolen from L16 fBM pattern)
 float hash(float n) { return fract(sin(n) * 43758.5453); }
@@ -34,10 +39,20 @@ void main() {
   modelPosition.x += turb * aScale;
   modelPosition.z += turb * aScale * 0.7;
 
+  // Depth-density gradient: deeper particles appear larger (denser plankton)
+  // Quadratic curve — density accelerates with depth, not linear
+  // Real oceans: particle concentration increases exponentially below photic zone
+  float depthFactor = 1.0;
+  if (uSurfaceY > 0.0) {
+    float normalizedDepth = clamp((uSurfaceY - modelPosition.y) / uSurfaceY, 0.0, 1.0);
+    depthFactor = 1.0 + uDepthDensity * normalizedDepth * normalizedDepth;
+  }
+  vDepthFactor = depthFactor;
+
   vec4 viewPosition = viewMatrix * modelPosition;
   vec4 projectionPosition = projectionMatrix * viewPosition;
 
   gl_Position = projectionPosition;
-  gl_PointSize = uSize * aScale * uPixelRatio;
+  gl_PointSize = uSize * aScale * uPixelRatio * depthFactor;
   gl_PointSize *= (1.0 / -viewPosition.z);
 }
