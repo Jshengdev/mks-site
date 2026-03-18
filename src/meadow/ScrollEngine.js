@@ -10,7 +10,9 @@ export default class ScrollEngine {
     this._raf = null
 
     this.lenis = new Lenis({
-      duration: 1.2,
+      duration: 3.0,           // much slower, cinematic pacing
+      wheelMultiplier: 0.4,    // reduce scroll speed per wheel tick
+      touchMultiplier: 0.6,    // reduce touch scroll speed
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       smoothTouch: false,
