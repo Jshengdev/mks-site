@@ -332,6 +332,8 @@ export default class AtmosphereController {
     this.snowParticles = null
     this.iceSpikes = null
     this.auroraCurtain = null
+    this.crystals = null
+    this.mushrooms = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -576,6 +578,16 @@ export default class AtmosphereController {
     // ─── Aurora curtain (aurora tundra) ───
     if (this.auroraCurtain && c.auroraBrightness !== undefined) {
       this.auroraCurtain.setBrightness(c.auroraBrightness)
+    }
+
+    // ─── Crystal formations (crystal cavern) ───
+    if (this.crystals && c.crystalBrightness !== undefined) {
+      this.crystals.setBrightness(c.crystalBrightness)
+    }
+
+    // ─── Glow mushrooms (crystal cavern) ───
+    if (this.mushrooms && c.mushroomBrightness !== undefined) {
+      this.mushrooms.setBrightness(c.mushroomBrightness)
     }
 
     // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───

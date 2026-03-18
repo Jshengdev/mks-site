@@ -21,6 +21,8 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,     // underground — no stars
+    crystalBrightness: 0.3,  // faint — barely visible at entrance
+    mushroomBrightness: 0.2, // dim bioluminescence — just hints
     sunElevation: -60,        // DEEP UNDERGROUND — sun far below horizon
     sunAzimuth: 180,
     turbidity: 0.5,           // no atmospheric scattering underground
@@ -79,6 +81,8 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
+    crystalBrightness: 0.6,   // growing — first clusters catch refracted light
+    mushroomBrightness: 0.5,  // pulsing visible — floor coming alive
     sunElevation: -65,         // deeper underground
     sunAzimuth: 190,
     turbidity: 0.4,
@@ -138,6 +142,8 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
+    crystalBrightness: 1.0,   // full intensity — prismatic cathedral
+    mushroomBrightness: 0.8,  // strong pulse — floor carpet glows
     sunElevation: -70,         // deepest point underground
     sunAzimuth: 200,
     turbidity: 0.3,
@@ -197,6 +203,8 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
+    crystalBrightness: 1.4,   // PEAK — cathedral blazes
+    mushroomBrightness: 1.0,  // peak pulse — floor and ceiling alive
     sunElevation: -65,         // still deep underground
     sunAzimuth: 210,
     turbidity: 0.2,
@@ -256,6 +264,8 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
+    crystalBrightness: 0.7,   // dimming — communion intimacy, not blaze
+    mushroomBrightness: 0.4,  // fading pulse — womb-like softness
     sunElevation: -55,         // still underground
     sunAzimuth: 220,
     turbidity: 0.2,

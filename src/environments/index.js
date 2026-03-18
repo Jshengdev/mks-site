@@ -62,6 +62,7 @@ export const ENV_ORDER = [
   'paper-world',
   'sonic-void',
   'underwater-cathedral',
+  'crystal-cavern',
 ]
 
 // Build track list from environments (for MiniPlayer)

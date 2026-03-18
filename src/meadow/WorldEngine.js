@@ -665,6 +665,8 @@ export default class WorldEngine {
     this.atmosphere.lavaCracks = this.lavaCracks
     this.atmosphere.iceSpikes = this.iceSpikes
     this.atmosphere.auroraCurtain = this.auroraCurtain
+    this.atmosphere.crystals = this.crystals
+    this.atmosphere.mushrooms = this.mushrooms
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
