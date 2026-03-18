@@ -41,7 +41,7 @@ export default class GlowMushroom {
     const stemGeo = new THREE.CylinderGeometry(0.015, 0.02, 0.15, 4)
     stemGeo.translate(0, 0.075, 0) // base at origin
 
-    const merged = mergeGeometries([stemGeo, capGeo])
+    this._sharedGeo = mergeGeometries([stemGeo, capGeo])
     stemGeo.dispose()
     capGeo.dispose()
 
@@ -62,7 +62,7 @@ export default class GlowMushroom {
         side: THREE.DoubleSide,
       })
 
-      const mesh = new THREE.InstancedMesh(merged, material, mushroomsPerColor)
+      const mesh = new THREE.InstancedMesh(this._sharedGeo, material, mushroomsPerColor)
       let placed = 0
 
       for (let i = 0; i < mushroomsPerColor * 4 && placed < mushroomsPerColor; i++) {
@@ -119,8 +119,8 @@ export default class GlowMushroom {
 
   dispose() {
     for (const { mesh, material } of this.meshes) {
-      mesh.geometry.dispose()
       material.dispose()
     }
+    this._sharedGeo.dispose()
   }
 }

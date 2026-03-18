@@ -106,7 +106,7 @@ export default class CrystalFormation {
       mesh.count = placed
       mesh.instanceMatrix.needsUpdate = true
       scene.add(mesh)
-      this.meshes.push({ mesh, material, geo })
+      this.meshes.push({ mesh, material })
     }
   }
 
@@ -133,10 +133,9 @@ export default class CrystalFormation {
   }
 
   dispose() {
-    for (const { mesh, material, geo } of this.meshes) {
+    for (const { mesh, material } of this.meshes) {
       mesh.geometry.dispose()
       material.dispose()
-      geo.dispose()
     }
   }
 }
