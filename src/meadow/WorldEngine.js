@@ -52,6 +52,9 @@ import FogWisp from './FogWisp.js'
 import OrigamiGrass from './OrigamiGrass.js'
 import PaperTree from './PaperTree.js'
 import FoldLine from './FoldLine.js'
+import FloatingPlatform from './FloatingPlatform.js'
+import StairSegment from './StairSegment.js'
+import PortalDoor from './PortalDoor.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -421,6 +424,32 @@ export default class WorldEngine {
       )
     }
 
+    // ─── Floating platforms (conditional — infinite staircase) ───
+    this.floatingPlatforms = null
+    if (envConfig.floatingPlatforms?.enabled) {
+      this.floatingPlatforms = new FloatingPlatform(
+        this.scene, envConfig.floatingPlatforms
+      )
+    }
+
+    // ─── Stair segments (conditional — infinite staircase) ───
+    this.stairSegments = null
+    if (envConfig.stairSegments?.enabled) {
+      const platformPositions = this.floatingPlatforms?.platformPositions ?? []
+      this.stairSegments = new StairSegment(
+        this.scene, envConfig.stairSegments, platformPositions
+      )
+    }
+
+    // ─── Portal doors (conditional — infinite staircase) ───
+    this.portalDoors = null
+    if (envConfig.portalDoors?.enabled) {
+      const platformPositions = this.floatingPlatforms?.platformPositions ?? []
+      this.portalDoors = new PortalDoor(
+        this.scene, envConfig.portalDoors, platformPositions
+      )
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -485,6 +514,9 @@ export default class WorldEngine {
     this.fogWisps?.update(animElapsed)
     this.origamiGrass?.update(animElapsed)
     this.paperTrees?.update(animElapsed)
+    this.floatingPlatforms?.update(animElapsed)
+    this.stairSegments?.update(animElapsed)
+    this.portalDoors?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -590,6 +622,9 @@ export default class WorldEngine {
       origamiGrass: this.origamiGrass,
       paperTrees: this.paperTrees,
       foldLines: this.foldLines,
+      floatingPlatforms: this.floatingPlatforms,
+      stairSegments: this.stairSegments,
+      portalDoors: this.portalDoors,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -632,6 +667,9 @@ export default class WorldEngine {
     this.origamiGrass?.dispose()
     this.paperTrees?.dispose()
     this.foldLines?.dispose()
+    this.floatingPlatforms?.dispose()
+    this.stairSegments?.dispose()
+    this.portalDoors?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()

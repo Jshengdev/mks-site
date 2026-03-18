@@ -14,7 +14,10 @@
 // HackerPoet/NonEuclidean (portal camera transforms),
 // metzlr/portals (stencil-based recursive portal rendering)
 //
-// The key trick: the terrain IS a staircase. The camera spirals upward.
+// End Cities meets Escher. Regular terrain DISABLED — floating platforms ARE the world.
+// 40 stone slabs in ascending spiral, some tilted/inverted (broken gravity).
+// 25 stair segments connecting platforms at impossible angles.
+// 6 portal doors with FBM swirl noise interiors — gateways to nowhere.
 // Heavy fog hides the finite edges. The atmosphere keyframes create
 // 5 radically different "landings" that suggest infinite variety.
 // Dust rises UPWARD. Ghost lights mark landings you'll never reach.
@@ -34,18 +37,8 @@ export default {
   // The music is the reason you keep climbing.
 
   terrain: {
-    type: 'infinite-staircase',
-    // Spiral staircase carved into terrain plane
-    // Steps rise along -z (camera travel direction)
-    // S-curve matches camera path curvature
-    // Wider platforms at "landings" (every 4 steps)
-    // Balustrade hints at edges, central void drops away
-    stepPitch: 5.0,      // z-distance per step
-    stepHeight: 0.5,     // y-height per step
-    corridorWidth: 8,    // default corridor width
-    landingWidth: 15,    // wider at landings
-    landingsEvery: 4,    // landing every N steps
-    size: 300,           // terrain plane size
+    type: 'void',        // DISABLED — floating platforms replace terrain
+    size: 300,
   },
 
   sky: {
@@ -63,15 +56,40 @@ export default {
   },
 
   grass: {
-    enabled: true,
-    bladeCount: 15000,         // sparse — moss/lichen growing in cracks
-    baseColor: [0.02, 0.05, 0.03],  // near-black green — moss
-    tipColor: [0.06, 0.12, 0.06],   // dark emerald tips
-    windSpeed: 0.15,            // barely any wind — interior space
+    enabled: false,  // DISABLED — no vegetation on floating stone platforms
   },
 
   flowers: {
-    enabled: false, // stone staircase — no flowers grow here
+    enabled: false,
+  },
+
+  // ─── Floating Platforms — Escher-inspired ascending spiral ───
+  floatingPlatforms: {
+    enabled: true,
+    count: 40,              // 40 stone slabs in ascending spiral
+    width: 3.5,             // platform width
+    thickness: 0.35,        // thin stone slabs
+    depth: 3.5,             // platform depth
+    bobAmplitude: 0.3,      // gentle floating bob
+  },
+
+  // ─── Stair Segments — impossible geometry connections ───
+  stairSegments: {
+    enabled: true,
+    count: 25,              // 25 stair segments connecting platforms
+    stepsPerSegment: 4,     // 4 steps per segment
+    bobAmplitude: 0.15,     // subtle bob — less than platforms
+  },
+
+  // ─── Portal Doors — glowing gateways to impossible destinations ───
+  portalDoors: {
+    enabled: true,
+    count: 6,               // 6 portal doors on selected platforms
+    frameWidth: 2.2,        // door frame width
+    frameHeight: 3.2,       // door frame height
+    beamThickness: 0.18,    // frame beam thickness
+    color: [0.3, 0.45, 0.8], // cool spectral blue — matching firefly palette
+    brightness: 1.0,
   },
 
   particles: {
