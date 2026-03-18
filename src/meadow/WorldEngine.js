@@ -76,6 +76,9 @@ import MarineSnow from './MarineSnow.js'
 import KelpStrand from './KelpStrand.js'
 import CoralCluster from './CoralCluster.js'
 import AnemoneField from './AnemoneSystem.js'
+import PulseOrb from './PulseOrb.js'
+import LightRibbon from './LightRibbon.js'
+import VoidParticle from './VoidParticle.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -597,6 +600,24 @@ export default class WorldEngine {
     this.marineSnow = null
     if (envConfig.deepsea?.marinesnow?.enabled) {
       this.marineSnow = new MarineSnow(this.scene, envConfig.deepsea.marinesnow)
+    }
+
+    // ─── Pulse orbs (conditional — sonic void) ───
+    this.pulseOrbs = null
+    if (envConfig.audioGeometry?.bassSpheres?.enabled) {
+      this.pulseOrbs = new PulseOrb(this.scene, envConfig.audioGeometry.bassSpheres)
+    }
+
+    // ─── Light ribbons (conditional — sonic void) ───
+    this.lightRibbons = null
+    if (envConfig.audioGeometry?.melodyRibbons?.enabled) {
+      this.lightRibbons = new LightRibbon(this.scene, envConfig.audioGeometry.melodyRibbons)
+    }
+
+    // ─── Void particles (conditional — sonic void) ───
+    this.voidParticles = null
+    if (envConfig.particles?.voidMotes?.enabled) {
+      this.voidParticles = new VoidParticle(this.scene, envConfig.particles.voidMotes)
     }
 
     // ─── Cursor interaction (always) ───

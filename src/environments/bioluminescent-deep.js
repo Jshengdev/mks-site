@@ -94,7 +94,7 @@ export default {
   deepsea: {
     jellyfish: {
       enabled: true,
-      count: 8,
+      count: 30,
       // Procedural geometry: rib + spine system
       // Stolen from: jpweeks/particulate-medusae (procedural constraint system)
       // 20 ribs, 36 segments each, parametric radius: sin(PI - PI*0.55*t*1.8) + log(t*100+2)/3
@@ -124,7 +124,7 @@ export default {
     },
     anglerfish: {
       enabled: true,
-      count: 5,
+      count: 12,
       // Distant bobbing lights — NOT full fish geometry
       // Just the lure: a point light on a pendulum
       // Stolen from: paulrobello/par-term (floating particle technique)
@@ -174,6 +174,8 @@ export default {
       // This is the emotional resolution: warmth exists even at the bottom
     },
     marinesnow: {
+      enabled: true,
+      count: 2000,
       // Separate from dust motes — these have specific deep-sea behavior
       // Stolen from: madmappersoftware/MadMapper-Materials (MarineSnow.fs)
       // 3D hash: fract(sin(p2.x*133.3)*19.9 + sin(p2.y*177.7)*13.3 + sin(p2.z*199.9)*17.7)
