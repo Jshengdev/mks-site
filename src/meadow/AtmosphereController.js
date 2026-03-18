@@ -608,6 +608,21 @@ export default class AtmosphereController {
       this.marineSnow.setBrightness(c.marineSnowBrightness)
     }
 
+    // ─── Embers (volcanic observatory) ───
+    if (this.embers && c.emberBrightness !== undefined) {
+      this.embers.setBrightness(c.emberBrightness)
+    }
+
+    // ─── Lava cracks (volcanic observatory) ───
+    if (this.lavaCracks && c.lavaCrackBrightness !== undefined) {
+      this.lavaCracks.setBrightness(c.lavaCrackBrightness)
+    }
+
+    // ─── Ash (volcanic observatory) ───
+    if (this.ash && c.ashBrightness !== undefined) {
+      this.ash.setBrightness(c.ashBrightness)
+    }
+
     // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───
     if (this.ocean) {
       if (c.oceanColorNear) {

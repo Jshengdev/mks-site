@@ -48,6 +48,8 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     vignetteDarkness: 0.50,          // moderate — can see the full scene
     grainOpacity: 0.06,
     dustMoteBrightness: 0.4,         // volcanic ash visible in orange light
+    emberBrightness: 0.8,            // embers visible from the start — lava is active
+    lavaCrackBrightness: 0.7,        // cracks glow on arrival
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.005,             // slight — heat shimmer tension
@@ -105,6 +107,8 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     vignetteDarkness: 0.40,          // opening up
     grainOpacity: 0.06,
     dustMoteBrightness: 0.5,
+    emberBrightness: 1.0,            // building — more sparks rising
+    lavaCrackBrightness: 0.85,       // cracks intensifying
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.008,
@@ -162,6 +166,8 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     vignetteDarkness: 0.30,          // wide open — expansive
     grainOpacity: 0.07,
     dustMoteBrightness: 0.7,         // ash swirling in the glow
+    emberBrightness: 1.5,            // PEAK — maximum ember intensity, white-hot sparks
+    lavaCrackBrightness: 1.0,        // PEAK — cracks at full molten glow
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.018,             // peak tension — heat distortion
@@ -220,6 +226,8 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     vignetteDarkness: 0.50,          // narrowing — focus on the mystery
     grainOpacity: 0.07,
     dustMoteBrightness: 0.5,
+    emberBrightness: 0.9,            // subsiding — still glowing but less urgent
+    lavaCrackBrightness: 0.75,       // dimming — the heat is behind you
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.010,
@@ -277,6 +285,8 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     vignetteDarkness: 0.75,          // tunnel closing
     grainOpacity: 0.08,
     dustMoteBrightness: 0.2,
+    emberBrightness: 0.3,            // fading — distant glow behind you
+    lavaCrackBrightness: 0.3,        // nearly dark — the fire recedes
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
     caDistortion: 0.003,

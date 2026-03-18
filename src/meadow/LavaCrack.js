@@ -1,7 +1,7 @@
 // LavaCrack — Glowing fissures on volcanic terrain surface
 // Stolen from Ppratik765/liquid-lava-effect (color ramp + FBM crust)
 // + mrdoob/three.js webgl_shader_lava (channel overflow glow)
-// PlaneGeometry strips placed on terrain with pulsing emissive glow
+// InstancedMesh of PlaneGeometry strips with pulsing emissive glow
 import * as THREE from 'three'
 import vertexShader from './shaders/lavaCrack.vert.glsl?raw'
 import fragmentShader from './shaders/lavaCrack.frag.glsl?raw'
@@ -10,8 +10,6 @@ const _dummy = new THREE.Object3D()
 
 export default class LavaCrack {
   constructor(scene, getTerrainHeight, config = {}) {
-    this.meshes = []
-
     const count = config.count ?? 40
     const pulseSpeed = config.pulseSpeed ?? 1.5
     const pulseIntensity = config.pulseIntensity ?? 0.4
@@ -22,7 +20,6 @@ export default class LavaCrack {
     const centerX = config.centerX ?? 0
     const centerZ = config.centerZ ?? -60
 
-    // Shared material — all cracks pulse together (unified lava system)
     this.material = new THREE.ShaderMaterial({
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -40,40 +37,40 @@ export default class LavaCrack {
       fragmentShader,
     })
 
-    // Generate crack strip meshes on the terrain surface
-    // Each crack = narrow PlaneGeometry, randomly placed and rotated
+    // Shared geometry — widest/longest crack; per-instance scale handles variation
+    const geo = new THREE.PlaneGeometry(0.5, 8.0, 1, 4)
+
+    this.mesh = new THREE.InstancedMesh(geo, this.material, count)
+    this.mesh.frustumCulled = false
+
     for (let i = 0; i < count; i++) {
-      // Random position within crater area
       const angle = Math.random() * Math.PI * 2
       const r = Math.pow(Math.random(), 0.7) * spreadRadius
       const x = centerX + Math.cos(angle) * r
       const z = centerZ + Math.sin(angle) * r
-      const y = getTerrainHeight(x, z) + 0.05 // just above terrain surface
+      const y = getTerrainHeight(x, z) + 0.05
 
-      // Random crack dimensions — long and thin
-      const length = 2.0 + Math.random() * 6.0  // 2-8 units long
-      const width = 0.15 + Math.random() * 0.35  // 0.15-0.5 units wide
+      // Per-instance scale variation: length 25-100%, width 30-100%
+      const lengthScale = 0.25 + Math.random() * 0.75
+      const widthScale = 0.30 + Math.random() * 0.70
 
-      const geo = new THREE.PlaneGeometry(width, length, 1, 4)
-      const mesh = new THREE.Mesh(geo, this.material)
+      _dummy.position.set(x, y, z)
+      _dummy.rotation.set(-Math.PI / 2, 0, Math.random() * Math.PI * 2) // flat + random yaw
 
-      // Position on terrain, rotated to lie flat, with random Y rotation
-      mesh.position.set(x, y, z)
-      mesh.rotation.x = -Math.PI / 2 // flat on ground
-      mesh.rotation.z = Math.random() * Math.PI * 2 // random orientation
-
-      // Conform to terrain slope — sample nearby height for tilt
+      // Conform to terrain slope
       const sampleDist = 1.0
       const hFwd = getTerrainHeight(x, z + sampleDist)
       const hRight = getTerrainHeight(x + sampleDist, z)
-      const slopeX = Math.atan2(hRight - y, sampleDist) * 0.5
-      const slopeZ = Math.atan2(hFwd - y, sampleDist) * 0.5
-      mesh.rotation.x += slopeZ
-      mesh.rotation.z += slopeX
+      _dummy.rotation.x += Math.atan2(hFwd - y, sampleDist) * 0.5
+      _dummy.rotation.z += Math.atan2(hRight - y, sampleDist) * 0.5
 
-      scene.add(mesh)
-      this.meshes.push(mesh)
+      _dummy.scale.set(widthScale, lengthScale, 1)
+      _dummy.updateMatrix()
+      this.mesh.setMatrixAt(i, _dummy.matrix)
     }
+
+    this.mesh.instanceMatrix.needsUpdate = true
+    scene.add(this.mesh)
   }
 
   update(elapsed) {
@@ -81,16 +78,12 @@ export default class LavaCrack {
   }
 
   setBrightness(value) {
-    for (const mesh of this.meshes) {
-      mesh.visible = value > 0.01
-    }
+    this.mesh.visible = value > 0.01
     this.material.uniforms.uPulseIntensity.value = value * 0.4
   }
 
   dispose() {
-    for (const mesh of this.meshes) {
-      mesh.geometry.dispose()
-    }
+    this.mesh.geometry.dispose()
     this.material.dispose()
   }
 }
