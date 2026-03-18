@@ -711,6 +711,24 @@ export default class WorldEngine {
     this.jellyfish?.update(animElapsed)
     this.anglerLights?.update(animElapsed)
     this.marineSnow?.update(animElapsed)
+    this.pulseOrbs?.update(animElapsed)
+    this.lightRibbons?.update(animElapsed)
+    this.voidParticles?.update(animElapsed)
+
+    // ─── Sonic void atmosphere-driven params ───
+    if (this.pulseOrbs && this.atmosphere.current.bassSphereOpacity !== undefined) {
+      this.pulseOrbs.material.uniforms.uBrightness.value = this.atmosphere.current.bassSphereOpacity
+      this.pulseOrbs.material.uniforms.uPulseIntensity.value = this.atmosphere.current.bassSphereScale
+      this.pulseOrbs.material.uniforms.uEmissiveIntensity.value = this.atmosphere.current.bassSphereEmissive
+    }
+    if (this.lightRibbons && this.atmosphere.current.melodyRibbonOpacity !== undefined) {
+      for (const ribbon of this.lightRibbons.ribbons) {
+        ribbon.material.uniforms.uBrightness.value = this.atmosphere.current.melodyRibbonOpacity
+      }
+    }
+    if (this.voidParticles && this.atmosphere.current.voidMoteBrightness !== undefined) {
+      this.voidParticles.material.uniforms.uBrightness.value = this.atmosphere.current.voidMoteBrightness
+    }
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -837,6 +855,9 @@ export default class WorldEngine {
       jellyfish: this.jellyfish,
       anglerLights: this.anglerLights,
       marineSnow: this.marineSnow,
+      pulseOrbs: this.pulseOrbs,
+      lightRibbons: this.lightRibbons,
+      voidParticles: this.voidParticles,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -900,6 +921,9 @@ export default class WorldEngine {
     this.jellyfish?.dispose()
     this.anglerLights?.dispose()
     this.marineSnow?.dispose()
+    this.pulseOrbs?.dispose()
+    this.lightRibbons?.dispose()
+    this.voidParticles?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
