@@ -64,6 +64,7 @@ import WarmLightOrb from './WarmLightOrb.js'
 import EmberSystem from './EmberSystem.js'
 import LavaCrack from './LavaCrack.js'
 import AshSystem from './AshSystem.js'
+import LavaLake from './LavaLake.js'
 import GearTree from './GearTree.js'
 import SteamVent from './SteamVent.js'
 import CopperLeaf from './CopperLeaf.js'
@@ -574,6 +575,16 @@ export default class WorldEngine {
       })
     }
 
+    // ─── Lava lake surface (conditional — volcanic observatory) ───
+    // Molten magma plane in the crater floor — the foundational "fire below"
+    this.lavaLake = null
+    if (envConfig.lava?.enabled) {
+      this.lavaLake = new LavaLake(this.scene, {
+        ...envConfig.lava,
+        centerZ: envConfig.lighting?.lavaLight?.position?.[2] ?? -60,
+      })
+    }
+
     // ─── Lava cracks (conditional — volcanic observatory) ───
     this.lavaCracks = null
     if (envConfig.lavaCracks?.enabled !== false && envConfig.lava?.enabled) {
@@ -664,6 +675,7 @@ export default class WorldEngine {
     this.atmosphere.snowParticles = this.snowParticles
     this.atmosphere.embers = this.embers
     this.atmosphere.ash = this.ash
+    this.atmosphere.lavaLake = this.lavaLake
     this.atmosphere.lavaCracks = this.lavaCracks
     this.atmosphere.iceSpikes = this.iceSpikes
     this.atmosphere.auroraCurtain = this.auroraCurtain
@@ -738,6 +750,7 @@ export default class WorldEngine {
     this.shelfSegments?.update(animElapsed)
     this.warmLightOrbs?.update(animElapsed)
     this.embers?.update(animElapsed)
+    this.lavaLake?.update(animElapsed)
     this.lavaCracks?.update(animElapsed)
     this.ash?.update(animElapsed)
     this.gearTrees?.update(animElapsed)
@@ -948,6 +961,7 @@ export default class WorldEngine {
     this.shelfSegments?.dispose()
     this.warmLightOrbs?.dispose()
     this.embers?.dispose()
+    this.lavaLake?.dispose()
     this.lavaCracks?.dispose()
     this.ash?.dispose()
     this.gearTrees?.dispose()

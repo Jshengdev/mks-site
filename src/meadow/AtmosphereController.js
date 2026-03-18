@@ -633,6 +633,11 @@ export default class AtmosphereController {
       this.embers.setBrightness(c.emberBrightness)
     }
 
+    // ─── Lava lake surface (volcanic observatory) ───
+    if (this.lavaLake && c.lavaEmissive !== undefined) {
+      this.lavaLake.setEmissive(c.lavaEmissive)
+    }
+
     // ─── Lava cracks (volcanic observatory) ───
     if (this.lavaCracks && c.lavaCrackBrightness !== undefined) {
       this.lavaCracks.setBrightness(c.lavaCrackBrightness)

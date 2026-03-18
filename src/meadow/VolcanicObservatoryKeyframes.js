@@ -49,6 +49,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     grainOpacity: 0.06,
     dustMoteBrightness: 0.4,         // volcanic ash visible in orange light
     emberBrightness: 0.8,            // embers visible from the start — lava is active
+    lavaEmissive: 1.2,               // lava surface glowing — immediate fire below
     lavaCrackBrightness: 0.7,        // cracks glow on arrival
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
@@ -109,6 +110,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     grainOpacity: 0.06,
     dustMoteBrightness: 0.5,
     emberBrightness: 1.0,            // building — more sparks rising
+    lavaEmissive: 1.5,               // lava intensifying — closer, veins brighter
     lavaCrackBrightness: 0.85,       // cracks intensifying
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
@@ -169,6 +171,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     grainOpacity: 0.07,
     dustMoteBrightness: 0.7,         // ash swirling in the glow
     emberBrightness: 1.5,            // PEAK — maximum ember intensity, white-hot sparks
+    lavaEmissive: 2.0,               // PEAK — lava at maximum incandescence, crater blazes
     lavaCrackBrightness: 1.0,        // PEAK — cracks at full molten glow
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
@@ -230,6 +233,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     grainOpacity: 0.07,
     dustMoteBrightness: 0.5,
     emberBrightness: 0.9,            // subsiding — still glowing but less urgent
+    lavaEmissive: 1.3,               // subsiding — lava still glows but less urgent
     lavaCrackBrightness: 0.75,       // dimming — the heat is behind you
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
@@ -290,6 +294,7 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     grainOpacity: 0.08,
     dustMoteBrightness: 0.2,
     emberBrightness: 0.3,            // fading — distant glow behind you
+    lavaEmissive: 0.6,               // fading — distant orange memory behind you
     lavaCrackBrightness: 0.3,        // nearly dark — the fire recedes
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
