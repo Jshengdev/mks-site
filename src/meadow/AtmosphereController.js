@@ -60,6 +60,7 @@ const KEYFRAMES = [
     colorGradeVibrance: 0.1,  // desaturated cold world
     colorGradeWarmth: 0.0,     // zero warmth — earned later
     vignetteDarkness: 0.85,
+    vignetteOffset: 0.3,       // static for meadow (matches PostProcessingStack default)
     grainOpacity: 0.06,
     dustMoteBrightness: 0.0,
     godRayIntensity: 0.0,
@@ -120,6 +121,7 @@ const KEYFRAMES = [
     colorGradeVibrance: 0.35,
     colorGradeWarmth: 0.02,
     vignetteDarkness: 0.60,
+    vignetteOffset: 0.3,
     grainOpacity: 0.04,
     dustMoteBrightness: 0.2,
     godRayIntensity: 0.15,
@@ -175,6 +177,7 @@ const KEYFRAMES = [
     colorGradeVibrance: 0.7,
     colorGradeWarmth: 0.06,
     vignetteDarkness: 0.35,
+    vignetteOffset: 0.3,
     grainOpacity: 0.03,
     dustMoteBrightness: 0.9,
     godRayIntensity: 0.5,
@@ -231,6 +234,7 @@ const KEYFRAMES = [
     colorGradeVibrance: 0.9,
     colorGradeWarmth: 0.10,
     vignetteDarkness: 0.30,   // opens up — expansive
+    vignetteOffset: 0.3,
     grainOpacity: 0.02,
     dustMoteBrightness: 1.0,
     godRayIntensity: 1.0,     // max — "rays fan out and touch everything"
@@ -286,6 +290,7 @@ const KEYFRAMES = [
     colorGradeVibrance: 0.4,
     colorGradeWarmth: 0.03,
     vignetteDarkness: 0.55,
+    vignetteOffset: 0.3,
     grainOpacity: 0.04,
     dustMoteBrightness: 0.3,
     godRayIntensity: 0.2,
@@ -499,6 +504,7 @@ export default class AtmosphereController {
     pp.bloom.intensity = c.bloomIntensity
     pp.bloom.luminancePass.fullscreenMaterial.threshold = c.bloomThreshold
     pp.vignette.darkness = c.vignetteDarkness
+    pp.vignette.offset = c.vignetteOffset
     // FilmGrainEffect uses uGrainIntensity uniform (not blendMode opacity)
     pp.grain.uniforms.get('uGrainIntensity').value = c.grainOpacity
 

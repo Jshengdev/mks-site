@@ -79,6 +79,7 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     colorGradeWarmth: -0.06,             // VERY COLD — no warmth underwater
 
     vignetteDarkness: 0.75,              // HEAVY — water pressure, tunnel vision
+    vignetteOffset: 0.30,                // moderate opening — you're already submerged
     grainOpacity: 0.04,                  // suspended sediment texture
 
     dustMoteBrightness: 0.5,             // marine snow — visible particles drifting
@@ -160,6 +161,7 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     colorGradeWarmth: -0.06,             // cold
 
     vignetteDarkness: 0.68,
+    vignetteOffset: 0.25,                // tightening — water pressing in as you descend
     grainOpacity: 0.04,
 
     dustMoteBrightness: 0.5,             // marine snow thicker mid-depth
@@ -241,6 +243,7 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     colorGradeWarmth: -0.04,             // cold sacred water
 
     vignetteDarkness: 0.45,              // OPENS slightly — the nave reveals itself
+    vignetteOffset: 0.38,                // WIDENS — the grand reveal, cathedral interior overwhelms
     grainOpacity: 0.04,
 
     dustMoteBrightness: 0.4,
@@ -322,6 +325,7 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     colorGradeWarmth: -0.03,             // slightly less cold — bio has warmth
 
     vignetteDarkness: 0.60,              // tightening
+    vignetteOffset: 0.18,                // CRUSHING — pressure closes in, intimate darkness
     grainOpacity: 0.05,
 
     dustMoteBrightness: 0.25,            // marine snow catching bioluminescent light
@@ -404,6 +408,7 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     colorGradeWarmth: -0.01,             // almost neutral — beyond temperature
 
     vignetteDarkness: 0.88,              // HEAVY tunnel — the pressure closes in
+    vignetteOffset: 0.10,                // EXTREME tunnel — barely a circle of light remains
     grainOpacity: 0.06,                  // grain increases — old film, old memory
 
     dustMoteBrightness: 0.10,            // marine snow sparse
