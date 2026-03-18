@@ -1,121 +1,64 @@
 // Volcanic Observatory atmosphere keyframes — Awe at the Threshold of Understanding
-// Scroll arc: Approach → Revelation → Wonder → Contemplation → Departure
-// "Beauty born from destruction. The telescope points at something
-//  the viewer never sees. Fire below. Ice above."
+// Scroll arc: RIM ARRIVAL → REVELATION → PEAK AWE → CONTEMPLATION → DEPARTURE
+// "Beauty born from destruction. Fire below. Ice above. The contrast IS the music."
 //
-// The emotional contrast IS the music: warm destruction below, cold eternity above.
-// The viewer stands at the boundary between creation and entropy.
-//
-// Lava-specific params (emberBrightness, lavaEmissive) are new additions —
-// WorldEngine wires them to lava/ember subsystems when present.
+// CRITICAL: t=0 must be IMMEDIATELY recognizable as volcanic.
+// Split world: orange-red glow from BELOW (lava), cold blue-white stars ABOVE.
+// The viewer stands on the rim from the start — no slow dark approach.
+// sunLightColor is orange because lava IS the light source.
+// fogColor is orange haze, not black.
 
 export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
   {
-    t: 0.0, // APPROACH — darkness, walking toward the rim, only a faint warm glow ahead
-    // The viewer doesn't know what's coming. Just a distant orange shimmer.
+    t: 0.0, // RIM ARRIVAL — already on the rim, lava glowing below, stars above
+    // Immediately dramatic. Orange haze from below, cold stars above.
+    // The viewer knows this is NOT the meadow.
     rainBrightness: 0.0,
     petalBrightness: 0.0,
-    starBrightness: 0.15,     // stars barely visible — horizon glow obscures them
-    sunElevation: -40,
+    starBrightness: 0.7,            // stars visible from the start — cold sky above
+    sunElevation: -10,              // just below horizon — orange rim glow
     sunAzimuth: 180,
     turbidity: 1.0,
     rayleigh: 0.3,
     mieCoefficient: 0.003,
     mieDirectionalG: 0.85,
-    fogColor: [0.04, 0.02, 0.02],   // warm-black volcanic haze
-    fogDensity: 0.008,              // thick — approaching blind
-    sunLightColor: [0.15, 0.10, 0.12],
-    sunLightIntensity: 0.15,
-    ambientIntensity: 0.03,         // near total darkness
-    grassBaseColor: [0.03, 0.03, 0.02],  // dead — no grass on volcano
-    grassTipColor: [0.05, 0.05, 0.03],
-    grassWindSpeed: 0.0,            // no grass
-    grassAmbientStrength: 0.10,
-    grassTranslucency: 0.0,
-    grassFogFade: 0.005,
-    cloudShadowOpacity: 0.0,
-    cloudDriftSpeed: 0.0,
-    fireflyBrightness: 0.0,        // no fireflies — embers replace them
-    fireflySize: 25,
-    bloomIntensity: 0.3,            // subtle — just the distant glow
-    bloomThreshold: 0.4,
-    fogDepthStrength: 0.08,
-    fogMidColor: [0.06, 0.03, 0.02],
-    fogFarColor: [0.03, 0.01, 0.01],
-    colorGradeContrast: 0.03,
-    colorGradeVibrance: 0.10,       // muted — darkness flattens color
-    colorGradeWarmth: 0.05,         // barely warm — cold approach
-    vignetteDarkness: 0.85,         // heavy tunnel — can barely see
-    grainOpacity: 0.06,
-    dustMoteBrightness: 0.2,        // volcanic ash drifting
-    godRayIntensity: 0.0,
-    kuwaharaStrength: 0.0,
-    caDistortion: 0.0,              // no lens stress in darkness
-    waveWindDirX: 0.0,
-    waveWindDirY: 0.0,
-    waveWindSpeed: 0.0,
-    waveWindStrength: 0.0,
-    dofFocusDistance: 25,           // distant focus — looking toward the glow
-    dofBokehScale: 2.0,            // mild bokeh
-    splitToneWarm: [0.90, 0.60, 0.35],  // warm amber in shadows (lava cast)
-    splitToneCool: [0.70, 0.72, 0.85],  // cold blue above
-    oceanColorNear: [0, 0, 0],
-    oceanColorFar: [0, 0, 0],
-    oceanFoamBrightness: 0,
-    oceanWaveLineIntensity: 0,
-    cloudCoverage: 0,
-    cloudDensity: 0,
-    cloudIntensity: 0,
-  },
-  {
-    t: 0.25, // REVELATION — cresting the rim, the lava lake reveals below
-    // The abyss opens. Fire below, first real stars above. Breath catches.
-    rainBrightness: 0.0,
-    petalBrightness: 0.0,
-    starBrightness: 0.55,          // stars emerging — sky clearing as you rise
-    sunElevation: -40,
-    sunAzimuth: 180,
-    turbidity: 1.0,
-    rayleigh: 0.3,
-    mieCoefficient: 0.003,
-    mieDirectionalG: 0.85,
-    fogColor: [0.06, 0.03, 0.02],  // warmer — lava light fills the haze
-    fogDensity: 0.004,             // clearing — the crater reveals itself
-    sunLightColor: [0.20, 0.12, 0.10],
-    sunLightIntensity: 0.25,
-    ambientIntensity: 0.05,
-    grassBaseColor: [0.03, 0.03, 0.02],
-    grassTipColor: [0.05, 0.05, 0.03],
+    fogColor: [0.15, 0.05, 0.02],   // ORANGE haze — lava light diffused through air
+    fogDensity: 0.003,              // see the crater — not blind
+    sunLightColor: [1.0, 0.4, 0.1], // ORANGE — lava IS the directional light
+    sunLightIntensity: 1.0,         // strong — the orange glow illuminates terrain
+    ambientIntensity: 0.10,         // warm orange ambient from below
+    grassBaseColor: [0.04, 0.03, 0.02],  // dark basalt — no grass grows here
+    grassTipColor: [0.06, 0.04, 0.03],
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.12,
+    grassAmbientStrength: 0.10,
     grassTranslucency: 0.0,
     grassFogFade: 0.004,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 0.0,
+    fireflyBrightness: 0.0,         // no fireflies — embers are separate particle system
     fireflySize: 25,
-    bloomIntensity: 0.6,            // lava bloom building
-    bloomThreshold: 0.35,           // more catches bloom — lava veins glow
+    bloomIntensity: 0.75,            // heavy bloom — the lava glow spills everywhere
+    bloomThreshold: 0.25,            // low threshold — catches all orange-hot surfaces
     fogDepthStrength: 0.06,
-    fogMidColor: [0.08, 0.04, 0.02],
-    fogFarColor: [0.04, 0.02, 0.01],
-    colorGradeContrast: 0.06,
-    colorGradeVibrance: 0.25,       // color returning — fire is vivid
-    colorGradeWarmth: 0.15,         // warming — lava light reaches you
-    vignetteDarkness: 0.60,         // opening up — you can see more
+    fogMidColor: [0.15, 0.06, 0.02], // orange mid-distance haze
+    fogFarColor: [0.08, 0.03, 0.01], // darker orange at distance
+    colorGradeContrast: 0.08,
+    colorGradeVibrance: 0.35,        // vivid — fire is saturated
+    colorGradeWarmth: 0.18,          // strong warmth — everything orange-tinted
+    vignetteDarkness: 0.50,          // moderate — can see the full scene
     grainOpacity: 0.06,
-    dustMoteBrightness: 0.4,        // more ash visible in lava light
+    dustMoteBrightness: 0.4,         // volcanic ash visible in orange light
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.005,            // slight tension — the revelation
+    caDistortion: 0.005,             // slight — heat shimmer tension
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 15,           // focusing on the lava lake
-    dofBokehScale: 3.5,            // moderate bokeh
-    splitToneWarm: [0.95, 0.65, 0.30],  // strong warm amber — lava dominates
-    splitToneCool: [0.60, 0.68, 0.88],  // cool highlights from stars
+    dofFocusDistance: 15,            // focused on crater below
+    dofBokehScale: 3.0,
+    splitToneWarm: [1.0, 0.55, 0.15],   // deep fire amber in shadows
+    splitToneCool: [0.55, 0.65, 0.92],  // cold blue-white in highlights (stars)
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -125,56 +68,54 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     cloudIntensity: 0,
   },
   {
-    t: 0.50, // WONDER — peak. Full vista. Fire below, ice above. Maximum contrast.
-    // This is the moment. The music lives in the tension between fire and ice.
-    // Bloom is highest. Stars are brightest. Lava pulses strongest.
-    // The viewer IS the boundary between creation and entropy.
+    t: 0.25, // REVELATION — looking deeper into the crater, lava veins visible
+    // The glow intensifies as the view opens up. Stars sharpen above.
     rainBrightness: 0.0,
     petalBrightness: 0.0,
-    starBrightness: 1.0,           // PEAK — "impossibly clear night sky, every star visible"
-    sunElevation: -40,
+    starBrightness: 0.85,           // stars sharpening — sky clearing
+    sunElevation: -10,
     sunAzimuth: 180,
     turbidity: 1.0,
-    rayleigh: 0.25,
-    mieCoefficient: 0.002,
-    mieDirectionalG: 0.82,
-    fogColor: [0.05, 0.02, 0.01],  // warmest — lava illuminates everything
-    fogDensity: 0.002,             // clearest — maximum view distance
-    sunLightColor: [0.25, 0.15, 0.10],
-    sunLightIntensity: 0.3,
-    ambientIntensity: 0.06,
-    grassBaseColor: [0.03, 0.03, 0.02],
-    grassTipColor: [0.05, 0.05, 0.03],
+    rayleigh: 0.3,
+    mieCoefficient: 0.003,
+    mieDirectionalG: 0.85,
+    fogColor: [0.18, 0.06, 0.02],   // warmer — closer to lava
+    fogDensity: 0.002,              // clearing — the crater reveals itself
+    sunLightColor: [1.0, 0.45, 0.12], // intensifying orange
+    sunLightIntensity: 1.3,
+    ambientIntensity: 0.12,
+    grassBaseColor: [0.04, 0.03, 0.02],
+    grassTipColor: [0.06, 0.04, 0.03],
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.15,
+    grassAmbientStrength: 0.12,
     grassTranslucency: 0.0,
     grassFogFade: 0.003,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
     fireflyBrightness: 0.0,
     fireflySize: 25,
-    bloomIntensity: 0.95,           // PEAK BLOOM — the whole crater glows
-    bloomThreshold: 0.28,           // low threshold — everything alive with light
-    fogDepthStrength: 0.04,
-    fogMidColor: [0.10, 0.05, 0.02],
-    fogFarColor: [0.05, 0.03, 0.01],
-    colorGradeContrast: 0.10,       // maximum contrast — fire vs ice
-    colorGradeVibrance: 0.40,       // vivid — colors alive
-    colorGradeWarmth: 0.25,         // peak warmth — lava dominates the grade
-    vignetteDarkness: 0.35,         // wide open — expansive vista
-    grainOpacity: 0.07,
-    dustMoteBrightness: 0.6,        // ash clearly visible, rising through the glow
+    bloomIntensity: 0.85,            // building — lava veins glowing through
+    bloomThreshold: 0.22,
+    fogDepthStrength: 0.05,
+    fogMidColor: [0.18, 0.07, 0.02],
+    fogFarColor: [0.10, 0.04, 0.01],
+    colorGradeContrast: 0.10,
+    colorGradeVibrance: 0.45,        // more vivid — fire revealing color
+    colorGradeWarmth: 0.22,
+    vignetteDarkness: 0.40,          // opening up
+    grainOpacity: 0.06,
+    dustMoteBrightness: 0.5,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.015,            // peak — visual tension from fire/ice contrast
+    caDistortion: 0.008,
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 10,           // focused on the lava lake surface
-    dofBokehScale: 5.0,            // heavy bokeh — cinematic
-    splitToneWarm: [1.0, 0.70, 0.25],   // PEAK warm — pure fire amber
-    splitToneCool: [0.50, 0.65, 0.90],  // cool blue-ice highlights
+    dofFocusDistance: 12,
+    dofBokehScale: 4.0,
+    splitToneWarm: [1.0, 0.60, 0.18],
+    splitToneCool: [0.50, 0.62, 0.90],
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -184,26 +125,82 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     cloudIntensity: 0,
   },
   {
-    t: 0.75, // CONTEMPLATION — near the observatory/telescope, looking inward
-    // The wonder settles into something quieter. The telescope is nearby
-    // but you never look through it. The mystery remains.
-    // What is it pointed at? You'll never know. That's the point.
+    t: 0.50, // PEAK AWE — maximum fire/ice contrast. The boundary between creation and entropy.
+    // Bloom at max. Stars at max. Lava pulses strongest. Extreme split-tone.
     rainBrightness: 0.0,
     petalBrightness: 0.0,
-    starBrightness: 0.85,          // still bright but the viewer is looking inward now
-    sunElevation: -40,
+    starBrightness: 1.0,            // PEAK — every star blazing, cold white above
+    sunElevation: -10,
+    sunAzimuth: 180,
+    turbidity: 1.0,
+    rayleigh: 0.25,
+    mieCoefficient: 0.002,
+    mieDirectionalG: 0.82,
+    fogColor: [0.20, 0.07, 0.02],   // peak orange haze — molten light in the air
+    fogDensity: 0.0015,             // clearest — maximum view distance
+    sunLightColor: [1.0, 0.5, 0.15], // peak orange — lava at full power
+    sunLightIntensity: 1.6,          // blazing
+    ambientIntensity: 0.14,
+    grassBaseColor: [0.04, 0.03, 0.02],
+    grassTipColor: [0.06, 0.04, 0.03],
+    grassWindSpeed: 0.0,
+    grassAmbientStrength: 0.15,
+    grassTranslucency: 0.0,
+    grassFogFade: 0.002,
+    cloudShadowOpacity: 0.0,
+    cloudDriftSpeed: 0.0,
+    fireflyBrightness: 0.0,
+    fireflySize: 25,
+    bloomIntensity: 1.1,             // MAX BLOOM — the whole crater is incandescent
+    bloomThreshold: 0.18,            // everything orange catches bloom
+    fogDepthStrength: 0.04,
+    fogMidColor: [0.22, 0.08, 0.02], // deep orange mid
+    fogFarColor: [0.12, 0.05, 0.01],
+    colorGradeContrast: 0.14,        // maximum contrast — fire vs ice
+    colorGradeVibrance: 0.55,        // peak vivid
+    colorGradeWarmth: 0.28,          // maximum warmth — lava dominates the grade
+    vignetteDarkness: 0.30,          // wide open — expansive
+    grainOpacity: 0.07,
+    dustMoteBrightness: 0.7,         // ash swirling in the glow
+    godRayIntensity: 0.0,
+    kuwaharaStrength: 0.0,
+    caDistortion: 0.018,             // peak tension — heat distortion
+    waveWindDirX: 0.0,
+    waveWindDirY: 0.0,
+    waveWindSpeed: 0.0,
+    waveWindStrength: 0.0,
+    dofFocusDistance: 10,            // focused on the lava surface
+    dofBokehScale: 5.5,             // heavy cinematic bokeh
+    splitToneWarm: [1.0, 0.50, 0.10],   // PURE FIRE — deep molten amber in shadows
+    splitToneCool: [0.45, 0.60, 0.95],  // ICE BLUE — cold stars in highlights
+    oceanColorNear: [0, 0, 0],
+    oceanColorFar: [0, 0, 0],
+    oceanFoamBrightness: 0,
+    oceanWaveLineIntensity: 0,
+    cloudCoverage: 0,
+    cloudDensity: 0,
+    cloudIntensity: 0,
+  },
+  {
+    t: 0.75, // CONTEMPLATION — near the observatory, looking inward, wonder settles
+    // The telescope is nearby but you never look through it.
+    // Bloom subsides slightly. The mystery remains.
+    rainBrightness: 0.0,
+    petalBrightness: 0.0,
+    starBrightness: 0.80,
+    sunElevation: -10,
     sunAzimuth: 180,
     turbidity: 1.0,
     rayleigh: 0.28,
     mieCoefficient: 0.003,
     mieDirectionalG: 0.84,
-    fogColor: [0.04, 0.02, 0.02],
-    fogDensity: 0.004,             // slightly hazier — contemplation narrows the world
-    sunLightColor: [0.20, 0.12, 0.12],
-    sunLightIntensity: 0.25,
-    ambientIntensity: 0.05,
-    grassBaseColor: [0.03, 0.03, 0.02],
-    grassTipColor: [0.05, 0.05, 0.03],
+    fogColor: [0.12, 0.05, 0.02],   // slightly cooler — pulling back from the heat
+    fogDensity: 0.003,
+    sunLightColor: [1.0, 0.42, 0.12],
+    sunLightIntensity: 1.1,
+    ambientIntensity: 0.10,
+    grassBaseColor: [0.04, 0.03, 0.02],
+    grassTipColor: [0.06, 0.04, 0.03],
     grassWindSpeed: 0.0,
     grassAmbientStrength: 0.12,
     grassTranslucency: 0.0,
@@ -212,28 +209,28 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     cloudDriftSpeed: 0.0,
     fireflyBrightness: 0.0,
     fireflySize: 25,
-    bloomIntensity: 0.65,           // subsiding but still warm
-    bloomThreshold: 0.32,
+    bloomIntensity: 0.65,
+    bloomThreshold: 0.28,
     fogDepthStrength: 0.06,
-    fogMidColor: [0.07, 0.04, 0.02],
-    fogFarColor: [0.04, 0.02, 0.01],
-    colorGradeContrast: 0.08,
-    colorGradeVibrance: 0.30,
+    fogMidColor: [0.12, 0.05, 0.02],
+    fogFarColor: [0.06, 0.03, 0.01],
+    colorGradeContrast: 0.10,
+    colorGradeVibrance: 0.38,
     colorGradeWarmth: 0.20,
-    vignetteDarkness: 0.55,         // narrowing — the world focuses
+    vignetteDarkness: 0.50,          // narrowing — focus on the mystery
     grainOpacity: 0.07,
     dustMoteBrightness: 0.5,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.01,             // settling — contemplation
+    caDistortion: 0.010,
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 6,            // tight focus — intimate, the telescope nearby
-    dofBokehScale: 6.5,            // heavy bokeh — abstract edges
-    splitToneWarm: [0.95, 0.68, 0.30],  // amber sustained
-    splitToneCool: [0.55, 0.68, 0.88],  // cool holding
+    dofFocusDistance: 6,             // tight — intimate with the telescope
+    dofBokehScale: 6.5,
+    splitToneWarm: [0.98, 0.58, 0.20],
+    splitToneCool: [0.52, 0.64, 0.90],
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -243,25 +240,24 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     cloudIntensity: 0,
   },
   {
-    t: 1.0, // DEPARTURE — pulling away, the glow fades behind, stars remain
-    // You leave carrying the question. What was the telescope pointed at?
-    // The warmth fades. The cold remains. But you carry both.
+    t: 1.0, // DEPARTURE — pulling away, glow fades, stars remain. Cold wins.
+    // You leave carrying the question. The warmth fades. The cold remains.
     rainBrightness: 0.0,
     petalBrightness: 0.0,
-    starBrightness: 0.45,          // stars remain but dim — you're descending the outer slope
-    sunElevation: -40,
+    starBrightness: 0.40,           // dimming — descending the outer slope
+    sunElevation: -10,
     sunAzimuth: 180,
     turbidity: 1.0,
     rayleigh: 0.3,
     mieCoefficient: 0.003,
     mieDirectionalG: 0.85,
-    fogColor: [0.03, 0.02, 0.02],
-    fogDensity: 0.010,             // thickening — the crater recedes into haze
-    sunLightColor: [0.15, 0.10, 0.10],
-    sunLightIntensity: 0.15,
-    ambientIntensity: 0.03,
-    grassBaseColor: [0.03, 0.03, 0.02],
-    grassTipColor: [0.05, 0.05, 0.03],
+    fogColor: [0.08, 0.03, 0.02],   // cooling — orange fading to dark
+    fogDensity: 0.006,              // thickening — the crater recedes
+    sunLightColor: [0.8, 0.3, 0.08], // fading orange
+    sunLightIntensity: 0.5,          // dimming — the glow is behind you
+    ambientIntensity: 0.05,
+    grassBaseColor: [0.04, 0.03, 0.02],
+    grassTipColor: [0.06, 0.04, 0.03],
     grassWindSpeed: 0.0,
     grassAmbientStrength: 0.10,
     grassTranslucency: 0.0,
@@ -270,28 +266,28 @@ export const VOLCANIC_OBSERVATORY_KEYFRAMES = [
     cloudDriftSpeed: 0.0,
     fireflyBrightness: 0.0,
     fireflySize: 25,
-    bloomIntensity: 0.15,           // fading — the glow is behind you now
-    bloomThreshold: 0.5,
+    bloomIntensity: 0.25,            // fading — the glow is behind you
+    bloomThreshold: 0.40,
     fogDepthStrength: 0.08,
-    fogMidColor: [0.04, 0.02, 0.02],
-    fogFarColor: [0.02, 0.01, 0.01],
-    colorGradeContrast: 0.03,       // flattening — the contrast dissolves
-    colorGradeVibrance: 0.08,       // draining — carrying it as memory, not sensation
-    colorGradeWarmth: 0.08,         // residual warmth — "you carry the fire"
-    vignetteDarkness: 0.80,         // tunnel closing — back to darkness
-    grainOpacity: 0.08,             // grain increasing — memory texture
-    dustMoteBrightness: 0.2,        // ash still drifts
+    fogMidColor: [0.06, 0.03, 0.02],
+    fogFarColor: [0.03, 0.02, 0.01],
+    colorGradeContrast: 0.04,
+    colorGradeVibrance: 0.12,        // draining — memory, not sensation
+    colorGradeWarmth: 0.08,          // residual warmth — "you carry the fire"
+    vignetteDarkness: 0.75,          // tunnel closing
+    grainOpacity: 0.08,
+    dustMoteBrightness: 0.2,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.003,            // residual — fading with the warmth
+    caDistortion: 0.003,
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 40,           // losing focus — can't hold it
-    dofBokehScale: 7.0,            // everything dissolves into bokeh
-    splitToneWarm: [0.85, 0.65, 0.45],  // amber fading — warmth leaving
-    splitToneCool: [0.65, 0.70, 0.82],  // cool dominant — cold wins in the end
+    dofFocusDistance: 40,            // losing focus — can't hold it
+    dofBokehScale: 7.0,             // everything dissolves
+    splitToneWarm: [0.85, 0.60, 0.35],  // amber fading
+    splitToneCool: [0.62, 0.68, 0.85],  // cool dominant — cold wins
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,

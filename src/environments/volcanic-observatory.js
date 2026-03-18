@@ -28,10 +28,9 @@ export default {
 
   sky: {
     type: 'night-atmosphere',
-    // Same night sky system as Night Meadow but with maximum clarity
-    // No moon — the lava IS the light source from below
-    sunElevation: -40,      // deep night, no sun
-    tealTint: [2.0e-6, 8.0e-6, 20.0e-6], // cool blue Rayleigh, less green than night-meadow
+    // Lava is the light source from below — sun is absent but not buried
+    sunElevation: -10,      // just below horizon — orange glow at rim
+    tealTint: [2.0e-6, 8.0e-6, 20.0e-6], // cool blue Rayleigh above
     stars: {
       enabled: true,
       sharpness: 60,        // sharper than night-meadow — impossibly clear
@@ -97,15 +96,15 @@ export default {
   },
 
   lighting: {
-    // No sun — two light sources: lava below (warm) and starlight above (cool)
-    sunColor: [0.15, 0.12, 0.20],  // very dim blue-purple ambient from sky
-    sunIntensity: 0.2,
-    ambientIntensity: 0.04,         // near darkness — lava provides the warmth
+    // Lava below (orange) + starlight above (cool blue-white)
+    sunColor: [1.0, 0.4, 0.1],     // orange — lava IS the directional light
+    sunIntensity: 1.0,
+    ambientIntensity: 0.10,         // warm orange ambient from below
     // Lava point light (wired by WorldEngine if lava.enabled)
     lavaLight: {
       color: [1.0, 0.35, 0.05],    // deep orange
-      intensity: 2.5,
-      distance: 60,
+      intensity: 3.0,
+      distance: 80,
       position: [0, -5, -60],       // crater center
     },
   },
@@ -113,8 +112,8 @@ export default {
   fog: {
     near: 20,
     far: 150,
-    color: '#0a0508',   // very dark warm black — volcanic haze
-    density: 0.005,
+    color: '#261008',   // orange volcanic haze — NOT black
+    density: 0.003,
   },
 
   postFX: {
