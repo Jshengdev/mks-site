@@ -42,7 +42,7 @@ export default {
     turbidity: 0.5,
     rayleigh: 0.1,
     mieCoefficient: 0.001,
-    sunElevation: -90,       // sun doesn't exist here
+    sunElevation: -40,       // sun doesn't exist here
     stars: { enabled: false }, // we're underwater
   },
 
@@ -67,7 +67,8 @@ export default {
       enabled: true,
       count: 350,             // less than meadow — life is sparse in the deep
       color: [0.15, 0.85, 0.75], // cyan-green bioluminescence (dinoflagellate spectrum)
-      brightness: 2.5,        // BRIGHT — these are the only light source
+      brightness: 2.0,        // BRIGHT — these are the ONLY light source
+      size: 200,              // LARGE — jellyfish bells, not firefly specks
       bobSpeed: 0.3,          // slow, dreamy pulse — heartbeat rhythm
       driftRadius: 5.0,       // wider drift — currents are slow but vast
     },
@@ -188,23 +189,23 @@ export default {
   lighting: {
     // No sun. No moon. No ambient light from above.
     // All light is bioluminescent — emitted by creatures.
-    sunColor: [0.05, 0.08, 0.15],  // extremely dim blue residual scatter
-    sunIntensity: 0.05,              // barely exists
-    ambientIntensity: 0.02,          // near-total darkness
+    sunColor: [0.02, 0.03, 0.06],  // near-zero residual scatter
+    sunIntensity: 0.01,              // effectively zero
+    ambientIntensity: 0.005,         // ALMOST ZERO — only creatures emit light
     // Bioluminescent contribution handled via bloom + emissive particles
   },
 
   fog: {
     near: 5,          // very close — water absorbs light fast at depth
     far: 60,          // can't see far — the abyss swallows everything
-    color: '#020208', // near-black with violet undertone — deep water scatter
-    density: 0.02,    // thick — this is 11km of water
+    color: '#000005', // pitch black with barely-perceptible blue — the void
+    density: 0.025,   // thick — this is 11km of water
   },
 
   postFX: {
     bloom: {
-      threshold: 0.3,    // LOW — everything bioluminescent should bloom
-      intensity: 1.2,    // HIGH — the glow IS the world
+      threshold: 0.2,    // VERY LOW — everything bioluminescent blooms hard
+      intensity: 1.5,    // MAXIMUM — the glow IS the world
       levels: 8,         // full mip chain for wide glow spread
     },
     grain: {
