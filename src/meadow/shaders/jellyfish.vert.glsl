@@ -6,9 +6,15 @@
 
 uniform float uTime;
 
+// Per-instance species variation (InstancedBufferAttribute)
+attribute float aColorIndex;   // 0-1 → maps to 5 deep-sea species in frag shader
+attribute float aOpacityScale; // 0.25-1.0 → per-instance transparency
+
 varying vec3 vNormal;
 varying vec3 vWorldPos;
 varying float vBellFactor;
+varying float vColorIndex;
+varying float vOpacityScale;
 
 void main() {
   // Extract instance position for per-jellyfish phase offset
@@ -20,6 +26,8 @@ void main() {
   // Determine bell vs tentacle by Y position (bell y>0, tentacles y<0)
   float bellFactor = smoothstep(-0.1, 0.1, pos.y);
   vBellFactor = bellFactor;
+  vColorIndex = aColorIndex;
+  vOpacityScale = aOpacityScale;
 
   // --- BELL PULSE (y > 0) ---
   // Adapted from Chrysaora: asymmetric sine — fast contraction, slow expansion

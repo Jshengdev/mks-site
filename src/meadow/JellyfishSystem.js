@@ -55,6 +55,35 @@ export default class JellyfishSystem {
       fragmentShader,
     })
 
+    // Per-instance species variation (color + opacity + scale)
+    // Controlled randomness: curated 5-species palette, power-law size distribution
+    // Real deep-sea ecosystems: many small organisms, few massive ones
+    const colorIndices = new Float32Array(count)
+    const opacityScales = new Float32Array(count)
+
+    for (let i = 0; i < count; i++) {
+      // Species: random 0-1, mapped to 5 species bands in fragment shader
+      // 35% cyan (Aequorea), 25% blue (Mnemiopsis), 15% red (Crossota),
+      // 15% violet (Beroe), 10% ghost white (Leucothea)
+      const ci = Math.random()
+      colorIndices[i] = ci
+
+      // Opacity correlated with species — ghost-white nearly invisible,
+      // blood-red most opaque (absorbs all light at depth → appears solid)
+      if (ci > 0.90) {
+        opacityScales[i] = 0.25 + Math.random() * 0.25  // ghostly
+      } else if (ci > 0.60 && ci <= 0.75) {
+        opacityScales[i] = 0.65 + Math.random() * 0.35  // solid reds
+      } else {
+        opacityScales[i] = 0.40 + Math.random() * 0.45  // medium
+      }
+    }
+
+    merged.setAttribute('aColorIndex',
+      new THREE.InstancedBufferAttribute(colorIndices, 1))
+    merged.setAttribute('aOpacityScale',
+      new THREE.InstancedBufferAttribute(opacityScales, 1))
+
     // InstancedMesh — GPU instancing for 20-40 jellyfish
     this.mesh = new THREE.InstancedMesh(merged, this.material, count)
     const dummy = new THREE.Object3D()
@@ -67,8 +96,10 @@ export default class JellyfishSystem {
 
       dummy.position.set(x, y, z)
       dummy.rotation.y = Math.random() * Math.PI * 2
-      // LARGE: scale 2-5 (these are deep sea giants, not specks)
-      const scale = 2.0 + Math.random() * 3.0
+      // Power-law scale: many small (1-2.5), few massive (5-6)
+      // pow(r, 2) → ~50% below 2.25, ~10% above 5.0
+      // Creates "creature scale variation" — tiny plankton-jelly to deep-sea giants
+      const scale = 1.0 + Math.pow(Math.random(), 2.0) * 5.0
       dummy.scale.setScalar(scale)
       dummy.updateMatrix()
       this.mesh.setMatrixAt(i, dummy.matrix)
