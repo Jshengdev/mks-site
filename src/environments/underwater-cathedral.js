@@ -101,6 +101,26 @@ export default {
     stars: { enabled: false },
   },
 
+  // Caustic light projection on cathedral floor — THE underwater signature
+  // Light refracts through the water surface and casts animated cellular patterns
+  // onto the worn stone. At the surface this is vivid; at the abyss, a ghost.
+  // Uses same CausticProjector as tide-pool but tuned for 45m depth:
+  //   - slower speed (heavy water, not shallow pool)
+  //   - lower frequency (larger, lazier patterns — cathedral scale)
+  //   - heavy depth fade (caustics die fast through 45m of murk)
+  //   - blue-shifted color (red absorbed, only blue-green survives)
+  //
+  // Stolen from: martinRenou/threejs-caustics + Shadertoy MdlXz8 (Dave_Hoskins)
+  caustics: {
+    enabled: true,
+    frequency: 5.0,              // LOWER than tide pool (8.0) — larger patterns, cathedral scale
+    speed: 0.15,                 // SLOWER — heavy water, glacial drift
+    intensity: 0.55,             // dimmer base — 45m of water absorbs most light
+    sharpness: 2.5,              // softer lines — water scatter blurs caustic edges at depth
+    depthFade: 0.06,             // STRONG fade — caustics vanish well before the floor
+    color: [0.35, 0.70, 0.90],  // blue-shifted — red channel is gone at this depth
+  },
+
   // DISABLED — underwater cathedral has kelp, not grass
   grass: {
     enabled: false,
@@ -216,6 +236,13 @@ export default {
     sunColor: [0.15, 0.35, 0.55],    // deep blue — all warmth absorbed
     sunIntensity: 0.5,                // dim — filtered through 45m of water
     ambientIntensity: 0.08,           // very low — underwater darkness
+    // Per-channel absorption rates for CausticProjector shader
+    // Real underwater physics: red dies fast, blue persists
+    // Lower than tide-pool defaults (0.15/0.06/0.02) because cathedral
+    // caustics need to survive longer through 45m — the floor must still shimmer
+    absorptionRed: 0.04,             // red dies within ~10m
+    absorptionGreen: 0.015,          // green fades by ~25m
+    absorptionBlue: 0.005,           // blue penetrates deepest
     // Bioluminescent ambient increases with depth (handled by keyframes)
     biolumAmbient: {
       color: [0.1, 0.5, 0.4],        // teal-green bioluminescent fill

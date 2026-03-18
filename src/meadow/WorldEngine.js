@@ -289,7 +289,7 @@ export default class WorldEngine {
       this.starfish = new Starfish(this.scene, envConfig, this.getTerrainHeight)
     }
 
-    // ─── Caustic projector (conditional — tide pool) ───
+    // ─── Caustic projector (conditional — tide pool, underwater cathedral) ───
     this.causticProjector = null
     if (envConfig.caustics?.enabled) {
       this.causticProjector = new CausticProjector(this.scene, {

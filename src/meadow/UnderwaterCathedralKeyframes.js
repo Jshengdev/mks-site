@@ -87,6 +87,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
 
     caDistortion: 0.008,                 // STRONG — water refracts light heavily
 
+    // Caustic projection — animated light patterns on cathedral stone
+    // Brightest near surface where light is strongest, fading with descent
+    causticBrightness: 0.55,             // vivid at surface — light fractures through water
+
     waveWindDirX: 0.3,
     waveWindDirY: 0.0,                   // horizontal current (not wind)
     waveWindSpeed: 0.15,
@@ -164,6 +168,10 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
 
     caDistortion: 0.008,                 // strong water refraction
 
+    // PEAK caustics — the last strong light before the deep
+    // You're passing through light shafts, caustic patterns dance on stone
+    causticBrightness: 0.70,             // BRIGHTEST — last gasp of surface light
+
     waveWindDirX: 0.25,
     waveWindDirY: 0.15,
     waveWindSpeed: 0.18,
@@ -240,6 +248,9 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     kuwaharaStrength: 0.0,
 
     caDistortion: 0.010,                 // peak refraction distortion
+
+    // Caustics still present but dimming — sunlight is a memory now
+    causticBrightness: 0.30,             // fading — bioluminescence replaces caustics
 
     waveWindDirX: 0.15,
     waveWindDirY: 0.25,
@@ -319,6 +330,9 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
 
     caDistortion: 0.007,                 // easing
 
+    // Ghost caustics — barely visible, just enough to hint at surface far above
+    causticBrightness: 0.08,             // ghost — light from 35m above barely reaches
+
     waveWindDirX: 0.1,
     waveWindDirY: 0.1,
     waveWindSpeed: 0.10,
@@ -397,6 +411,9 @@ export const UNDERWATER_CATHEDRAL_KEYFRAMES = [
     kuwaharaStrength: 0.0,
 
     caDistortion: 0.004,                 // settling — the deep is still
+
+    // Caustics are gone — 42m of water kills all coherent light
+    causticBrightness: 0.02,             // near-zero — a distant memory of the surface
 
     waveWindDirX: 0.05,
     waveWindDirY: 0.05,
