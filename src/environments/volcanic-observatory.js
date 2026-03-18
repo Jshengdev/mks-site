@@ -61,6 +61,16 @@ export default {
     heaveSpeed: 0.4,
   },
 
+  // ─── Lava cracks (glowing fissures on terrain surface) ───
+  // Pulsing orange-red PlaneGeometry strips placed on dark basalt
+  lavaCracks: {
+    enabled: true,
+    count: 40,                // 30-50 cracks across crater surface
+    spreadRadius: 50,         // spread across the caldera rim area
+    pulseSpeed: 1.5,          // oscillation speed — cooling/heating lava
+    pulseIntensity: 0.4,      // amplitude of brightness oscillation
+  },
+
   // Ocean system disabled — lava replaces it
   ocean: {
     enabled: false,
@@ -80,18 +90,27 @@ export default {
     rain: { enabled: false },
     spray: { enabled: false },
     // Embers rising from lava lake — the warm counterpart to stars
+    // 1000 instances, additive blending, slow upward drift with wobble
     embers: {
       enabled: true,
-      count: 300,           // enough to see rising columns, not so many it's a wall
-      color: [1.0, 0.40, 0.0],  // orange base (shader overrides with age ramp)
-      riseSpeed: 0.15,
-      brightness: 1.5,
+      count: 1000,            // full ember field — Basalt Deltas intensity
+      riseSpeed: 0.15,        // slow contemplative rise
+      brightness: 1.5,        // bright against dark sky
+      size: 90,               // larger than fireflies — these are burning sparks
+      spawnRadius: 40,        // concentrated around crater
+      ceilingHeight: 20,      // die before reaching stars
     },
-    // Volcanic ash — slow-falling grey dust (uses dust mote system)
+    // Volcanic ash — slow-falling grey particles
+    // 500 instances, NormalBlending (not additive), very low opacity
     ash: {
       enabled: true,
-      count: 150,
-      color: [0.3, 0.28, 0.25], // grey volcanic ash
+      count: 500,             // atmospheric density
+      fallSpeed: 0.8,         // slow descent — volcanic ash drifts
+      size: 30,               // small grey flecks
+      brightness: 1.0,
+      spreadX: 120,           // wide horizontal spread
+      spreadZ: 120,
+      baseHeight: 15,         // falls from 15m above terrain
     },
   },
 

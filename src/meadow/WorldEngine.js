@@ -64,6 +64,12 @@ import WarmLightOrb from './WarmLightOrb.js'
 import EmberSystem from './EmberSystem.js'
 import LavaCrack from './LavaCrack.js'
 import AshSystem from './AshSystem.js'
+import GearTree from './GearTree.js'
+import SteamVent from './SteamVent.js'
+import CopperLeaf from './CopperLeaf.js'
+import GiantAnemone from './GiantAnemone.js'
+import Starfish from './Starfish.js'
+import CausticProjector from './CausticProjector.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -260,6 +266,34 @@ export default class WorldEngine {
       this.mushrooms = new GlowMushroom(
         this.scene, this.cameraRig, envConfig.mushrooms, this.getTerrainHeight
       )
+    }
+
+    // ─── Giant anemones (conditional — tide pool) ───
+    this.anemones = null
+    if (envConfig.anemones?.enabled) {
+      this.anemones = new GiantAnemone(this.scene, envConfig, this.getTerrainHeight)
+    }
+
+    // ─── Starfish (conditional — tide pool) ───
+    this.starfish = null
+    if (envConfig.starfish?.enabled) {
+      this.starfish = new Starfish(this.scene, envConfig, this.getTerrainHeight)
+    }
+
+    // ─── Caustic projector (conditional — tide pool) ───
+    this.causticProjector = null
+    if (envConfig.caustics?.enabled) {
+      this.causticProjector = new CausticProjector(this.scene, {
+        ...envConfig.caustics,
+        surfaceHeight: envConfig.sky?.surfaceHeight ?? 8.0,
+        absorptionRed: envConfig.lighting?.absorptionRed,
+        absorptionGreen: envConfig.lighting?.absorptionGreen,
+        absorptionBlue: envConfig.lighting?.absorptionBlue,
+      })
+      // Clone terrain geometry for caustic overlay projection
+      if (this.terrain) {
+        this.causticProjector.setTerrainGeometry(this.terrain.geometry)
+      }
     }
 
     // ─── Post-processing ───
@@ -571,6 +605,9 @@ export default class WorldEngine {
     this.flowers?.update(animElapsed)
     this.crystals?.update(animElapsed)
     this.mushrooms?.update(animElapsed)
+    this.anemones?.update(animElapsed)
+    this.starfish?.update(animElapsed)
+    this.causticProjector?.update(animElapsed)
 
     if (!this.atmosphere.paused) {
       this.atmosphere.update(this.scrollEngine.progress)
@@ -719,6 +756,12 @@ export default class WorldEngine {
       snowParticles: this.snowParticles,
       iceSpikes: this.iceSpikes,
       auroraCurtain: this.auroraCurtain,
+      embers: this.embers,
+      lavaCracks: this.lavaCracks,
+      ash: this.ash,
+      anemones: this.anemones,
+      starfish: this.starfish,
+      causticProjector: this.causticProjector,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -770,6 +813,12 @@ export default class WorldEngine {
     this.floatingBooks?.dispose()
     this.shelfSegments?.dispose()
     this.warmLightOrbs?.dispose()
+    this.embers?.dispose()
+    this.lavaCracks?.dispose()
+    this.ash?.dispose()
+    this.anemones?.dispose()
+    this.starfish?.dispose()
+    this.causticProjector?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()

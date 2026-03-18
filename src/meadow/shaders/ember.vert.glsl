@@ -1,16 +1,22 @@
-// Ember particle vertex shader — rising ash/sparks from lava lake
-// Adapted from Alex-DG firefly system (firefly.vert.glsl) + yomotsu/three-particle-fire
-// Key difference: embers RISE (positive Y drift) instead of bob (sin oscillation)
-// They also cool as they rise — size shrinks, brightness fades
+// Ember vertex shader — rising sparks from lava lake
+// Stolen from simondevyoutube/ThreeJS_Tutorial_ParticleSystems (age-based sizing)
+// + al-ro curl noise drift pattern + Alex-DG firefly base
+// Embers RISE from configurable lava surface to ceiling height
 uniform float uPixelRatio;
 uniform float uSize;
 uniform float uTime;
+uniform float uRiseSpeed;
+uniform float uSpawnHeight;    // Y floor where embers are born (lava surface)
+uniform float uCeilingHeight;  // Y ceiling where embers die
 
 attribute float aScale;
-attribute float aPhase;   // per-particle random phase (0-1)
-attribute float aLifetime; // per-particle lifetime multiplier
+attribute float aPhase;        // per-particle random phase (0-1)
+attribute float aLifetime;     // per-particle lifetime multiplier
 
-// Simple hash noise for drift turbulence (stolen from L16 fBM pattern)
+varying float vAge;            // 0=newborn (hot), 1=dead (cool) → drives color ramp
+varying float vBrightness;
+
+// Hash noise stolen from al-ro/grass
 float hash(float n) { return fract(sin(n) * 43758.5453); }
 
 float noise3D(vec3 p) {
@@ -25,47 +31,43 @@ float noise3D(vec3 p) {
   );
 }
 
-varying float vAge;       // 0=newborn, 1=dead — drives color/alpha fade
-varying float vBrightness;
-
 void main() {
   float time = uTime * 0.001;
 
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
-  // ─── Rising motion ───
-  // Each ember has a looping lifecycle based on its phase
-  // fract() creates the loop — ember rises, resets, rises again
-  float cycleTime = fract(time * 0.15 * aLifetime + aPhase);
-  vAge = cycleTime; // 0=just born from lava, 1=about to die
+  // Looping lifecycle — fract() creates seamless cycle per particle
+  // uRiseSpeed controls how fast embers traverse spawn→ceiling
+  float cycleTime = fract(time * uRiseSpeed * aLifetime + aPhase);
+  vAge = cycleTime;
 
-  // Vertical rise — fast initial burst, then decelerating (sqrt curve)
-  // Embers rise 15-25 units before dying
-  float riseHeight = sqrt(cycleTime) * 20.0 * aLifetime;
-  modelPosition.y += riseHeight;
+  // Vertical rise — sqrt curve gives fast initial burst, then deceleration
+  // Configurable height range for caldera geometry
+  float totalHeight = uCeilingHeight - uSpawnHeight;
+  float riseHeight = sqrt(cycleTime) * totalHeight * aLifetime;
+  modelPosition.y = uSpawnHeight + riseHeight;
 
-  // ─── Horizontal drift (thermal turbulence) ───
-  // More turbulent than fireflies — volcanic updrafts are chaotic
+  // Horizontal drift — thermal turbulence from al-ro curl noise concept
   float turb = noise3D(modelPosition.xyz * 0.08 + time * 0.2) * 0.8
              + noise3D(modelPosition.xyz * 0.15 + time * 0.3) * 0.4;
   modelPosition.x += turb * aScale * 1.5;
   modelPosition.z += turb * aScale * 1.2;
 
-  // Slight spiral — thermal column rotation
-  float angle = cycleTime * 3.14159 * 2.0 * aPhase;
+  // Thermal column spiral — stolen from simondev rotation concept
+  float angle = cycleTime * 6.28318 * aPhase;
   float spiralR = cycleTime * 2.0;
   modelPosition.x += sin(angle) * spiralR * 0.3;
   modelPosition.z += cos(angle) * spiralR * 0.3;
 
-  // ─── Size fade ───
-  // Embers shrink as they cool and die
-  float sizeFade = 1.0 - cycleTime * 0.7; // shrinks to 30% at death
+  // Size fades as ember cools and dies
+  float sizeFade = 1.0 - cycleTime * 0.7;
   vBrightness = sizeFade;
 
   vec4 viewPosition = viewMatrix * modelPosition;
-  vec4 projectionPosition = projectionMatrix * viewPosition;
+  gl_Position = projectionMatrix * viewPosition;
 
-  gl_Position = projectionPosition;
+  // Size with distance attenuation
   gl_PointSize = uSize * aScale * sizeFade * uPixelRatio;
   gl_PointSize *= (1.0 / -viewPosition.z);
+  gl_PointSize = clamp(gl_PointSize, 0.5, 24.0);
 }
