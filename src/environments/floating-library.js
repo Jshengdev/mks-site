@@ -49,24 +49,32 @@ export default {
     },
   },
 
-  // ─── Custom: Floating library shelves ───
-  // (Needs new subsystem: FloatingLibrary.js — InstancedMesh shelves + books)
-  // For now, worldEngine falls back to existing subsystems.
-  // Score sheets serve as the "books" and are heavily featured.
+  // ─── Floating library shelves + books ───
+  // FloatingBook.js — InstancedMesh books with opening angle, GPU rotation + bob
+  // ShelfSegment.js — InstancedMesh shelves at impossible Escher angles
   library: {
     enabled: true,
-    shelfLayers: 7,         // vertical tiers of impossible shelves
-    shelfSpacing: 4.0,      // Y distance between tiers
-    shelfWidth: [8, 15],    // min/max width
-    bookCount: 200,          // instanced books resting on shelves
-    floatingBookCount: 40,   // books drifting free (weightless)
-    driftSpeed: 0.002,       // glacial drift of free books
-    rotationSpeed: 0.001,    // shelf clusters rotate glacially
-    escherTwist: 0.15,       // perspective distortion per scroll (vertex displacement)
+    shelfCount: 12,           // impossible shelf segments spiraling upward
+    shelfSpacing: 4.0,        // Y distance between tiers
+    shelfWidth: [8, 15],      // min/max width per shelf
+    floatingBookCount: 50,    // books drifting free (weightless) — MORE than originally spec'd
+    rotationSpeed: 0.001,     // glacial rotation for books
     // Materials: dark wood (#2a1a0a), aged paper (#e8dcc8), gold leaf accents (#d4a050)
     woodColor: [0.16, 0.10, 0.04],
     paperColor: [0.91, 0.86, 0.78],
     goldAccent: [0.83, 0.63, 0.31],
+  },
+
+  // ─── Warm light orbs ───
+  // WarmLightOrb.js — Stemkoski fresnel glow spheres
+  // "Lamplight from nowhere" — pools of warm light in the cloud-space
+  warmLightOrbs: {
+    enabled: true,
+    count: 7,                  // 5-8 as spec'd — odd number for visual asymmetry
+    color: [0.95, 0.78, 0.42], // warm incandescent amber
+    radius: 0.25,              // small but bright — the glow IS the size
+    pulseSpeed: 0.3,           // slow breathing
+    intensity: 2.5,            // high — bloom catches these, creates lamp halos
   },
 
   grass: {

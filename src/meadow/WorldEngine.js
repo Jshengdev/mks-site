@@ -36,6 +36,9 @@ import { SONIC_VOID_KEYFRAMES } from './SonicVoidKeyframes.js'
 import CrystalFormation from './CrystalFormation.js'
 import GlowMushroom from './GlowMushroom.js'
 import PetalSystem from './PetalSystem.js'
+import SnowParticle from './SnowParticle.js'
+import IceSpike from './IceSpike.js'
+import AuroraCurtain from './AuroraCurtain.js'
 import MusicTrigger from './MusicTrigger.js'
 import ScoreSheetCloth from './ScoreSheetCloth.js'
 import ArtistFigure from './ArtistFigure.js'
@@ -55,6 +58,9 @@ import FoldLine from './FoldLine.js'
 import FloatingPlatform from './FloatingPlatform.js'
 import StairSegment from './StairSegment.js'
 import PortalDoor from './PortalDoor.js'
+import FloatingBook from './FloatingBook.js'
+import ShelfSegment from './ShelfSegment.js'
+import WarmLightOrb from './WarmLightOrb.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -358,6 +364,24 @@ export default class WorldEngine {
       this.petals = new PetalSystem(this.scene, envConfig.particles.petals)
     }
 
+    // ─── Snow particles (conditional — aurora tundra) ───
+    this.snowParticles = null
+    if (envConfig.particles?.snow?.enabled) {
+      this.snowParticles = new SnowParticle(this.scene, envConfig.particles.snow)
+    }
+
+    // ─── Ice spikes (conditional — aurora tundra) ───
+    this.iceSpikes = null
+    if (envConfig.iceSpikes?.enabled) {
+      this.iceSpikes = new IceSpike(this.scene, this.getTerrainHeight, envConfig.iceSpikes)
+    }
+
+    // ─── Aurora curtain (conditional — aurora tundra) ───
+    this.auroraCurtain = null
+    if (envConfig.aurora?.enabled) {
+      this.auroraCurtain = new AuroraCurtain(this.scene, envConfig.aurora)
+    }
+
     // ─── Lightning (conditional — storm field) ───
     this.lightning = null
     if (envConfig.sky?.lightning?.enabled) {
@@ -450,6 +474,24 @@ export default class WorldEngine {
       )
     }
 
+    // ─── Floating books (conditional — floating library) ───
+    this.floatingBooks = null
+    if (envConfig.library?.enabled) {
+      this.floatingBooks = new FloatingBook(this.scene, envConfig.library)
+    }
+
+    // ─── Shelf segments (conditional — floating library) ───
+    this.shelfSegments = null
+    if (envConfig.library?.enabled) {
+      this.shelfSegments = new ShelfSegment(this.scene, envConfig.library)
+    }
+
+    // ─── Warm light orbs (conditional — floating library) ───
+    this.warmLightOrbs = null
+    if (envConfig.warmLightOrbs?.enabled) {
+      this.warmLightOrbs = new WarmLightOrb(this.scene, envConfig.warmLightOrbs)
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -465,6 +507,9 @@ export default class WorldEngine {
     this.atmosphere.ocean = this.ocean
     this.atmosphere.volumetricClouds = this.volumetricClouds
     this.atmosphere.fogWisps = this.fogWisps
+    this.atmosphere.snowParticles = this.snowParticles
+    this.atmosphere.iceSpikes = this.iceSpikes
+    this.atmosphere.auroraCurtain = this.auroraCurtain
 
     this._onResize = this._onResize.bind(this)
     window.addEventListener('resize', this._onResize)
@@ -508,6 +553,9 @@ export default class WorldEngine {
     this.starField?.update(animElapsed)
     this.rain?.update(animElapsed)
     this.petals?.update(animElapsed)
+    this.snowParticles?.update(animElapsed)
+    this.iceSpikes?.update(animElapsed)
+    this.auroraCurtain?.update(animElapsed)
     this.lightning?.update(animElapsed, delta)
     this.dissolvingFlowers?.update(animElapsed)
     this.wiltingGrass?.update(animElapsed)
@@ -517,6 +565,9 @@ export default class WorldEngine {
     this.floatingPlatforms?.update(animElapsed)
     this.stairSegments?.update(animElapsed)
     this.portalDoors?.update(animElapsed)
+    this.floatingBooks?.update(animElapsed)
+    this.shelfSegments?.update(animElapsed)
+    this.warmLightOrbs?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -625,6 +676,12 @@ export default class WorldEngine {
       floatingPlatforms: this.floatingPlatforms,
       stairSegments: this.stairSegments,
       portalDoors: this.portalDoors,
+      floatingBooks: this.floatingBooks,
+      shelfSegments: this.shelfSegments,
+      warmLightOrbs: this.warmLightOrbs,
+      snowParticles: this.snowParticles,
+      iceSpikes: this.iceSpikes,
+      auroraCurtain: this.auroraCurtain,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -659,6 +716,9 @@ export default class WorldEngine {
     }
     this.rain?.dispose()
     this.petals?.dispose()
+    this.snowParticles?.dispose()
+    this.iceSpikes?.dispose()
+    this.auroraCurtain?.dispose()
     this.lightning?.dispose()
     this.volumetricClouds?.dispose()
     this.dissolvingFlowers?.dispose()
@@ -670,6 +730,9 @@ export default class WorldEngine {
     this.floatingPlatforms?.dispose()
     this.stairSegments?.dispose()
     this.portalDoors?.dispose()
+    this.floatingBooks?.dispose()
+    this.shelfSegments?.dispose()
+    this.warmLightOrbs?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
