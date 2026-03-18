@@ -44,11 +44,47 @@ export default {
   },
 
   grass: {
-    enabled: false, // Paper doesn't grow. The terrain IS the surface.
+    enabled: false, // Paper doesn't grow. Origami grass replaces it.
   },
 
   flowers: {
-    enabled: false, // No organic elements. Everything is folded geometry.
+    enabled: false, // No organic elements. Paper trees replace them.
+  },
+
+  // ─── ORIGAMI GRASS — angular paper blades replacing smooth grass ───
+  // Hard folds, not curves. Each blade is a zigzag of flat paper faces.
+  // Sparse — paper isn't dense like grass, it's scattered origami.
+  origamiGrass: {
+    enabled: true,
+    count: 400,        // sparse — paper world is mostly terrain + shadow
+    spread: 160,       // across the full landscape
+    color: [0.96, 0.94, 0.89],       // cream lit face
+    shadowColor: [0.88, 0.86, 0.82], // darker cream shadow
+  },
+
+  // ─── PAPER TREES — low-poly folded paper tree instances ───
+  // Trunk = rectangular prism, crown = intersecting triangular planes
+  // Like origami trees — everything is flat surfaces, no curves
+  paperTrees: {
+    enabled: true,
+    count: 15,         // scattered paper trees across the landscape
+    spread: 140,
+    trunkHeight: 1.5,  // trunk height
+    crownRadius: 0.9,  // crown triangle width
+    crownApex: 3.0,    // crown top height
+    color: [0.97, 0.95, 0.90],       // slightly brighter cream
+    shadowColor: [0.86, 0.84, 0.80], // fold shadow
+  },
+
+  // ─── FOLD LINES — grid on terrain like notebook paper ───
+  // The terrain IS a sheet of paper — these lines prove it
+  foldLines: {
+    enabled: true,
+    spacing: 6,        // grid spacing in world units
+    size: 160,         // grid coverage
+    color: '#c0bcb0',  // warm grey — subtle, not harsh
+    opacity: 0.22,     // barely visible — paper texture, not a grid overlay
+    sampleStep: 2,     // terrain height sample interval
   },
 
   particles: {
