@@ -334,6 +334,9 @@ export default class AtmosphereController {
     this.auroraCurtain = null
     this.crystals = null
     this.mushrooms = null
+    this.jellyfish = null
+    this.anglerLights = null
+    this.marineSnow = null
     // Pause flag — when true, update() is a no-op (DevTuner freeze mode)
     this.paused = false
     this.keyframes = keyframes ?? KEYFRAMES
@@ -588,6 +591,21 @@ export default class AtmosphereController {
     // ─── Glow mushrooms (crystal cavern) ───
     if (this.mushrooms && c.mushroomBrightness !== undefined) {
       this.mushrooms.setBrightness(c.mushroomBrightness)
+    }
+
+    // ─── Jellyfish (bioluminescent deep) ───
+    if (this.jellyfish && c.jellyfishBrightness !== undefined) {
+      this.jellyfish.setBrightness(c.jellyfishBrightness)
+    }
+
+    // ─── Angler lights (bioluminescent deep) ───
+    if (this.anglerLights && c.anglerBrightness !== undefined) {
+      this.anglerLights.setBrightness(c.anglerBrightness)
+    }
+
+    // ─── Marine snow (bioluminescent deep) ───
+    if (this.marineSnow && c.marineSnowBrightness !== undefined) {
+      this.marineSnow.setBrightness(c.marineSnowBrightness)
     }
 
     // ─── Ocean (stylized water — atmosphere-driven colors + foam) ───

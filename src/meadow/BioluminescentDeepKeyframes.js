@@ -73,6 +73,9 @@ export const BIOLUMINESCENT_DEEP_KEYFRAMES = [
     dofBokehScale: 6.0,        // heavy bokeh — distant glow becomes soft orbs
     splitToneWarm: [0.50, 0.40, 0.38],  // muted — warmth doesn't exist here
     splitToneCool: [0.15, 0.55, 0.90],  // deep cyan dominates
+    jellyfishBrightness: 1.0,   // visible from frame 1 — bells pulsing in void
+    anglerBrightness: 0.0,      // not yet — anglerfish live deeper
+    marineSnowBrightness: 0.3,  // faint — just starting to notice
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -129,6 +132,9 @@ export const BIOLUMINESCENT_DEEP_KEYFRAMES = [
     dofBokehScale: 6.5,        // bioluminescent bokeh circles
     splitToneWarm: [0.50, 0.40, 0.38],
     splitToneCool: [0.12, 0.50, 0.88],  // cooler still
+    jellyfishBrightness: 1.2,   // more jellyfish emerging, bells closer
+    anglerBrightness: 0.15,     // first distant lure-lights appear
+    marineSnowBrightness: 0.5,  // denser — caught in creature light
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -186,6 +192,9 @@ export const BIOLUMINESCENT_DEEP_KEYFRAMES = [
     dofBokehScale: 7.0,        // heavy bokeh — distant creatures become soft orbs of light
     splitToneWarm: [0.45, 0.38, 0.35],
     splitToneCool: [0.10, 0.55, 0.92],  // peak cyan cool tones
+    jellyfishBrightness: 1.8,   // PEAK — you're IN the jellyfish zone, bells everywhere
+    anglerBrightness: 0.3,      // more lures visible, still secondary to jellyfish
+    marineSnowBrightness: 0.8,  // peak — glowing in bioluminescent light
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -243,6 +252,9 @@ export const BIOLUMINESCENT_DEEP_KEYFRAMES = [
     dofBokehScale: 8.0,        // maximum bokeh — lures become soft discs of hope
     splitToneWarm: [0.60, 0.45, 0.35],  // slightly warmer — vents approaching
     splitToneCool: [0.10, 0.38, 0.82],
+    jellyfishBrightness: 0.6,   // fewer jellyfish this deep — sparse, lonely
+    anglerBrightness: 1.0,      // PEAK — anglerfish territory, lures are all you see
+    marineSnowBrightness: 0.4,  // less marine snow at hadal depths
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -301,6 +313,9 @@ export const BIOLUMINESCENT_DEEP_KEYFRAMES = [
     dofBokehScale: 5.5,        // warm bokeh from vent light
     splitToneWarm: [0.85, 0.60, 0.35],  // amber warmth — the resolution
     splitToneCool: [0.25, 0.35, 0.65],  // still cool in shadows — the cold never fully leaves
+    jellyfishBrightness: 0.3,   // dim — overshadowed by vent warmth
+    anglerBrightness: 0.5,      // still present, but vent glow dominates
+    marineSnowBrightness: 0.7,  // mineral particles in vent plumes
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
