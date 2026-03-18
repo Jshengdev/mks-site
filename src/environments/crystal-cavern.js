@@ -166,31 +166,29 @@ export default {
   },
 
   lighting: {
-    // Single source — the shaft from above
-    // Everything else is crystal-refracted secondary light
-    sunColor: [0.95, 0.92, 0.85],   // warm white shaft
-    sunIntensity: 2.5,               // intense but narrow
+    // NO real sun — all light is crystal-refracted purple
+    sunColor: [0.25, 0.12, 0.70],   // purple crystal light, NOT sunlight
+    sunIntensity: 0.15,              // very dim — underground has no directional source
     sunDirection: [0.1, -1.0, -0.2], // from above, angled into cave
-    ambientIntensity: 0.02,          // near-zero — darkness IS the world
-    // Secondary illumination comes from crystal emissives + bloom
-    // This is NOT ambient light — it's earned light, refracted through matter
+    ambientIntensity: 0.008,         // near-zero — darkness IS the world
+    // All visible illumination comes from crystal emissives + bloom
   },
 
   fog: {
-    near: 5,
-    far: 60,
-    color: '#05030a',    // deep purple-black
-    density: 0.015,      // thick — cave atmosphere, limits draw distance
+    near: 3,
+    far: 45,
+    color: '#05010a',    // deep purple-black — saturated, not grey
+    density: 0.035,      // VERY thick — claustrophobic cave atmosphere
   },
 
   postFX: {
     bloom: {
-      threshold: 0.3,    // LOW — crystals glow aggressively
-      intensity: 1.2,    // HIGH — the glow IS the atmosphere
+      threshold: 0.20,   // VERY LOW — any bright pixel blooms hard
+      intensity: 1.6,    // VERY HIGH — crystal glow IS the atmosphere
       levels: 8,
     },
-    grain: { intensity: 0.08 },           // gritty underground texture
-    vignette: { darkness: 0.95, offset: 0.2 }, // HEAVIEST — cave walls close in
+    grain: { intensity: 0.06 },           // gritty underground texture
+    vignette: { darkness: 0.95, offset: 0.15 }, // HEAVIEST — cave walls press in
     ca: {
       offset: [0.004, 0.002],    // heavy — prismatic lens matching dispersion theme
       radialModulation: true,

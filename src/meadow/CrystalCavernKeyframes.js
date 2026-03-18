@@ -21,49 +21,49 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,     // underground — no stars
-    sunElevation: -30,        // DEEP UNDERGROUND — no sun, ever
+    sunElevation: -60,        // DEEP UNDERGROUND — sun far below horizon
     sunAzimuth: 180,
-    turbidity: 2.0,
-    rayleigh: 0.3,
-    mieCoefficient: 0.008,
-    mieDirectionalG: 0.95,
-    fogColor: [0.03, 0.01, 0.05],   // deep purple-black cave air
-    fogDensity: 0.020,        // dense underground fog
-    sunLightColor: [0.30, 0.20, 0.80],  // purple-blue crystal-refracted light, NOT sunlight
-    sunLightIntensity: 0.4,   // dim, mysterious
-    ambientIntensity: 0.01,   // near darkness — you can barely see your hands
-    grassBaseColor: [0.03, 0.01, 0.04],  // dark purple stone
-    grassTipColor: [0.10, 0.15, 0.30],   // crystal blue hints on edges
+    turbidity: 0.5,           // no atmospheric scattering underground
+    rayleigh: 0.05,           // near-zero — no sky, no Rayleigh
+    mieCoefficient: 0.002,
+    mieDirectionalG: 0.80,
+    fogColor: [0.02, 0.005, 0.04],  // DEEP purple-black — saturated, not grey
+    fogDensity: 0.035,        // VERY dense cave air — claustrophobic
+    sunLightColor: [0.25, 0.12, 0.70],  // STRONG purple — crystal-refracted, NOT sunlight
+    sunLightIntensity: 0.15,  // barely there — underground has no directional source
+    ambientIntensity: 0.008,  // near-zero — darkness IS the world
+    grassBaseColor: [0.02, 0.005, 0.03],  // near-black purple stone
+    grassTipColor: [0.08, 0.06, 0.25],    // deep crystal blue-violet
     grassWindSpeed: 0.0,      // no wind underground
-    grassAmbientStrength: 0.05,
+    grassAmbientStrength: 0.03,
     grassTranslucency: 0.0,   // stone doesn't transmit
-    grassFogFade: 0.006,
+    grassFogFade: 0.008,
     cloudShadowOpacity: 0.0,  // underground — no clouds
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 0.8,   // crystal sparkle particles — the ONLY light source
-    fireflySize: 60,          // large sparkle points
-    bloomIntensity: 1.0,      // crystals GLOW
-    bloomThreshold: 0.3,      // low — everything prismatic glows
-    fogDepthStrength: 0.10,
-    fogMidColor: [0.04, 0.02, 0.07],
-    fogFarColor: [0.02, 0.01, 0.04],
-    colorGradeContrast: 0.08,
-    colorGradeVibrance: 0.05,  // almost monochrome at entrance
+    fireflyBrightness: 1.2,   // crystal sparkle particles — the ONLY light source
+    fireflySize: 80,          // large sparkle points — prismatic facets
+    bloomIntensity: 1.6,      // VERY HIGH — crystal glow IS the atmosphere
+    bloomThreshold: 0.20,     // very low — any bright pixel blooms hard
+    fogDepthStrength: 0.14,
+    fogMidColor: [0.04, 0.01, 0.08],   // rich purple cave depth
+    fogFarColor: [0.015, 0.005, 0.03], // void purple at distance
+    colorGradeContrast: 0.10,
+    colorGradeVibrance: 0.08,  // almost monochrome at entrance — color is earned deeper
     colorGradeWarmth: 0.0,     // cold world — warmth is below
-    vignetteDarkness: 0.90,    // heavy darkness at edges — cave walls close in
-    grainOpacity: 0.04,        // subtle cave atmosphere
-    dustMoteBrightness: 0.3,
+    vignetteDarkness: 0.95,    // MAXIMUM — cave walls press in from all sides
+    grainOpacity: 0.06,        // gritty underground texture
+    dustMoteBrightness: 0.4,
     godRayIntensity: 0.0,      // NO god rays — there is no sun
     kuwaharaStrength: 0.0,     // crystals need sharp facets
-    caDistortion: 0.80,        // STRONG prismatic refraction — light shatters through crystal
+    caDistortion: 1.0,         // STRONG prismatic refraction — light shatters through crystal
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,     // no wind underground
-    dofFocusDistance: 12,
-    dofBokehScale: 4.0,
-    splitToneWarm: [0.60, 0.40, 0.85],  // purple crystal warmth
-    splitToneCool: [0.30, 0.20, 0.60],  // deep violet shadows
+    dofFocusDistance: 10,
+    dofBokehScale: 5.0,        // heavy bokeh — out-of-focus crystals become colored blobs
+    splitToneWarm: [0.50, 0.25, 0.85],  // purple crystal warmth
+    splitToneCool: [0.20, 0.10, 0.55],  // deep violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -79,49 +79,49 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
-    sunElevation: -35,         // deeper underground
+    sunElevation: -65,         // deeper underground
     sunAzimuth: 190,
-    turbidity: 1.5,
-    rayleigh: 0.2,
-    mieCoefficient: 0.010,     // more scatter from crystal dust
-    mieDirectionalG: 0.92,
-    fogColor: [0.04, 0.02, 0.08],   // deeper purple
-    fogDensity: 0.016,         // thinning slightly — passage opens
-    sunLightColor: [0.35, 0.25, 0.75],  // purple-blue crystal light intensifying
-    sunLightIntensity: 0.5,    // crystals refracting more
-    ambientIntensity: 0.02,    // first crystal reflections add faint fill
-    grassBaseColor: [0.04, 0.02, 0.06],  // dark purple stone, slightly lighter
-    grassTipColor: [0.12, 0.18, 0.35],   // more crystal blue on edges
+    turbidity: 0.4,
+    rayleigh: 0.04,
+    mieCoefficient: 0.004,
+    mieDirectionalG: 0.82,
+    fogColor: [0.03, 0.01, 0.06],   // deeper purple — passage walls absorb light
+    fogDensity: 0.028,         // thinning slightly but still thick
+    sunLightColor: [0.30, 0.15, 0.75],  // intensifying purple — more crystal refractions
+    sunLightIntensity: 0.20,   // still very dim
+    ambientIntensity: 0.012,   // first crystal reflections add faint fill
+    grassBaseColor: [0.03, 0.01, 0.05],  // dark purple stone
+    grassTipColor: [0.10, 0.08, 0.30],   // crystal blue on edges
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.08,
+    grassAmbientStrength: 0.05,
     grassTranslucency: 0.1,    // faintest subsurface in small crystals
-    grassFogFade: 0.005,
+    grassFogFade: 0.007,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 1.0,    // crystal sparkles growing — more facets catching light
-    fireflySize: 65,
-    bloomIntensity: 1.1,       // bloom increasing — prismatic refractions glow
-    bloomThreshold: 0.28,
-    fogDepthStrength: 0.08,
-    fogMidColor: [0.05, 0.03, 0.10],
-    fogFarColor: [0.03, 0.02, 0.06],
-    colorGradeContrast: 0.07,
-    colorGradeVibrance: 0.15,  // color appearing — prismatic hints
+    fireflyBrightness: 1.4,    // crystal sparkles growing — more facets catching light
+    fireflySize: 75,
+    bloomIntensity: 1.7,       // bloom increasing — prismatic refractions glow
+    bloomThreshold: 0.18,
+    fogDepthStrength: 0.12,
+    fogMidColor: [0.05, 0.015, 0.10],
+    fogFarColor: [0.02, 0.008, 0.05],
+    colorGradeContrast: 0.08,
+    colorGradeVibrance: 0.20,  // color appearing — prismatic hints
     colorGradeWarmth: 0.0,     // still cold
-    vignetteDarkness: 0.85,    // slightly opening
-    grainOpacity: 0.04,
-    dustMoteBrightness: 0.5,   // crystal dust catching refracted light
-    godRayIntensity: 0.0,      // no god rays underground
+    vignetteDarkness: 0.90,    // slightly opening
+    grainOpacity: 0.05,
+    dustMoteBrightness: 0.6,   // crystal dust catching refracted light
+    godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.90,        // prismatic refraction intensifying
+    caDistortion: 1.1,         // prismatic refraction intensifying
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 8,
-    dofBokehScale: 5.0,        // heavy bokeh — out-of-focus crystals become prismatic blur
-    splitToneWarm: [0.65, 0.45, 0.85],  // purple warmth growing
-    splitToneCool: [0.35, 0.25, 0.65],  // purple deepening
+    dofFocusDistance: 7,
+    dofBokehScale: 5.5,        // heavy bokeh — out-of-focus crystals become prismatic blur
+    splitToneWarm: [0.55, 0.30, 0.85],  // purple warmth growing
+    splitToneCool: [0.25, 0.15, 0.60],  // purple deepening
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -138,49 +138,49 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
-    sunElevation: -40,         // deepest point underground
+    sunElevation: -70,         // deepest point underground
     sunAzimuth: 200,
-    turbidity: 1.0,
-    rayleigh: 0.15,
-    mieCoefficient: 0.015,     // maximum crystal dust scatter
-    mieDirectionalG: 0.90,
-    fogColor: [0.06, 0.03, 0.12],   // rich purple — crystal-infused air
-    fogDensity: 0.010,         // thinner — cathedral space opening
-    sunLightColor: [0.40, 0.30, 0.85],  // intense purple-blue crystal light
-    sunLightIntensity: 0.6,    // crystals are now the primary illumination
-    ambientIntensity: 0.04,    // crystal glow as ambient fill
-    grassBaseColor: [0.06, 0.03, 0.10],  // deep amethyst tones on stone
-    grassTipColor: [0.15, 0.20, 0.40],   // crystal blue-purple tips
+    turbidity: 0.3,
+    rayleigh: 0.03,
+    mieCoefficient: 0.006,
+    mieDirectionalG: 0.85,
+    fogColor: [0.05, 0.02, 0.10],   // rich purple — crystal-infused air
+    fogDensity: 0.018,         // thinning — cathedral space opening up
+    sunLightColor: [0.35, 0.18, 0.80],  // intense purple crystal light
+    sunLightIntensity: 0.25,   // crystal glow, not sun
+    ambientIntensity: 0.025,   // crystal reflections as ambient fill
+    grassBaseColor: [0.04, 0.015, 0.08],  // deep amethyst stone
+    grassTipColor: [0.12, 0.10, 0.35],    // crystal blue-purple tips
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.12,
+    grassAmbientStrength: 0.08,
     grassTranslucency: 0.4,    // crystal subsurface scattering visible
-    grassFogFade: 0.004,
+    grassFogFade: 0.005,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 1.2,    // crystal sparkles at full prismatic intensity
-    fireflySize: 70,
-    bloomIntensity: 1.3,       // HIGH — crystals blazing with refracted light
-    bloomThreshold: 0.25,      // low threshold — everything prismatic glows
-    fogDepthStrength: 0.06,
-    fogMidColor: [0.08, 0.04, 0.15],
-    fogFarColor: [0.04, 0.02, 0.08],
-    colorGradeContrast: 0.06,
-    colorGradeVibrance: 0.35,  // HIGH — prismatic colors are VIVID
+    fireflyBrightness: 1.8,    // crystal sparkles at full prismatic intensity
+    fireflySize: 85,
+    bloomIntensity: 1.8,       // HIGH — crystals blazing with refracted light
+    bloomThreshold: 0.15,      // very low — everything prismatic glows
+    fogDepthStrength: 0.08,
+    fogMidColor: [0.06, 0.025, 0.13],
+    fogFarColor: [0.025, 0.01, 0.06],
+    colorGradeContrast: 0.07,
+    colorGradeVibrance: 0.45,  // HIGH — prismatic colors VIVID
     colorGradeWarmth: 0.01,    // hint of warmth from amber crystals
-    vignetteDarkness: 0.70,    // opening — the cathedral reveals itself
-    grainOpacity: 0.035,
-    dustMoteBrightness: 0.8,   // crystal dust fully prismatic
+    vignetteDarkness: 0.75,    // opening — the cathedral reveals itself
+    grainOpacity: 0.04,
+    dustMoteBrightness: 0.9,   // crystal dust fully prismatic
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 1.0,         // PEAK prismatic — light fractures everywhere
+    caDistortion: 1.3,         // PEAK prismatic — light fractures everywhere
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 6,        // intimate crystal focus
-    dofBokehScale: 6.0,        // maximum bokeh — prismatic quality in the blur
-    splitToneWarm: [0.70, 0.50, 0.90],  // purple-warm crystal light
-    splitToneCool: [0.35, 0.25, 0.65],  // deep blue-violet shadows
+    dofFocusDistance: 5,        // intimate crystal focus
+    dofBokehScale: 6.5,        // heavy bokeh — prismatic quality in the blur
+    splitToneWarm: [0.60, 0.35, 0.90],  // purple-warm crystal light
+    splitToneCool: [0.25, 0.15, 0.60],  // deep blue-violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -197,49 +197,49 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
-    sunElevation: -38,         // still deep underground
+    sunElevation: -65,         // still deep underground
     sunAzimuth: 210,
-    turbidity: 0.8,
-    rayleigh: 0.1,
-    mieCoefficient: 0.012,
-    mieDirectionalG: 0.88,
-    fogColor: [0.08, 0.04, 0.15],   // deep amethyst fog
-    fogDensity: 0.006,         // THINNEST — vast cathedral space, maximum visibility
-    sunLightColor: [0.45, 0.35, 0.80],  // fully crystal-colored light
-    sunLightIntensity: 0.5,    // crystal glow is everything
-    ambientIntensity: 0.08,    // crystal glow fills the space — earned light
-    grassBaseColor: [0.08, 0.04, 0.14],  // rich purple stone
-    grassTipColor: [0.18, 0.22, 0.45],   // strong crystal blue tips
+    turbidity: 0.2,
+    rayleigh: 0.02,
+    mieCoefficient: 0.005,
+    mieDirectionalG: 0.82,
+    fogColor: [0.06, 0.025, 0.14],   // deep amethyst fog — richest purple
+    fogDensity: 0.010,         // THINNEST — vast cathedral space, maximum visibility
+    sunLightColor: [0.40, 0.22, 0.85],  // fully crystal-colored light — peak purple
+    sunLightIntensity: 0.30,   // crystal glow is everything
+    ambientIntensity: 0.05,    // crystal glow fills the space — earned light
+    grassBaseColor: [0.06, 0.025, 0.12],  // rich purple stone
+    grassTipColor: [0.14, 0.12, 0.40],    // strong crystal blue-violet tips
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.18,
+    grassAmbientStrength: 0.12,
     grassTranslucency: 0.6,    // peak subsurface — crystals glow from within
-    grassFogFade: 0.003,
+    grassFogFade: 0.004,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 1.5,    // PEAK crystal sparkle — prismatic particles everywhere
-    fireflySize: 75,
-    bloomIntensity: 1.4,       // MAXIMUM — the cathedral blazes
-    bloomThreshold: 0.22,      // very low — everything glows
-    fogDepthStrength: 0.04,
-    fogMidColor: [0.10, 0.05, 0.18],
-    fogFarColor: [0.05, 0.03, 0.10],
-    colorGradeContrast: 0.05,
-    colorGradeVibrance: 0.45,  // PEAK — maximum prismatic saturation
+    fireflyBrightness: 2.0,    // PEAK crystal sparkle — prismatic particles everywhere
+    fireflySize: 90,
+    bloomIntensity: 2.0,       // MAXIMUM — the cathedral blazes with refracted light
+    bloomThreshold: 0.12,      // very low — everything glows
+    fogDepthStrength: 0.05,
+    fogMidColor: [0.08, 0.035, 0.16],
+    fogFarColor: [0.03, 0.015, 0.08],
+    colorGradeContrast: 0.06,
+    colorGradeVibrance: 0.55,  // PEAK — maximum prismatic saturation
     colorGradeWarmth: 0.03,    // earned warmth — citrine crystals glow amber
-    vignetteDarkness: 0.55,    // WIDEST — the cathedral opens, awe
+    vignetteDarkness: 0.60,    // WIDEST — the cathedral opens, awe
     grainOpacity: 0.03,        // cleanest — awe needs clarity
     dustMoteBrightness: 1.0,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 1.2,         // MAXIMUM prismatic CA — cathedral blazes with refraction
+    caDistortion: 1.5,         // MAXIMUM prismatic CA — cathedral blazes with refraction
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 5,
-    dofBokehScale: 6.5,        // maximum bokeh
-    splitToneWarm: [0.75, 0.55, 0.95],  // purple-amber warmth
-    splitToneCool: [0.30, 0.20, 0.55],  // deep violet shadows
+    dofFocusDistance: 4,
+    dofBokehScale: 7.0,        // maximum bokeh — world dissolves into colored light
+    splitToneWarm: [0.65, 0.40, 0.95],  // purple-amber warmth
+    splitToneCool: [0.22, 0.12, 0.50],  // deep violet shadows
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,
@@ -256,49 +256,49 @@ export const CRYSTAL_CAVERN_KEYFRAMES = [
     rainBrightness: 0.0,
     petalBrightness: 0.0,
     starBrightness: 0.0,
-    sunElevation: -35,         // still underground
+    sunElevation: -55,         // still underground
     sunAzimuth: 220,
-    turbidity: 0.5,
-    rayleigh: 0.05,
-    mieCoefficient: 0.005,
-    mieDirectionalG: 0.85,
-    fogColor: [0.05, 0.02, 0.10],   // deep void purple
-    fogDensity: 0.018,         // fog returns — enclosed, intimate, womb-like
-    sunLightColor: [0.35, 0.25, 0.70],  // pure crystal color — no natural light
-    sunLightIntensity: 0.3,    // dimming — communion intimacy
-    ambientIntensity: 0.04,    // only crystal emissives light the space
-    grassBaseColor: [0.05, 0.02, 0.08],  // fading stone
-    grassTipColor: [0.12, 0.15, 0.35],   // crystal blue persists
+    turbidity: 0.2,
+    rayleigh: 0.02,
+    mieCoefficient: 0.003,
+    mieDirectionalG: 0.80,
+    fogColor: [0.035, 0.012, 0.08],  // deep void purple — closing in
+    fogDensity: 0.030,         // fog returns dense — enclosed, intimate, womb-like
+    sunLightColor: [0.28, 0.14, 0.65],  // pure crystal color — dimming
+    sunLightIntensity: 0.12,   // dimming — communion intimacy
+    ambientIntensity: 0.015,   // only crystal emissives light the space
+    grassBaseColor: [0.03, 0.01, 0.06],  // fading stone
+    grassTipColor: [0.10, 0.08, 0.30],   // crystal blue persists
     grassWindSpeed: 0.0,
-    grassAmbientStrength: 0.10,
+    grassAmbientStrength: 0.06,
     grassTranslucency: 0.8,    // PEAK subsurface — crystals are pure light vessels
-    grassFogFade: 0.005,
+    grassFogFade: 0.007,
     cloudShadowOpacity: 0.0,
     cloudDriftSpeed: 0.0,
-    fireflyBrightness: 0.6,    // crystal sparkles dimming — you're below most of them
-    fireflySize: 55,
-    bloomIntensity: 0.9,       // bloom softening — intimate glow, not blaze
-    bloomThreshold: 0.30,
-    fogDepthStrength: 0.08,
-    fogMidColor: [0.06, 0.03, 0.12],
-    fogFarColor: [0.03, 0.02, 0.06],
-    colorGradeContrast: 0.04,
-    colorGradeVibrance: 0.25,  // color fading — approaching synesthesia
+    fireflyBrightness: 0.8,    // crystal sparkles dimming — you're below most of them
+    fireflySize: 65,
+    bloomIntensity: 1.2,       // bloom softening — intimate glow, not blaze
+    bloomThreshold: 0.22,
+    fogDepthStrength: 0.10,
+    fogMidColor: [0.04, 0.015, 0.10],
+    fogFarColor: [0.02, 0.008, 0.05],
+    colorGradeContrast: 0.05,
+    colorGradeVibrance: 0.30,  // color softening — approaching synesthesia
     colorGradeWarmth: 0.04,    // warmest — communion warmth, earned
-    vignetteDarkness: 0.92,    // closing in — not oppressive, protective. Womb.
-    grainOpacity: 0.05,        // slightly grittier — deep underground texture
-    dustMoteBrightness: 0.2,
+    vignetteDarkness: 0.95,    // MAXIMUM — closing in, protective. Womb.
+    grainOpacity: 0.06,        // grittier — deep underground texture
+    dustMoteBrightness: 0.3,
     godRayIntensity: 0.0,
     kuwaharaStrength: 0.0,
-    caDistortion: 0.60,        // settling — prismatic fringing softens in communion
+    caDistortion: 0.80,        // settling — prismatic fringing softens in communion
     waveWindDirX: 0.0,
     waveWindDirY: 0.0,
     waveWindSpeed: 0.0,
     waveWindStrength: 0.0,
-    dofFocusDistance: 3,        // extreme close — touching the crystal face
-    dofBokehScale: 7.0,        // maximum bokeh — world dissolves into colored light
-    splitToneWarm: [0.65, 0.45, 0.80],  // purple communion glow
-    splitToneCool: [0.25, 0.18, 0.50],  // deep void violet
+    dofFocusDistance: 2,        // extreme close — touching the crystal face
+    dofBokehScale: 8.0,        // maximum bokeh — world dissolves into colored light
+    splitToneWarm: [0.55, 0.30, 0.80],  // purple communion glow
+    splitToneCool: [0.18, 0.10, 0.45],  // deep void violet
     oceanColorNear: [0, 0, 0],
     oceanColorFar: [0, 0, 0],
     oceanFoamBrightness: 0,

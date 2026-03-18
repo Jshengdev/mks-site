@@ -97,13 +97,17 @@ export default {
       shaftFalloff: 0.04,             // how quickly light fades with distance from window
     },
 
-    sunElevation: 90,                 // light comes straight from above
+    sunElevation: -5,                 // sun barely above horizon through water surface
     stars: { enabled: false },
   },
 
-  // No grass underwater — replaced by coral and kelp in particles
+  // Grass system repurposed as kelp fronds
   grass: {
-    enabled: false,
+    enabled: true,
+    bladeCount: 8000,                 // sparse kelp patches near pillars
+    baseColor: [0.01, 0.06, 0.03],   // dark green kelp
+    tipColor: [0.03, 0.14, 0.06],    // slightly brighter tips
+    windSpeed: 0.10,                  // slow underwater current sway
   },
 
   // No flowers — replaced by coral formations
@@ -207,7 +211,7 @@ export default {
     // This is the OCEAN, not air. Particles scatter light aggressively.
     near: 3,                          // fog starts 3m from camera (claustrophobic)
     far: 35,                          // can't see past 35m (oppressive, sacred)
-    color: '#050d14',                 // deep blue-black — not grey, not green
+    color: '#05141e',                 // teal-blue murk [0.02, 0.08, 0.12]
     density: 0.015,                   // HEAVY — thickest of any world
   },
 
