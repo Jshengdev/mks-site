@@ -154,5 +154,25 @@ export default {
     },
   },
 
+  // ─── Gear Trees ─── 20 brass/copper trees with rotating gears at branch tips
+  // Techniques: EmptySamurai/GearTrain (gear profile), mattatz/THREE.Tree (branching)
+  gearTrees: {
+    enabled: true,
+    count: 20,
+    trunkColor: [0.72, 0.45, 0.20],   // dark aged copper
+    branchColor: [0.91, 0.78, 0.42],  // warm brass
+    gearColor: [0.96, 0.64, 0.54],    // bright polished copper
+    gearTeeth: 12,
+    maxGearSpeed: 0.5,                 // radians/sec — slow and deliberate
+  },
+
+  // ─── Copper Leaves ─── metallic leaf instances clustered near gear trees
+  // PBR: roughness 0.3, metalness 0.9 — physicallybased.info copper values
+  copperLeaves: {
+    enabled: true,
+    count: 400,
+    color: [0.96, 0.64, 0.54],  // matches gear copper
+  },
+
   dominantColor: '#8b6914',  // aged brass
 }

@@ -70,6 +70,12 @@ import CopperLeaf from './CopperLeaf.js'
 import GiantAnemone from './GiantAnemone.js'
 import Starfish from './Starfish.js'
 import CausticProjector from './CausticProjector.js'
+import JellyfishSystem from './JellyfishSystem.js'
+import AnglerLight from './AnglerLight.js'
+import MarineSnow from './MarineSnow.js'
+import KelpStrand from './KelpStrand.js'
+import CoralCluster from './CoralCluster.js'
+import AnemoneField from './AnemoneSystem.js'
 import { SECTION_T_VALUES } from './constants.js'
 import scoreSheetUrl from '../assets/textures/score-sheet.jpg'
 import mksPortraitUrl from '../assets/textures/mks-portrait.jpg'
@@ -557,6 +563,42 @@ export default class WorldEngine {
       this.ash = new AshSystem(this.scene, envConfig.particles.ash)
     }
 
+    // ─── Gear trees (conditional — clockwork forest) ───
+    this.gearTrees = null
+    if (envConfig.gearTrees?.enabled) {
+      this.gearTrees = new GearTree(this.scene, this.cameraRig, this.getTerrainHeight, envConfig.gearTrees)
+    }
+
+    // ─── Steam vents (conditional — clockwork forest) ───
+    this.steamVents = null
+    if (envConfig.particles?.steam?.enabled) {
+      this.steamVents = new SteamVent(this.scene, this.getTerrainHeight, envConfig.particles.steam)
+    }
+
+    // ─── Copper leaves (conditional — clockwork forest) ───
+    this.copperLeaves = null
+    if (envConfig.copperLeaves?.enabled) {
+      this.copperLeaves = new CopperLeaf(this.scene, this.gearTrees, envConfig.copperLeaves)
+    }
+
+    // ─── Jellyfish (conditional — bioluminescent deep) ───
+    this.jellyfish = null
+    if (envConfig.deepsea?.jellyfish?.enabled) {
+      this.jellyfish = new JellyfishSystem(this.scene, envConfig.deepsea.jellyfish)
+    }
+
+    // ─── Angler lights (conditional — bioluminescent deep) ───
+    this.anglerLights = null
+    if (envConfig.deepsea?.anglerfish?.enabled) {
+      this.anglerLights = new AnglerLight(this.scene, envConfig.deepsea.anglerfish)
+    }
+
+    // ─── Marine snow (conditional — bioluminescent deep) ───
+    this.marineSnow = null
+    if (envConfig.deepsea?.marinesnow?.enabled) {
+      this.marineSnow = new MarineSnow(this.scene, envConfig.deepsea.marinesnow)
+    }
+
     // ─── Cursor interaction (always) ───
     this.cursorInteraction = new CursorInteraction()
 
@@ -642,6 +684,12 @@ export default class WorldEngine {
     this.embers?.update(animElapsed)
     this.lavaCracks?.update(animElapsed)
     this.ash?.update(animElapsed)
+    this.gearTrees?.update(animElapsed)
+    this.steamVents?.update(animElapsed)
+    this.copperLeaves?.update(animElapsed)
+    this.jellyfish?.update(animElapsed)
+    this.anglerLights?.update(animElapsed)
+    this.marineSnow?.update(animElapsed)
 
     this.cursorInteraction.update(this.camera, delta)
     if (this.grassManager) {
@@ -759,9 +807,15 @@ export default class WorldEngine {
       embers: this.embers,
       lavaCracks: this.lavaCracks,
       ash: this.ash,
+      gearTrees: this.gearTrees,
+      steamVents: this.steamVents,
+      copperLeaves: this.copperLeaves,
       anemones: this.anemones,
       starfish: this.starfish,
       causticProjector: this.causticProjector,
+      jellyfish: this.jellyfish,
+      anglerLights: this.anglerLights,
+      marineSnow: this.marineSnow,
       audioReactive: this.audioReactive,
       cursorInteraction: this.cursorInteraction,
       cameraRig: this.cameraRig,
@@ -816,9 +870,15 @@ export default class WorldEngine {
     this.embers?.dispose()
     this.lavaCracks?.dispose()
     this.ash?.dispose()
+    this.gearTrees?.dispose()
+    this.steamVents?.dispose()
+    this.copperLeaves?.dispose()
     this.anemones?.dispose()
     this.starfish?.dispose()
     this.causticProjector?.dispose()
+    this.jellyfish?.dispose()
+    this.anglerLights?.dispose()
+    this.marineSnow?.dispose()
     this.audioReactive?.dispose()
     this.cursorInteraction?.dispose()
     this.cameraRig?.dispose()
