@@ -1,0 +1,12 @@
+{
+  "total_iterations": 0,
+  "build_since_last_plan": 0,
+  "builds_since_last_retro": 0,
+  "builds_since_last_qa": 0,
+  "last_mode": "none",
+  "last_run": null,
+  "retros_completed": 0,
+  "qa_gates_completed": 0,
+  "tags_created": [],
+  "errors": []
+}
