@@ -64,6 +64,7 @@ export default class PulseOrb {
     geometry.setAttribute('aBaseScale', new THREE.InstancedBufferAttribute(baseScales, 1))
     this.mesh.instanceMatrix.needsUpdate = true
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -72,6 +73,7 @@ export default class PulseOrb {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

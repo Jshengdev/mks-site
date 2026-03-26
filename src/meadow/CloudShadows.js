@@ -28,6 +28,7 @@ export default class CloudShadows {
     this.mesh = new THREE.Mesh(geometry, this.material)
     this.mesh.position.y = 3.0
     this.mesh.renderOrder = -1
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -37,6 +38,7 @@ export default class CloudShadows {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
     this.texture.dispose()

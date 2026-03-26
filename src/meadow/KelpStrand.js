@@ -102,6 +102,7 @@ export default class KelpStrand {
 
     this.mesh.count = placed
     this.mesh.instanceMatrix.needsUpdate = true
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -120,6 +121,7 @@ export default class KelpStrand {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

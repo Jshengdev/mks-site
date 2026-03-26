@@ -96,6 +96,7 @@ export default class StarField {
 
     this.points = new THREE.Points(geometry, this.material)
     this.points.renderOrder = -100 // Render before everything else
+    this.scene = scene
     scene.add(this.points)
 
     // Moon — large bright glow point
@@ -171,6 +172,8 @@ export default class StarField {
   }
 
   dispose() {
+    if (this.points) this.scene.remove(this.points)
+    if (this.moon) this.scene.remove(this.moon)
     this.points.geometry.dispose()
     this.material.dispose()
     if (this.moon) {

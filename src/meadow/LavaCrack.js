@@ -70,6 +70,7 @@ export default class LavaCrack {
     }
 
     this.mesh.instanceMatrix.needsUpdate = true
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -83,6 +84,7 @@ export default class LavaCrack {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

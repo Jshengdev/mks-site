@@ -69,6 +69,7 @@ export default class BioluminescenceSystem {
     geometry.setAttribute('aColorIndex', new THREE.BufferAttribute(colorIndices, 1))
 
     this.points = new THREE.Points(geometry, this.material)
+    this.scene = scene
     scene.add(this.points)
   }
 
@@ -81,6 +82,7 @@ export default class BioluminescenceSystem {
   }
 
   dispose() {
+    if (this.points) this.scene.remove(this.points)
     this.points.geometry.dispose()
     this.material.dispose()
   }

@@ -73,6 +73,7 @@ export default class ShelfSegment {
     shelfGeo.setAttribute('aPhase', new THREE.InstancedBufferAttribute(phases, 1))
     shelfGeo.setAttribute('aRotSpeed', new THREE.InstancedBufferAttribute(rotSpeeds, 1))
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -81,6 +82,7 @@ export default class ShelfSegment {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

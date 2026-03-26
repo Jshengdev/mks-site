@@ -30,6 +30,7 @@ function makeMetal(vertShader, fragShader, color, roughness, metalness, extras =
 
 export default class GearTree {
   constructor(scene, cameraRig, getTerrainHeight, config = {}) {
+    this.scene = scene
     this.meshes = []
     this.treePositions = [] // exposed for CopperLeaf placement
 
@@ -193,6 +194,7 @@ export default class GearTree {
 
   dispose() {
     for (const { mesh, material } of this.meshes) {
+      this.scene.remove(mesh)
       mesh.geometry.dispose()
       material.dispose()
     }

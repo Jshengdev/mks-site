@@ -36,6 +36,7 @@ const _dummy = new THREE.Object3D()
 
 export default class CrystalFormation {
   constructor(scene, cameraRig, crystalConfig, getTerrainHeight) {
+    this.scene = scene
     this._getTerrainHeight = getTerrainHeight
     this.meshes = []
 
@@ -227,7 +228,8 @@ export default class CrystalFormation {
   }
 
   dispose() {
-    for (const { material } of this.meshes) {
+    for (const { mesh, material } of this.meshes) {
+      this.scene.remove(mesh)
       material.dispose()
     }
     this._sharedGeo.dispose()

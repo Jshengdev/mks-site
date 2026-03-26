@@ -79,6 +79,7 @@ export default class CopperLeaf {
     mesh.instanceMatrix.needsUpdate = true
     leafGeo.attributes.aPhase.needsUpdate = true
 
+    this.scene = scene
     scene.add(mesh)
     this.mesh = mesh
     this.material = material
@@ -89,6 +90,7 @@ export default class CopperLeaf {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

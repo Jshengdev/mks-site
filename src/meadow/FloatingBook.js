@@ -106,6 +106,7 @@ export default class FloatingBook {
     bookGeo.setAttribute('aBobAmp', new THREE.InstancedBufferAttribute(bobAmps, 1))
     bookGeo.setAttribute('aRotSpeed', new THREE.InstancedBufferAttribute(rotSpeeds, 1))
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -114,6 +115,7 @@ export default class FloatingBook {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

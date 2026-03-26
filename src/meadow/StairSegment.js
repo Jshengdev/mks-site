@@ -115,6 +115,7 @@ export default class StairSegment {
     mergedGeo.setAttribute('aPhase', new THREE.InstancedBufferAttribute(phases, 1))
     mergedGeo.setAttribute('aInstanceColor', new THREE.InstancedBufferAttribute(colors, 3))
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -123,6 +124,7 @@ export default class StairSegment {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

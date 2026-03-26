@@ -102,6 +102,7 @@ export default class FloatingPlatform {
     geometry.setAttribute('aPhase', new THREE.InstancedBufferAttribute(phases, 1))
     geometry.setAttribute('aInstanceColor', new THREE.InstancedBufferAttribute(colors, 3))
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -110,6 +111,7 @@ export default class FloatingPlatform {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

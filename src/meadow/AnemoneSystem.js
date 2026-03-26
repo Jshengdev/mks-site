@@ -21,6 +21,7 @@ const _sunDir = new THREE.Vector3(0.1, -0.95, 0.05) // underwater: nearly vertic
 
 export default class AnemoneSystem {
   constructor(scene, config = {}, getTerrainHeight) {
+    this.scene = scene
     this._getTerrainHeight = getTerrainHeight
     this.meshes = []
 
@@ -162,6 +163,7 @@ export default class AnemoneSystem {
 
   dispose() {
     for (const mesh of this.meshes) {
+      this.scene.remove(mesh)
       mesh.geometry.dispose()
     }
     this.material.dispose()

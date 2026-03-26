@@ -35,6 +35,7 @@ export default class StylizedOcean {
     this.mesh = new THREE.Mesh(geometry, this.material)
     // Position at water level (just below terrain sea level)
     this.mesh.position.y = config.waterLevel ?? -0.5
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -59,6 +60,7 @@ export default class StylizedOcean {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

@@ -61,6 +61,7 @@ export default class FogWisp {
     mesh.geometry.setAttribute('aWispScale', new THREE.InstancedBufferAttribute(wispScales, 1))
 
     this.mesh = mesh
+    this.scene = scene
     scene.add(mesh)
   }
 
@@ -74,6 +75,7 @@ export default class FogWisp {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

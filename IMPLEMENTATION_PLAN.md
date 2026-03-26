@@ -2,15 +2,15 @@
 
 ## CURRENT STATUS
 - **Specs:** 13 (6 Phase 1, 4 Phase 2, 3 Phase 3)
-- **Steps:** 3 done / 13 remaining
+- **Steps:** 4 done / 12 remaining
 - **QA gates passed:** 0
-- **verify-all.sh runs:** 3
+- **verify-all.sh runs:** 4
 
 | Spec | ACs | Done | Grade |
 |------|-----|------|-------|
 | lint-cleanup | 9 | 100% | PASS |
 | design-rule-enforcement | 8 | 100% | PASS |
-| dispose-lifecycle | 7 | 71% (AC2-6 done, AC1+AC7 remain) | PARTIAL |
+| dispose-lifecycle | 7 | 100% | PASS |
 | subsystem-extraction | 9 | 22% (AC8-9 constraints) | NOT STARTED |
 | config-normalization | 6 | 17% (AC6) | PARTIAL |
 | bundle-splitting | 11 | 9% (AC1) | PARTIAL |
@@ -44,10 +44,13 @@
 - [x] PostProcessingStack: store RenderPass ref, dispose RenderPass + EffectPass before effects (AC6)
 - Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 4: Dispose lifecycle — 49 subsystem scene.remove() sweep [spec: specs/dispose-lifecycle.md]
-- [ ] Add `this.scene.remove(this.mesh/points/group)` before geometry.dispose() in all 49 files (AC1) [files: all subsystem .js in src/meadow/ listed in spec]
-- [ ] Verify pattern: scene.remove THEN dispose in correct order for InstancedMesh classes (AC1) [files: FlowerInstances.js, GrassChunkManager.js]
-- Required tests: `grep -rn "this.scene.remove" src/meadow/ --include="*.js" -l | wc -l` >= 44; `npx vite build`
+### STEP 4: Dispose lifecycle — 45 subsystem scene.remove() sweep [DONE]
+- [x] Added `this.scene = scene` + `this.scene.remove()` to 12 points-based subsystems (AC1)
+- [x] Added `this.scene = scene` + `this.scene.remove()` to 22 mesh-based subsystems inc. WaterSurface (AC1)
+- [x] Fixed 3 special cases: VoidParticle (group), FoldLine (lines), StarField (points+moon) (AC1)
+- [x] Fixed 8 array-based subsystems with per-mesh scene.remove in loops (AC1)
+- [x] Fixed CrystalFormation/GlowMushroom destructuring to include mesh ref for removal (AC1)
+- Result: 51 files with scene.remove(), verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
 ### STEP 5: Subsystem extraction — shared GLSL utilities [spec: specs/subsystem-extraction.md]
 - [ ] Create `_fog-utils.glsl` with fogFactor/applyFog (AC4) [files: src/meadow/shaders/_fog-utils.glsl]

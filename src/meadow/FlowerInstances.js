@@ -23,6 +23,7 @@ const SUN_COLOR = new THREE.Color(1.0, 1.0, 0.99)
 
 export default class FlowerInstances {
   constructor(scene, cameraRig, count = 800, getTerrainHeight, flowerConfig = {}) {
+    this.scene = scene
     this._getTerrainHeight = getTerrainHeight ?? defaultGetTerrainHeight
     this.meshes = []
 
@@ -102,6 +103,7 @@ export default class FlowerInstances {
 
   dispose() {
     for (const { mesh, material } of this.meshes) {
+      this.scene.remove(mesh)
       mesh.geometry.dispose()
       material.dispose()
     }

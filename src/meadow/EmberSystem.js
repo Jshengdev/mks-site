@@ -61,6 +61,7 @@ export default class EmberSystem {
     geometry.setAttribute('aLifetime', new THREE.BufferAttribute(lifetimes, 1))
 
     this.points = new THREE.Points(geometry, this.material)
+    this.scene = scene
     scene.add(this.points)
   }
 
@@ -74,6 +75,7 @@ export default class EmberSystem {
   }
 
   dispose() {
+    if (this.points) this.scene.remove(this.points)
     this.points.geometry.dispose()
     this.material.dispose()
   }

@@ -41,6 +41,7 @@ export default class WaterSurface {
     this.mesh = new THREE.Mesh(geometry, this.material)
     this.mesh.position.y = surfaceHeight
     this.mesh.renderOrder = 20  // render after terrain + caustics
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -53,6 +54,7 @@ export default class WaterSurface {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

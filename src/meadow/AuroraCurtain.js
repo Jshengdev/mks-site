@@ -41,6 +41,7 @@ export default class AuroraCurtain {
     this.mesh = new THREE.Mesh(geometry, this.material)
     this.mesh.position.y = height
     this.mesh.renderOrder = -50 // behind most things, in front of stars
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -54,6 +55,7 @@ export default class AuroraCurtain {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

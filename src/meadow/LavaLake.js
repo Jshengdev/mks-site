@@ -40,6 +40,7 @@ export default class LavaLake {
     // Position at crater floor — lava sits below the rim
     const lavaLevel = config.lavaLevel ?? -7.0
     this.mesh.position.set(0, lavaLevel, config.centerZ ?? -60)
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -53,6 +54,7 @@ export default class LavaLake {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

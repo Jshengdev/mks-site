@@ -59,6 +59,7 @@ export default class VoidParticle {
     // Slow rotation group — the whole sphere rotates glacially
     this.group = new THREE.Group()
     this.group.add(this.points)
+    this.scene = scene
     scene.add(this.group)
 
     this._rotationSpeed = config.rotationSpeed ?? 0.01
@@ -72,6 +73,7 @@ export default class VoidParticle {
   }
 
   dispose() {
+    if (this.group) this.scene.remove(this.group)
     this.points.geometry.dispose()
     this.material.dispose()
   }

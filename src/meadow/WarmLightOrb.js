@@ -64,6 +64,7 @@ export default class WarmLightOrb {
     orbGeo.setAttribute('aPhase', new THREE.InstancedBufferAttribute(phases, 1))
     orbGeo.setAttribute('aPulseSpeed', new THREE.InstancedBufferAttribute(pulseSpeeds, 1))
 
+    this.scene = scene
     scene.add(this.mesh)
   }
 
@@ -72,6 +73,7 @@ export default class WarmLightOrb {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

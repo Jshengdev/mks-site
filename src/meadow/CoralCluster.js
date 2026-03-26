@@ -129,6 +129,7 @@ function mulberry32(seed) {
 
 export default class CoralCluster {
   constructor(scene, getTerrainHeight, coralConfig = {}) {
+    this.scene = scene
     this._getTerrainHeight = getTerrainHeight
     this.meshes = []
 
@@ -206,6 +207,7 @@ export default class CoralCluster {
 
   dispose() {
     for (const { mesh, material } of this.meshes) {
+      this.scene.remove(mesh)
       mesh.geometry.dispose()
       material.dispose()
     }

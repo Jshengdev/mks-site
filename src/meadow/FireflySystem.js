@@ -48,6 +48,7 @@ export default class FireflySystem {
     geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1))
 
     this.points = new THREE.Points(geometry, this.material)
+    this.scene = scene
     scene.add(this.points)
   }
 
@@ -56,6 +57,7 @@ export default class FireflySystem {
   }
 
   dispose() {
+    if (this.points) this.scene.remove(this.points)
     this.points.geometry.dispose()
     this.material.dispose()
   }

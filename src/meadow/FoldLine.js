@@ -49,10 +49,12 @@ export default class FoldLine {
     })
 
     this.lines = new THREE.LineSegments(geometry, material)
+    this.scene = scene
     scene.add(this.lines)
   }
 
   dispose() {
+    if (this.lines) this.scene.remove(this.lines)
     this.lines.geometry.dispose()
     this.lines.material.dispose()
   }

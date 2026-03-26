@@ -53,6 +53,7 @@ export default class DustMotes {
     geometry.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1))
 
     this.points = new THREE.Points(geometry, this.material)
+    this.scene = scene
     scene.add(this.points)
   }
 
@@ -61,6 +62,7 @@ export default class DustMotes {
   }
 
   dispose() {
+    if (this.points) this.scene.remove(this.points)
     this.points.geometry.dispose()
     this.material.dispose()
   }

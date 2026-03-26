@@ -74,6 +74,7 @@ export default class WiltingGrass {
     mesh.geometry.setAttribute('aScale', new THREE.InstancedBufferAttribute(scales, 1))
 
     this.mesh = mesh
+    this.scene = scene
     scene.add(mesh)
   }
 
@@ -112,6 +113,7 @@ export default class WiltingGrass {
   }
 
   dispose() {
+    if (this.mesh) this.scene.remove(this.mesh)
     this.mesh.geometry.dispose()
     this.material.dispose()
   }

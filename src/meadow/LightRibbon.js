@@ -15,6 +15,7 @@ const _point = new THREE.Vector3()
 
 export default class LightRibbon {
   constructor(scene, config = {}) {
+    this.scene = scene
     const count = config.count ?? 5
     this.ribbons = []
     this._segments = 64
@@ -171,7 +172,8 @@ export default class LightRibbon {
   }
 
   dispose() {
-    for (const { geometry, material } of this.ribbons) {
+    for (const { mesh, geometry, material } of this.ribbons) {
+      this.scene.remove(mesh)
       geometry.dispose()
       material.dispose()
     }

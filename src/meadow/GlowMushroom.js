@@ -25,6 +25,7 @@ const DEFAULT_MUSHROOM_COLORS = [
 
 export default class GlowMushroom {
   constructor(scene, cameraRig, mushroomConfig, getTerrainHeight) {
+    this.scene = scene
     this._getTerrainHeight = getTerrainHeight
     this.meshes = []
 
@@ -118,7 +119,8 @@ export default class GlowMushroom {
   }
 
   dispose() {
-    for (const { material } of this.meshes) {
+    for (const { mesh, material } of this.meshes) {
+      this.scene.remove(mesh)
       material.dispose()
     }
     this._sharedGeo.dispose()
