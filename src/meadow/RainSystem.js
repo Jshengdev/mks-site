@@ -2,7 +2,9 @@
 // Adapted from three.quarks velocity-stretched billboards concept
 // and standard particle rain techniques (seeded random phase offsets)
 import * as THREE from 'three'
-import vertexShader from './shaders/rain.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/rain.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/rain.frag.glsl?raw'
 
 export default class RainSystem {

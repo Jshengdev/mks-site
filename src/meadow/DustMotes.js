@@ -3,7 +3,9 @@
 // + depth-density gradient for underwater marine snow
 // Stolen from L16 particle patterns + Alex-DG firefly approach
 import * as THREE from 'three'
-import vertexShader from './shaders/dustMote.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/dustMote.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/dustMote.frag.glsl?raw'
 
 export default class DustMotes {

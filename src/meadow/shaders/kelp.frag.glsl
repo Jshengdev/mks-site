@@ -45,10 +45,9 @@ void main() {
   // Root shadow — darken toward base (al-ro technique)
   col = mix(0.3 * uBaseColor, col, smoothstep(0.0, 0.25, vElevation));
 
-  // Underwater exponential fog
+  // Underwater exponential fog (shared _fog-utils.glsl)
   float dist = length(vWorldPos - cameraPosition);
-  float fogAmount = 1.0 - exp(-dist * uFogDensity);
-  col = mix(col, uWaterFogColor, fogAmount);
+  col = applyExpFog(col, uWaterFogColor, dist, uFogDensity);
 
   gl_FragColor = vec4(col, 1.0);
 }

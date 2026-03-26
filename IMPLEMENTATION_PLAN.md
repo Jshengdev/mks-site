@@ -2,16 +2,16 @@
 
 ## CURRENT STATUS
 - **Specs:** 13 (6 Phase 1, 4 Phase 2, 3 Phase 3)
-- **Steps:** 4 done / 12 remaining
+- **Steps:** 5 done / 11 remaining
 - **QA gates passed:** 0
-- **verify-all.sh runs:** 4
+- **verify-all.sh runs:** 5
 
 | Spec | ACs | Done | Grade |
 |------|-----|------|-------|
 | lint-cleanup | 9 | 100% | PASS |
 | design-rule-enforcement | 8 | 100% | PASS |
 | dispose-lifecycle | 7 | 100% | PASS |
-| subsystem-extraction | 9 | 22% (AC8-9 constraints) | NOT STARTED |
+| subsystem-extraction | 9 | 33% (AC4+AC8-9) | PARTIAL |
 | config-normalization | 6 | 17% (AC6) | PARTIAL |
 | bundle-splitting | 11 | 9% (AC1) | PARTIAL |
 | unified-scroll-arc | 6 | 0% | NOT STARTED |
@@ -52,12 +52,17 @@
 - [x] Fixed CrystalFormation/GlowMushroom destructuring to include mesh ref for removal (AC1)
 - Result: 51 files with scene.remove(), verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 5: Subsystem extraction — shared GLSL utilities [spec: specs/subsystem-extraction.md]
-- [ ] Create `_fog-utils.glsl` with fogFactor/applyFog (AC4) [files: src/meadow/shaders/_fog-utils.glsl]
-- [ ] Create `_rim-light.glsl` with fresnelRim (AC4) [files: src/meadow/shaders/_rim-light.glsl]
-- [ ] Create `_particle-utils.glsl` with scalePointSize (AC4) [files: src/meadow/shaders/_particle-utils.glsl]
-- [ ] Refactor consuming shaders to import via JS string concatenation, remove local copies (AC4) [files: 11+ shader files with fresnel duplication]
-- Required tests: `npx vite build`; grep for duplicate function definitions returns only shared files
+### STEP 5: Subsystem extraction — shared GLSL utilities [DONE]
+- [x] Created `_fog-utils.glsl` with expFogFactor/applyExpFog (AC4)
+- [x] Created `_rim-light.glsl` with fresnelRim (parameterized power) (AC4)
+- [x] Created `_particle-utils.glsl` with perspectivePointSize (AC4)
+- [x] Refactored 16 shader files to use shared utilities via JS string concatenation:
+  - Fog: kelp.frag, coral.frag, wilting-grass.frag (3 files)
+  - Rim: crystal.vert, mushroom.vert, flower.frag, coral.frag (4 files)
+  - Point-size: ash.vert, dustMote.vert, voidParticle.vert, marineSnow.vert, anglerLight.vert, steam-vent.vert, snow.vert, rain.vert, petal.vert (9 files)
+- [x] Wired 13 JS files with shared GLSL imports + concatenation
+- **Findings:** Actual GLSL duplication is less than spec estimated. Fog has 3 variants (height-dependent, exponential, 3-zone) — only exponential (3 files) was truly identical. Fresnel has 5 variants (Schlick, Schlick+smoothstep, Schlick+F0, abs-dot, different view dir) — 4 files cleanly use shared function. Point-size uses inline code with varying constants — 9 files refactored. Hash/noise/cel-shading correctly left local per AC8. Net GLSL line reduction ~30 lines (spec estimated 900 — the bulk of subsystem-extraction savings come from AC1-3 in Steps 6-7).
+- Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
 ### STEP 6: Subsystem extraction — BaseParticleSystem + ParticleGeometryBuilder [spec: specs/subsystem-extraction.md]
 - [ ] Create ParticleGeometryBuilder.js with addAttribute/addPositions/addPhases/build (AC3) [files: src/meadow/ParticleGeometryBuilder.js]
@@ -155,7 +160,7 @@
 - **verify-all.sh** has 10 sections, design rules section covers Rules 1-3 (needs 4-6)
 - **Entry page already split** via React.lazy in main.jsx (ProfessionalSite at /, ExperienceApp at /experience)
 - **Build output:** index 232KB + App 1162KB = 2 chunks. Target: 6+ chunks, entry < 220KB
-- **Fresnel duplication** across 11 shaders is the biggest GLSL extraction win
+- **Shared GLSL utilities** in `_fog-utils.glsl`, `_rim-light.glsl`, `_particle-utils.glsl` — 16 shaders refactored, 13 JS files wired via string concatenation
 - **49 subsystems** missing scene.remove() — largest single sweep task
 - **17 keyframe files × 54 properties × 5 keyframes** = biggest line-count reduction opportunity
 - Spec location corrections: AC5 error is in EnvironmentScene.jsx (not WorldContext), AC6 error is in WorldContext.jsx (not ContentOverlay)

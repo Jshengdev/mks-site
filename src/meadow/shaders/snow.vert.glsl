@@ -33,8 +33,8 @@ void main() {
 
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
-  // Round point particles — perspective scaled
-  gl_PointSize = aSize * uPixelRatio * (250.0 / -mvPosition.z);
+  // Round point particles — perspective scaled (shared _particle-utils.glsl)
+  gl_PointSize = perspectivePointSize(aSize * uPixelRatio, mvPosition.z, 250.0);
   gl_PointSize = clamp(gl_PointSize, 1.0, 10.0);
 
   gl_Position = projectionMatrix * mvPosition;

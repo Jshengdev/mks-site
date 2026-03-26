@@ -57,9 +57,9 @@ void main() {
   vNormal = normalize(mat3(modelMatrix) * mat3(instanceMatrix) * normal);
   vWorldNormal = vNormal;
 
-  // Fresnel — Schlick's approximation (stemkoski pattern)
+  // Fresnel — Schlick's approximation (shared _rim-light.glsl)
   vec3 viewDir = normalize(cameraPosition - worldPosition.xyz);
-  vFresnel = pow(1.0 - max(dot(viewDir, vWorldNormal), 0.0), 3.0);
+  vFresnel = fresnelRim(vWorldNormal, viewDir, 3.0);
 
   gl_Position = projectionMatrix * viewMatrix * worldPosition;
 }

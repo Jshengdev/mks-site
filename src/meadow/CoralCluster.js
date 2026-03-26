@@ -5,7 +5,10 @@
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import vertexShader from './shaders/coral.vert.glsl?raw'
-import fragmentShader from './shaders/coral.frag.glsl?raw'
+import fogUtils from './shaders/_fog-utils.glsl?raw'
+import rimLight from './shaders/_rim-light.glsl?raw'
+import fragmentShaderSrc from './shaders/coral.frag.glsl?raw'
+const fragmentShader = fogUtils + '\n' + rimLight + '\n' + fragmentShaderSrc
 
 const _dummy = new THREE.Object3D()
 const _direction = new THREE.Vector3()

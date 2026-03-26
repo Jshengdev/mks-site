@@ -2,7 +2,9 @@
 // Stolen from: stephanbogner fibonacci sphere distribution,
 // Alex-DG firefly approach, codecruzer starfield depth sizing
 import * as THREE from 'three'
-import vertexShader from './shaders/voidParticle.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/voidParticle.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/voidParticle.frag.glsl?raw'
 
 export default class VoidParticle {

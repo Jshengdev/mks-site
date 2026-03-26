@@ -25,8 +25,8 @@ void main() {
 
   vec3 diffuse = uColor * uSunColor * toon;
 
-  // Rim light (BotW edge glow)
-  float rim = 1.0 - max(dot(viewDir, normal), 0.0);
+  // Rim light (BotW edge glow, shared _rim-light.glsl)
+  float rim = fresnelRim(normal, viewDir, 1.0);
   rim = smoothstep(0.6, 1.0, rim);
   vec3 rimColor = uSunColor * rim * 0.3;
 

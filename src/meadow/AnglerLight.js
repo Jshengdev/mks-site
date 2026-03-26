@@ -4,7 +4,9 @@
 // Warm amber-yellow points against blue-black void — the ONLY warmth in the abyss
 // Each lure bobs on a pendulum swing + breathes in brightness
 import * as THREE from 'three'
-import vertexShader from './shaders/anglerLight.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/anglerLight.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/anglerLight.frag.glsl?raw'
 
 export default class AnglerLight {

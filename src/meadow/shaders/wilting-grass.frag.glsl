@@ -30,10 +30,9 @@ void main() {
   float diffuse = max(dot(vec3(0.0, 1.0, 0.0), lightDir), 0.0) * 0.5;
   vec3 lit = bladeColor * (ambient + diffuse) * uSunColor + transColor;
 
-  // ─── Distance fog (stolen from iquilez) ───
+  // ─── Distance fog (shared _fog-utils.glsl) ───
   float dist = length(vWorldPos - cameraPosition);
-  float fogFactor = 1.0 - exp(-dist * uFogDensity);
-  lit = mix(lit, uFogColor, fogFactor);
+  lit = applyExpFog(lit, uFogColor, dist, uFogDensity);
 
   gl_FragColor = vec4(lit, 1.0);
 }

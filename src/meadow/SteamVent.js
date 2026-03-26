@@ -2,7 +2,9 @@
 // Particles rise, expand, drift laterally, fade — then loop
 // Adapted from: stemkoski/ParticleEngine (lifecycle), SqrtPapere/SmokeGL (chaotic dispersal)
 import * as THREE from 'three'
-import vertexShader from './shaders/steam-vent.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/steam-vent.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/steam-vent.frag.glsl?raw'
 
 export default class SteamVent {

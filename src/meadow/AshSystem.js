@@ -3,7 +3,9 @@
 // + hzy5000 campfire smoke emitter values
 // NormalBlending (not additive) — ash occludes light, doesn't glow
 import * as THREE from 'three'
-import vertexShader from './shaders/ash.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/ash.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/ash.frag.glsl?raw'
 
 export default class AshSystem {

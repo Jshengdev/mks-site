@@ -3,7 +3,9 @@ import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { getTerrainHeight as defaultGetTerrainHeight } from './TerrainPlane.js'
 import flowerVertexShader from './shaders/flower.vert.glsl?raw'
-import flowerFragmentShader from './shaders/flower.frag.glsl?raw'
+import rimLight from './shaders/_rim-light.glsl?raw'
+import flowerFragmentShaderSrc from './shaders/flower.frag.glsl?raw'
+const flowerFragmentShader = rimLight + '\n' + flowerFragmentShaderSrc
 
 import { SECTION_T_VALUES } from './constants.js'
 const CLEARING_RADIUS = 8 // world units around clearing center

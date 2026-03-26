@@ -32,6 +32,5 @@ void main() {
 
   // Size grows as steam expands (stemkoski sizeTween: 32→128)
   float sizeScale = 1.0 + life * 4.0;
-  gl_PointSize = uSize * sizeScale * uPixelRatio;
-  gl_PointSize *= (1.0 / -viewPosition.z);
+  gl_PointSize = perspectivePointSize(uSize * sizeScale * uPixelRatio, viewPosition.z, 1.0);
 }

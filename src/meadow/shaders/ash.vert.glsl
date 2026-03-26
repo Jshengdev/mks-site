@@ -57,7 +57,6 @@ void main() {
   // Distance fade
   vAlpha *= smoothstep(100.0, 15.0, -viewPosition.z);
 
-  gl_PointSize = uSize * aScale * uPixelRatio;
-  gl_PointSize *= (1.0 / -viewPosition.z);
+  gl_PointSize = perspectivePointSize(uSize * aScale * uPixelRatio, viewPosition.z, 1.0);
   gl_PointSize = clamp(gl_PointSize, 0.5, 12.0);
 }

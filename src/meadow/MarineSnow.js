@@ -5,7 +5,9 @@
 // Barely visible — you notice them only when you stop looking
 // The only connection to the sunlit surface world
 import * as THREE from 'three'
-import vertexShader from './shaders/marineSnow.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/marineSnow.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/marineSnow.frag.glsl?raw'
 
 export default class MarineSnow {

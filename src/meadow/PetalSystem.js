@@ -2,7 +2,9 @@
 // Uses sine-wave flutter with spiral descent for natural petal motion
 // Each petal has unique phase, size, and drift direction
 import * as THREE from 'three'
-import vertexShader from './shaders/petal.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/petal.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/petal.frag.glsl?raw'
 
 export default class PetalSystem {

@@ -14,8 +14,10 @@
 //   Varun Vachhar — iquilez cosine palette iridescence
 //   kamilprusko/prism — chromatic dispersion feel
 import * as THREE from 'three'
-import crystalVertexShader from './shaders/crystal.vert.glsl?raw'
+import rimLight from './shaders/_rim-light.glsl?raw'
+import crystalVertexShaderSrc from './shaders/crystal.vert.glsl?raw'
 import crystalFragmentShader from './shaders/crystal.frag.glsl?raw'
+const crystalVertexShader = rimLight + '\n' + crystalVertexShaderSrc
 import { SECTION_T_VALUES } from './constants.js'
 
 const CLEARING_RADIUS = 6 // keep clearings free for content visibility

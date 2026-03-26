@@ -35,10 +35,9 @@ void main() {
   vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mvPosition;
 
-  // Size with distance attenuation
-  float size = uBaseSize * aSize * uPixelRatio;
-  size *= (150.0 / -mvPosition.z);
-  gl_PointSize = clamp(size, 2.0, 20.0);
+  // Size with distance attenuation (shared _particle-utils.glsl)
+  gl_PointSize = perspectivePointSize(uBaseSize * aSize * uPixelRatio, mvPosition.z, 150.0);
+  gl_PointSize = clamp(gl_PointSize, 2.0, 20.0);
 
   // Fade near ground and at distance
   vAlpha = smoothstep(-3.0, 0.0, pos.y) * smoothstep(120.0, 30.0, -mvPosition.z);

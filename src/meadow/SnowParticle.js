@@ -3,7 +3,9 @@
 // Fall speed ~10x slower than rain, 3x more lateral drift, round flakes
 // Uses same Points/ShaderMaterial pattern as FireflySystem and RainSystem
 import * as THREE from 'three'
-import vertexShader from './shaders/snow.vert.glsl?raw'
+import particleUtils from './shaders/_particle-utils.glsl?raw'
+import vertexShaderSrc from './shaders/snow.vert.glsl?raw'
+const vertexShader = particleUtils + '\n' + vertexShaderSrc
 import fragmentShader from './shaders/snow.frag.glsl?raw'
 
 export default class SnowParticle {

@@ -6,8 +6,10 @@
 //   Alex-DG — bioluminescent pulse cycling (sin with phase offset)
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
-import mushroomVertexShader from './shaders/mushroom.vert.glsl?raw'
+import rimLight from './shaders/_rim-light.glsl?raw'
+import mushroomVertexShaderSrc from './shaders/mushroom.vert.glsl?raw'
 import mushroomFragmentShader from './shaders/mushroom.frag.glsl?raw'
+const mushroomVertexShader = rimLight + '\n' + mushroomVertexShaderSrc
 import { SECTION_T_VALUES } from './constants.js'
 
 const CLEARING_RADIUS = 6

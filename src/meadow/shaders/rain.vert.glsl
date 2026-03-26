@@ -38,10 +38,9 @@ void main() {
 
   gl_Position = projectionMatrix * mvPosition;
 
-  // Size: elongated streaks via lengthFactor, attenuated by distance
-  float size = uLengthFactor * uPixelRatio;
-  size *= (200.0 / -mvPosition.z); // distance attenuation
-  gl_PointSize = clamp(size, 1.0, 16.0);
+  // Size: elongated streaks via lengthFactor, attenuated by distance (shared _particle-utils.glsl)
+  gl_PointSize = perspectivePointSize(uLengthFactor * uPixelRatio, mvPosition.z, 200.0);
+  gl_PointSize = clamp(gl_PointSize, 1.0, 16.0);
 
   // Fade at top (spawn) and bottom (impact)
   vAlpha = smoothstep(0.0, 0.05, t) * smoothstep(1.0, 0.9, t);

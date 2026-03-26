@@ -4,7 +4,9 @@
 // + FlowerInstances.js placement/instancing pattern
 import * as THREE from 'three'
 import vertexShader from './shaders/kelp.vert.glsl?raw'
-import fragmentShader from './shaders/kelp.frag.glsl?raw'
+import fogUtils from './shaders/_fog-utils.glsl?raw'
+import fragmentShaderSrc from './shaders/kelp.frag.glsl?raw'
+const fragmentShader = fogUtils + '\n' + fragmentShaderSrc
 import { SECTION_T_VALUES } from './constants.js'
 
 const CLEARING_RADIUS = 8

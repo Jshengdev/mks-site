@@ -35,8 +35,8 @@ void main() {
   vec3 diffuse = uCoralColor * toonBand * uLightColor;
   vec3 ambient = uAmbientStrength * uCoralColor;
 
-  // Rim light for edge glow (daniel-ilett)
-  float rim = 1.0 - max(dot(viewDir, normal), 0.0);
+  // Rim light for edge glow (shared _rim-light.glsl)
+  float rim = fresnelRim(normal, viewDir, 1.0);
   rim = smoothstep(0.4, 1.0, rim);
   vec3 rimColor = uGlowColor * rim * 0.5;
 
@@ -50,10 +50,9 @@ void main() {
 
   vec3 col = diffuse + ambient + rimColor + emission + tipBrighten * uCoralColor;
 
-  // Underwater exponential fog
+  // Underwater exponential fog (shared _fog-utils.glsl)
   float dist = length(vWorldPos - cameraPosition);
-  float fogAmount = 1.0 - exp(-dist * uFogDensity);
-  col = mix(col, uWaterFogColor, fogAmount);
+  col = applyExpFog(col, uWaterFogColor, dist, uFogDensity);
 
   gl_FragColor = vec4(col, 1.0);
 }

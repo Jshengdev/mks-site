@@ -27,7 +27,6 @@ void main() {
   vec4 viewPosition = viewMatrix * modelPosition;
   gl_Position = projectionMatrix * viewPosition;
 
-  // Point size with perspective attenuation (codecruzer pattern)
-  gl_PointSize = uSize * aScale * uPixelRatio;
-  gl_PointSize *= (1.0 / -viewPosition.z);
+  // Point size with perspective attenuation (shared _particle-utils.glsl)
+  gl_PointSize = perspectivePointSize(uSize * aScale * uPixelRatio, viewPosition.z, 1.0);
 }

@@ -4,7 +4,9 @@
 // Wind from Nitash-Biswas, translucent lighting from al-ro
 import * as THREE from 'three'
 import vertexShader from './shaders/wilting-grass.vert.glsl?raw'
-import fragmentShader from './shaders/wilting-grass.frag.glsl?raw'
+import fogUtils from './shaders/_fog-utils.glsl?raw'
+import fragmentShaderSrc from './shaders/wilting-grass.frag.glsl?raw'
+const fragmentShader = fogUtils + '\n' + fragmentShaderSrc
 
 const SUN_DIR = new THREE.Vector3(0.0, 0.21, -1.0).normalize()
 const SUN_COLOR = new THREE.Color(1.0, 1.0, 0.99)
