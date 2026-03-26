@@ -21,14 +21,14 @@ export default function ContentOverlay({ onSectionsReady }) {
 
   return (
     <div ref={containerRef} className="content-overlay">
-      {SECTIONS.map(({ t, Component }) => (
+      {SECTIONS.map((section) => (
         <div
-          key={t}
+          key={section.t}
           className="content-section"
-          data-section-t={t}
+          data-section-t={section.t}
           style={{ opacity: 0, pointerEvents: 'none' }}
         >
-          <Component />
+          <section.Component />
         </div>
       ))}
     </div>

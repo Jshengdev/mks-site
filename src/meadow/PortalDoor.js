@@ -67,8 +67,6 @@ export default class PortalDoor {
     // Prefer platforms at regular intervals along the spiral
     const doorPositions = this._selectDoorPositions(count, platformPositions)
 
-    const dummy = new THREE.Object3D()
-
     for (let i = 0; i < count; i++) {
       const group = new THREE.Group()
 

@@ -71,7 +71,7 @@ export default class MusicTrigger {
 
   dispose() {
     if (this._sourceNode) {
-      try { this._sourceNode.stop() } catch (_) { /* already stopped */ }
+      try { this._sourceNode.stop() } catch { /* already stopped */ }
     }
     if (this._audioCtx) {
       this._audioCtx.close()

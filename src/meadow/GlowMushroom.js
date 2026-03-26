@@ -118,7 +118,7 @@ export default class GlowMushroom {
   }
 
   dispose() {
-    for (const { mesh, material } of this.meshes) {
+    for (const { material } of this.meshes) {
       material.dispose()
     }
     this._sharedGeo.dispose()

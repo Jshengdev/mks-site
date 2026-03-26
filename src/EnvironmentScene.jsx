@@ -11,25 +11,30 @@ import useScrollAudio from './useScrollAudio.js'
 export default function EnvironmentScene({ envId }) {
   const canvasRef = useRef(null)
   const engineRef = useRef(null)
-  const [isTier3, setIsTier3] = useState(false)
   const config = ENVIRONMENTS[envId]
 
+  // Detect tier 3 (mobile/no-WebGL2) eagerly — avoids setState inside effect
+  const [isTier3] = useState(() => {
+    if (window.screen.width <= 768) return true
+    try {
+      const c = document.createElement('canvas')
+      return !c.getContext('webgl2')
+    } catch { return true }
+  })
+
   useEffect(() => {
-    if (!canvasRef.current) return
+    if (!canvasRef.current || isTier3) return
 
     // All environments use WorldEngine with their config
     engineRef.current = new WorldEngine(canvasRef.current, config)
     window.__MEADOW_ENGINE__ = engineRef.current
-    if (engineRef.current.tier === 3) {
-      setIsTier3(true)
-    }
 
     return () => {
       engineRef.current?.destroy()
       engineRef.current = null
       window.__MEADOW_ENGINE__ = null
     }
-  }, [envId, config])
+  }, [envId, config, isTier3])
 
   useScrollAudio(engineRef)
 

@@ -676,7 +676,6 @@ export function createTerrain(scene, envConfig = {}) {
     const range = maxH - minH || 1
 
     for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i)
       const z = pos.getZ(i)
       const y = pos.getY(i)
       const heightT = (y - minH) / range

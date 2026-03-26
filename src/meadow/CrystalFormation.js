@@ -109,8 +109,6 @@ export default class CrystalFormation {
 
         if (this._inClearing(cx, cz, cameraRig)) continue
 
-        const cy = this._getTerrainHeight(cx, cz)
-
         // Cluster size: 3-7 crystals (constrained random)
         const clusterSize = CLUSTER_SIZE_MIN +
           Math.floor(Math.random() * (CLUSTER_SIZE_MAX - CLUSTER_SIZE_MIN + 1))
@@ -229,7 +227,7 @@ export default class CrystalFormation {
   }
 
   dispose() {
-    for (const { mesh, material } of this.meshes) {
+    for (const { material } of this.meshes) {
       material.dispose()
     }
     this._sharedGeo.dispose()

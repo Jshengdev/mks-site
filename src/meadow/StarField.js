@@ -74,8 +74,6 @@ export default class StarField {
       }
     }
 
-    const count = starPositions.length / 3
-
     this.material = new THREE.ShaderMaterial({
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -103,14 +101,11 @@ export default class StarField {
     // Moon — large bright glow point
     this.moon = null
     if (moonEnabled) {
-      this._createMoon(scene, radius, config.moon)
+      this._createMoon(scene, radius)
     }
   }
 
-  _createMoon(scene, radius, moonConfig) {
-    const moonSize = moonConfig.size ?? 5000
-    const moonSharpness = moonConfig.sharpness ?? 12000
-
+  _createMoon(scene, radius) {
     // Moon position — upper sky, offset from center
     const moonPhi = THREE.MathUtils.degToRad(35)  // 35deg from zenith
     const moonTheta = THREE.MathUtils.degToRad(120) // azimuth

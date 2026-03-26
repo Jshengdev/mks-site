@@ -189,8 +189,7 @@ export default function EntryPage() {
 
     // Half-resolution for pixelated quality
     const resize = () => {
-      const dpr = 1 // intentionally 1x for pixel aesthetic
-      const scale = 0.5 // half-res
+      const scale = 0.5 // half-res (intentionally 1x pixel aesthetic)
       canvas.width = Math.floor(window.innerWidth * scale)
       canvas.height = Math.floor(window.innerHeight * scale)
       canvas.style.width = window.innerWidth + 'px'

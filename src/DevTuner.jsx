@@ -9,7 +9,7 @@ import './DevTuner.css'
 function buildParamGroups(api) {
   if (!api) return []
 
-  const { renderer, scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets, ocean, volumetricClouds } = api
+  const { scene, sceneSetup, postProcessing, grassManager, fireflies, cloudShadows, cameraRig, scrollEngine, godRayPass, dustMotes, scoreSheets, ocean, volumetricClouds } = api
   const sky = sceneSetup?.sky
   const sunLight = sceneSetup?.sunLight
   const fogDepth = postProcessing.fogDepth
@@ -774,6 +774,7 @@ export default function DevTuner({ engineRef }) {
   const [toast, setToast] = useState('')
   const [frozen, setFrozen] = useState(false)
   const groupsRef = useRef([])
+  const [groups, setGroups] = useState([])
   const atmosphereRef = useRef(null)
   const rafRef = useRef(null)
 
@@ -785,6 +786,7 @@ export default function DevTuner({ engineRef }) {
       const api = engine.getDevAPI()
       atmosphereRef.current = api.atmosphere
       groupsRef.current = buildParamGroups(api)
+      setGroups(groupsRef.current)
       // Initialize values
       const initial = {}
       for (const group of groupsRef.current) {
@@ -872,7 +874,7 @@ export default function DevTuner({ engineRef }) {
 
   const gatherJson = useCallback(() => {
     const result = { _meta: { exported: new Date().toISOString(), locked: [] } }
-    for (const group of groupsRef.current) {
+    for (const group of groups) {
       const section = {}
       for (const p of group.params) {
         section[p.key] = {
@@ -884,7 +886,7 @@ export default function DevTuner({ engineRef }) {
       result[group.id] = section
     }
     return result
-  }, [values, locks])
+  }, [values, locks, groups])
 
   const handleExport = useCallback(() => setShowJson(true), [])
 
@@ -949,7 +951,7 @@ export default function DevTuner({ engineRef }) {
     input.click()
   }, [showToast])
 
-  if (groupsRef.current.length === 0) return null
+  if (groups.length === 0) return null
 
   return (
     <>
@@ -974,7 +976,7 @@ export default function DevTuner({ engineRef }) {
         </div>
 
         <div className="dt-scroll-area" data-lenis-prevent>
-          {groupsRef.current.map(group => (
+          {groups.map(group => (
             <div key={group.id} className={`dt-panel${collapsed[group.id] ? ' collapsed' : ''}`}>
               <div className="dt-panel-header" onClick={() => toggleCollapse(group.id)}>
                 <span className="dt-panel-title">{group.title}</span>

@@ -77,5 +77,3 @@ export function useWorld() {
   if (!ctx) throw new Error('useWorld must be used within WorldProvider')
   return ctx
 }
-
-export default WorldContext
