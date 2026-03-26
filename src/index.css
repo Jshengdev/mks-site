@@ -3,6 +3,13 @@
 :root {
   --font-display: 'Cormorant Garamond', 'Georgia', serif;
   --font-body: 'DM Sans', -apple-system, sans-serif;
+  --void: #0a0a0a;
+  --warm-black: #1a1208;
+  --text-primary: #c8d4e8;
+  --text-secondary: #90a0a0;
+  --teal: #4a6a68;
+  --amber: #d4c968;
+  --red-felt: #983028;
 }
 
 *,
@@ -33,7 +40,7 @@ body {
   overflow-x: hidden;
   overscroll-behavior: none;
   font-family: 'PT Serif', serif;
-  background: #0a0a0a;
+  background: var(--void);
   color: #fff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

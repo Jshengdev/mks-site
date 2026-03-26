@@ -54,7 +54,7 @@ section "Design Rules Compliance"
   [[ "$TOTAL_BLACK" -eq 0 ]] && check "No flat black (#000) in CSS" "PASS" || check "No flat black (#000) in CSS" "FAIL" "$TOTAL_BLACK occurrences"
 
   # prefers-reduced-motion in EVERY CSS file that has animation or transition
-  CSS_WITH_ANIM=$(grep -rl 'animation\|@keyframes' src/ --include='*.css' 2>/dev/null || true)
+  CSS_WITH_ANIM=$(grep -rl 'animation\|@keyframes\|transition' src/ --include='*.css' 2>/dev/null || true)
   MISSING_MOTION=0
   for cssfile in $CSS_WITH_ANIM; do
     if ! grep -q 'prefers-reduced-motion' "$cssfile" 2>/dev/null; then
@@ -67,6 +67,36 @@ section "Design Rules Compliance"
   # No transform-based entrance animations in CSS keyframes
   TRANSFORM_ENTRANCE=$(grep -rn 'translateY\|translateX\|scale(' src/*.css src/**/*.css 2>/dev/null | grep -i '@keyframes\|animation' | wc -l | tr -d ' ')
   [[ "$TRANSFORM_ENTRANCE" -eq 0 ]] && check "No transform entrance animations" "PASS" || check "No transform entrance animations" "FAIL" "$TRANSFORM_ENTRANCE occurrences (opacity-only rule)"
+
+  # Rule 4: Backgrounds should use CSS custom properties, not raw hex (warning only — gradients/micro-UI may need raw hex)
+  BG_RAW_HEX=$(grep -rn 'background.*#[0-9a-fA-F]' src/*.css src/**/*.css 2>/dev/null | grep -v 'DevTuner' | grep -v 'var(--' | wc -l | tr -d ' ')
+  if [[ "$BG_RAW_HEX" -gt 0 ]]; then
+    echo "  [WARN] $BG_RAW_HEX raw hex backgrounds in CSS (prefer var(--void), var(--warm-black))"
+  else
+    check "Backgrounds use CSS custom properties" "PASS"
+  fi
+
+  # Rule 5: --amber and --teal max 5 uses per CSS file
+  AMBER_TEAL_FAIL=0
+  for css_file in src/*.css src/**/*.css; do
+    [[ -f "$css_file" ]] || continue
+    amber_count=$(grep -c 'var(--amber)' "$css_file" 2>/dev/null || true)
+    teal_count=$(grep -c 'var(--teal)' "$css_file" 2>/dev/null || true)
+    amber_count=${amber_count:-0}; teal_count=${teal_count:-0}
+    if [[ "$amber_count" -gt 5 ]]; then
+      echo "    $css_file uses --amber $amber_count times (max 5)"
+      AMBER_TEAL_FAIL=1
+    fi
+    if [[ "$teal_count" -gt 5 ]]; then
+      echo "    $css_file uses --teal $teal_count times (max 5)"
+      AMBER_TEAL_FAIL=1
+    fi
+  done
+  [[ "$AMBER_TEAL_FAIL" -eq 0 ]] && check "Amber/teal within limits (≤5 per file)" "PASS" || check "Amber/teal within limits" "FAIL"
+
+  # Rule 6: --red-felt max 1 use across entire CSS
+  RED_TOTAL=$(grep -rc 'var(--red-felt)' src/*.css src/**/*.css 2>/dev/null | awk -F: '{s+=$2} END {print s+0}')
+  [[ "$RED_TOTAL" -le 1 ]] && check "Red-felt used ≤1 time ($RED_TOTAL)" "PASS" || check "Red-felt used ≤1 time" "FAIL" "$RED_TOTAL uses (max 1)"
 section_summary
 
 # ── Section 4: Core Engine Files ───────────────────────────

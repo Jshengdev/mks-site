@@ -23,14 +23,8 @@
 }
 
 @keyframes playerSlideUp {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .mini-player:hover {
@@ -323,13 +317,15 @@
   }
 
   @keyframes playerSlideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-player,
+  .mini-player * {
+    animation: none !important;
+    transition: none !important;
   }
 }

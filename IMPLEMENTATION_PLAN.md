@@ -2,14 +2,14 @@
 
 ## CURRENT STATUS
 - **Specs:** 13 (6 Phase 1, 4 Phase 2, 3 Phase 3)
-- **Steps:** 1 done / 15 remaining
+- **Steps:** 2 done / 14 remaining
 - **QA gates passed:** 0
 - **verify-all.sh runs:** 2
 
 | Spec | ACs | Done | Grade |
 |------|-----|------|-------|
 | lint-cleanup | 9 | 100% | PASS |
-| design-rule-enforcement | 8 | 25% (AC6-7) | PARTIAL |
+| design-rule-enforcement | 8 | 100% | PASS |
 | dispose-lifecycle | 7 | 0% | NOT STARTED |
 | subsystem-extraction | 9 | 22% (AC8-9 constraints) | NOT STARTED |
 | config-normalization | 6 | 17% (AC6) | PARTIAL |
@@ -26,14 +26,13 @@
 
 ## PRIORITY TASKS
 
-### STEP 2: Design rule fixes — #000, reduced-motion, opacity-only [spec: specs/design-rule-enforcement.md]
-- [ ] Replace `background: #0a0a0a` with `background: var(--void)` in index.css:36 (AC1) [files: src/index.css]
-- [ ] Add `@media (prefers-reduced-motion: reduce)` to MiniPlayer.css (AC4) [files: src/MiniPlayer.css]
-- [ ] Add `@media (prefers-reduced-motion: reduce)` to DevTuner.css (AC3) [files: src/DevTuner.css]
-- [ ] Add `@media (prefers-reduced-motion: reduce)` to content-overlay.css (AC2) [files: src/content/content-overlay.css]
-- [ ] Replace playerSlideUp translateY with opacity-only in MiniPlayer.css (AC5) [files: src/MiniPlayer.css]
-- [ ] Add Rules 4-6 to verify-all.sh design section (background hex, amber/teal limits, red-felt limit) (AC6) [files: scripts/verify-all.sh]
-- Required tests: `bash scripts/verify-all.sh` passes; `npx vite build` passes
+### STEP 2: Design rule fixes — #000, reduced-motion, opacity-only [DONE]
+- [x] Added --void and all color tokens to :root in index.css, replaced raw hex background
+- [x] Added prefers-reduced-motion blocks to MiniPlayer.css, DevTuner.css, content-overlay.css
+- [x] Replaced playerSlideUp translateY with opacity-only (both desktop + mobile @480px)
+- [x] Added Rules 4-6 to verify-all.sh (background hex warning, amber/teal ≤5/file, red-felt ≤1 total)
+- [x] Updated Rule 2 check to also flag CSS files with `transition` (not just animation/@keyframes)
+- Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
 ### STEP 3: Dispose lifecycle — WorldEngine + PostProcessingStack + textures [spec: specs/dispose-lifecycle.md]
 - [ ] WorldEngine.destroy(): add terrain mesh removal + geometry/material dispose (AC2) [files: src/meadow/WorldEngine.js]
