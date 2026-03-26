@@ -26,7 +26,7 @@
 
 ## PRIORITY TASKS
 
-### STEP 2: Design rule fixes — #000, reduced-motion, opacity-only [DONE]
+### STEP 2: Design rule fixes — #000, reduced-motion, opacity-only [DONE ✓ 6d7cfbd]
 - [x] Added --void and all color tokens to :root in index.css, replaced raw hex background
 - [x] Added prefers-reduced-motion blocks to MiniPlayer.css, DevTuner.css, content-overlay.css
 - [x] Replaced playerSlideUp translateY with opacity-only (both desktop + mobile @480px)
@@ -34,7 +34,7 @@
 - [x] Updated Rule 2 check to also flag CSS files with `transition` (not just animation/@keyframes)
 - Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 3: Dispose lifecycle — WorldEngine + PostProcessingStack + textures [DONE]
+### STEP 3: Dispose lifecycle — WorldEngine + PostProcessingStack + textures [DONE ✓ 2843013]
 - [x] WorldEngine.destroy(): terrain mesh scene.remove + geometry/material dispose (AC2)
 - [x] WorldEngine.destroy(): sceneSetup disposal — sky, skyMesh, sunLight, ambientLight (AC2)
 - [x] ArtistFigure: store texture ref in loadTexture(), dispose in dispose() (AC3)
@@ -44,7 +44,7 @@
 - [x] PostProcessingStack: store RenderPass ref, dispose RenderPass + EffectPass before effects (AC6)
 - Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 4: Dispose lifecycle — 45 subsystem scene.remove() sweep [DONE]
+### STEP 4: Dispose lifecycle — 45 subsystem scene.remove() sweep [DONE ✓ dc7e3f5]
 - [x] Added `this.scene = scene` + `this.scene.remove()` to 12 points-based subsystems (AC1)
 - [x] Added `this.scene = scene` + `this.scene.remove()` to 22 mesh-based subsystems inc. WaterSurface (AC1)
 - [x] Fixed 3 special cases: VoidParticle (group), FoldLine (lines), StarField (points+moon) (AC1)
@@ -52,7 +52,7 @@
 - [x] Fixed CrystalFormation/GlowMushroom destructuring to include mesh ref for removal (AC1)
 - Result: 51 files with scene.remove(), verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 5: Subsystem extraction — shared GLSL utilities [DONE]
+### STEP 5: Subsystem extraction — shared GLSL utilities [DONE ✓ d9d598b]
 - [x] Created `_fog-utils.glsl` with expFogFactor/applyExpFog (AC4)
 - [x] Created `_rim-light.glsl` with fresnelRim (parameterized power) (AC4)
 - [x] Created `_particle-utils.glsl` with perspectivePointSize (AC4)
@@ -140,7 +140,7 @@
 ---
 
 ## COMPLETED
-### STEP 1: Lint cleanup — ESLint zero-error baseline [DONE]
+### STEP 1: Lint cleanup — ESLint zero-error baseline [DONE ✓ a69604b]
 - Excluded docs/webgl-reference/ in globalIgnores (80 vendored errors eliminated)
 - Fixed 11 no-unused-vars across 8 files (removed dead vars/imports, restructured destructuring)
 - Fixed 4 ref-during-render in DevTuner.jsx (mirrored groupsRef to state for render reads)

@@ -358,6 +358,15 @@ Research: `research/pipeline/` — 24 experiments with scoring, `research/web-ex
   - Encodes full architecture, design philosophy, 15 bug learnings
   - `/build-world` slash command for generating new environment configs
 
+### Built (Phase 4: Ralph Loop — Refactor & Quality)
+- **Route split** — `/` = professional site (231KB), `/experience` = WebGL (lazy loaded, 1.16MB)
+- **ESLint zero-error baseline** — 98 errors fixed, 5 unused deps removed (a69604b)
+- **Design rule enforcement** — reduced-motion fallbacks, opacity-only transitions, color tokens, verify-all Rules 4-6 (6d7cfbd)
+- **Dispose lifecycle** — terrain/sceneSetup/textures/AudioContext/quad geometries/passes (2843013), 45 subsystem scene.remove() sweep (dc7e3f5)
+- **Shared GLSL utilities** — `_fog-utils.glsl`, `_rim-light.glsl`, `_particle-utils.glsl` across 16 shaders (d9d598b)
+- **Ralph infrastructure** — 13 specs (86 ACs), verify-all.sh with 54 checks
+- **7 design skills** installed from taste-skill repo
+
 ### Stripped (decided against / needs redo)
 - **GhibliClouds** — toon-shaded hemisphere dome. Removed: flat blobs. Needs real volumetric approach.
 - **CursorCreatures** — textured butterflies. Removed: looked terrible. User wants simple 3D geometry with wing flap.
@@ -501,3 +510,7 @@ The codebase now has two key entry points:
 - 2026-03-15: JS bundle is 998 KB — needs code splitting via dynamic imports before production. Audio asset (11 MB) needs streaming/lazy-load.
 - 2026-03-15: Winner documentation backlog is significant — 20+ techniques above 60/70 lack formal docs. Key breakthroughs: GOLDEN RUINS (multiplicative convergence), VIGIL (absence as presence), gravitational lensing (largest weighted gain ever).
 - 2026-03-15: Web extractor Tier 1 techniques ready for implementation: Active Theory's analytical curl noise (3x faster), scroll-driven particle lifecycle, Immersive Garden's wave propagation and dissipation model.
+- 2026-03-26: **Ralph Loop bootstrapped** — 13 specs (86 ACs), verify-all.sh (54 checks), 5 build iterations completed (lint, design rules, dispose x2, shared GLSL). Commits a69604b through d9d598b.
+- 2026-03-26: Route split live — `/` = professional site, `/experience` = WebGL experience. Lazy loaded: 231KB entry vs 1.16MB WebGL chunk (commit 6210585).
+- 2026-03-26: 7 new design skills installed from taste-skill repo (creative layering, creative coding principles, etc.).
+- 2026-03-26: Shared GLSL utilities (`_fog-utils.glsl`, `_rim-light.glsl`, `_particle-utils.glsl`) refactored 16 shaders across 13 JS files. Actual duplication less than estimated — net ~30 lines reduced (bulk savings come from Steps 6-7).

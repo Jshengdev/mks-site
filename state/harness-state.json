@@ -1,10 +1,10 @@
 {
-  "total_iterations": 0,
+  "total_iterations": 2,
   "build_since_last_plan": 0,
   "builds_since_last_retro": 0,
   "builds_since_last_qa": 0,
-  "last_mode": "none",
-  "last_run": null,
+  "last_mode": "plan",
+  "last_run": "2026-03-26T08:14:08Z",
   "retros_completed": 0,
   "qa_gates_completed": 0,
   "tags_created": [],
