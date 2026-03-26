@@ -28,10 +28,12 @@ function AppInner() {
 
 function App() {
   return (
-    <WorldProvider>
-      <SiteLinks />
-      <AppInner />
-    </WorldProvider>
+    <div style={{ cursor: 'none' }}>
+      <WorldProvider>
+        <SiteLinks />
+        <AppInner />
+      </WorldProvider>
+    </div>
   )
 }
 
