@@ -39,6 +39,7 @@ export default class ArtistFigure {
     const loader = new THREE.TextureLoader()
     loader.load(url, (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace
+      this.texture = texture  // Store ref for disposal (AC3)
       this.mesh.material.map = texture
       this.mesh.material.opacity = 1.0
       this.mesh.material.needsUpdate = true
@@ -57,6 +58,7 @@ export default class ArtistFigure {
 
   dispose() {
     this._scene.remove(this.mesh)
+    if (this.texture) this.texture.dispose()
     this.mesh.geometry.dispose()
     this.mesh.material.dispose()
   }

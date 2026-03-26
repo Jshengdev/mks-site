@@ -66,10 +66,8 @@ export default class TransitionRenderer {
       depthWrite: false,
     })
 
-    const quad = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
-      this._material
-    )
+    this._quadGeometry = new THREE.PlaneGeometry(2, 2)
+    const quad = new THREE.Mesh(this._quadGeometry, this._material)
     this._scene.add(quad)
   }
 
@@ -129,6 +127,7 @@ export default class TransitionRenderer {
   }
 
   dispose() {
+    if (this._quadGeometry) this._quadGeometry.dispose()
     this.fboFrom.dispose()
     this.fboTo.dispose()
     this._material.dispose()

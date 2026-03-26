@@ -2,15 +2,15 @@
 
 ## CURRENT STATUS
 - **Specs:** 13 (6 Phase 1, 4 Phase 2, 3 Phase 3)
-- **Steps:** 2 done / 14 remaining
+- **Steps:** 3 done / 13 remaining
 - **QA gates passed:** 0
-- **verify-all.sh runs:** 2
+- **verify-all.sh runs:** 3
 
 | Spec | ACs | Done | Grade |
 |------|-----|------|-------|
 | lint-cleanup | 9 | 100% | PASS |
 | design-rule-enforcement | 8 | 100% | PASS |
-| dispose-lifecycle | 7 | 0% | NOT STARTED |
+| dispose-lifecycle | 7 | 71% (AC2-6 done, AC1+AC7 remain) | PARTIAL |
 | subsystem-extraction | 9 | 22% (AC8-9 constraints) | NOT STARTED |
 | config-normalization | 6 | 17% (AC6) | PARTIAL |
 | bundle-splitting | 11 | 9% (AC1) | PARTIAL |
@@ -34,15 +34,15 @@
 - [x] Updated Rule 2 check to also flag CSS files with `transition` (not just animation/@keyframes)
 - Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
-### STEP 3: Dispose lifecycle — WorldEngine + PostProcessingStack + textures [spec: specs/dispose-lifecycle.md]
-- [ ] WorldEngine.destroy(): add terrain mesh removal + geometry/material dispose (AC2) [files: src/meadow/WorldEngine.js]
-- [ ] WorldEngine.destroy(): add sceneSetup disposal (sky dome, sunLight, ambientLight) (AC2) [files: src/meadow/WorldEngine.js]
-- [ ] ArtistFigure: store texture ref in loadTexture(), dispose in dispose() (AC3) [files: src/meadow/ArtistFigure.js]
-- [ ] ScoreSheetCloth: store DataTexture ref, dispose it (AC3) [files: src/meadow/ScoreSheetCloth.js]
-- [ ] AudioReactive.dispose(): add audioCtx.close() with state check (AC4) [files: src/meadow/AudioReactive.js]
-- [ ] VolumetricCloudSystem + TransitionRenderer: store quad geometry, dispose it (AC5) [files: src/meadow/VolumetricCloudSystem.js, src/meadow/TransitionRenderer.js]
-- [ ] PostProcessingStack: store RenderPass ref, dispose RenderPass + EffectPass (AC6) [files: src/meadow/PostProcessingStack.js]
-- Required tests: `npx vite build`; grep for scene.remove in WorldEngine.destroy; grep for texture.dispose in ArtistFigure
+### STEP 3: Dispose lifecycle — WorldEngine + PostProcessingStack + textures [DONE]
+- [x] WorldEngine.destroy(): terrain mesh scene.remove + geometry/material dispose (AC2)
+- [x] WorldEngine.destroy(): sceneSetup disposal — sky, skyMesh, sunLight, ambientLight (AC2)
+- [x] ArtistFigure: store texture ref in loadTexture(), dispose in dispose() (AC3)
+- [x] ScoreSheetCloth: store DataTexture as this.dataTexture, dispose it (AC3)
+- [x] AudioReactive.dispose(): audioCtx.close() with state !== 'closed' guard (AC4)
+- [x] VolumetricCloudSystem + TransitionRenderer: store quad PlaneGeometry, dispose it (AC5)
+- [x] PostProcessingStack: store RenderPass ref, dispose RenderPass + EffectPass before effects (AC6)
+- Result: verify-all.sh 54/55 (1 pre-existing orphan shader), `npx vite build` clean
 
 ### STEP 4: Dispose lifecycle — 49 subsystem scene.remove() sweep [spec: specs/dispose-lifecycle.md]
 - [ ] Add `this.scene.remove(this.mesh/points/group)` before geometry.dispose() in all 49 files (AC1) [files: all subsystem .js in src/meadow/ listed in spec]

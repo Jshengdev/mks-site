@@ -84,5 +84,8 @@ export default class AudioReactive {
 
   dispose() {
     if (this.analyser) this.analyser.disconnect()
+    if (this.audioCtx && this.audioCtx.state !== 'closed') {
+      this.audioCtx.close()
+    }
   }
 }

@@ -27,7 +27,8 @@ export default class PostProcessingStack {
     this.composer = new EffectComposer(renderer, {
       frameBufferType: THREE.HalfFloatType,
     })
-    this.composer.addPass(new RenderPass(scene, camera))
+    this.renderPass = new RenderPass(scene, camera)
+    this.composer.addPass(this.renderPass)
 
     if (tier === 'css') return
 
@@ -138,6 +139,11 @@ export default class PostProcessingStack {
   }
 
   dispose() {
+    // Dispose passes first (AC6)
+    this.renderPass?.dispose()
+    this.effectPass?.dispose()
+
+    // Dispose individual effects
     this.ssao?.dispose()
     this.fogDepth?.dispose()
     this.colorGrade?.dispose()
@@ -152,6 +158,8 @@ export default class PostProcessingStack {
     this.heatDistortion?.dispose()
     this.kuwahara?.dispose()
     this.grain?.dispose()
+
+    // Dispose composer last
     this.composer.dispose()
   }
 }

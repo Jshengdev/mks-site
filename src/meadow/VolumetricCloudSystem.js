@@ -60,10 +60,8 @@ export default class VolumetricCloudSystem {
       depthTest: false,
     })
 
-    const quad = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
-      this.material
-    )
+    this.quadGeometry = new THREE.PlaneGeometry(2, 2)
+    const quad = new THREE.Mesh(this.quadGeometry, this.material)
     quad.frustumCulled = false
     this.cloudScene.add(quad)
   }
@@ -106,6 +104,7 @@ export default class VolumetricCloudSystem {
   }
 
   dispose() {
+    if (this.quadGeometry) this.quadGeometry.dispose()
     this.cloudFBO.dispose()
     this.noiseTexture.dispose()
     this.material.dispose()

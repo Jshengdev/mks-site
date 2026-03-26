@@ -923,6 +923,35 @@ export default class WorldEngine {
     if (this._rafId) cancelAnimationFrame(this._rafId)
     window.removeEventListener('resize', this._onResize)
     this.scrollEngine?.destroy()
+
+    // ─── Terrain disposal (AC2) — PlaneGeometry up to 1200x1200 = ~34MB vertex data ───
+    if (this.terrain) {
+      this.scene.remove(this.terrain)
+      this.terrain.geometry.dispose()
+      this.terrain.material.dispose()
+    }
+
+    // ─── SceneSetup disposal (AC2) — sky dome, lights ───
+    if (this.sceneSetup) {
+      // Sky dome (Preetham Sky or gradient/void SphereGeometry)
+      if (this.sceneSetup.sky) {
+        this.scene.remove(this.sceneSetup.sky)
+        this.sceneSetup.sky.geometry?.dispose()
+        this.sceneSetup.sky.material?.dispose()
+      }
+      if (this.sceneSetup.skyMesh) {
+        this.scene.remove(this.sceneSetup.skyMesh)
+        this.sceneSetup.skyMesh.geometry?.dispose()
+        this.sceneSetup.skyMesh.material?.dispose()
+      }
+      if (this.sceneSetup.sunLight) {
+        this.scene.remove(this.sceneSetup.sunLight)
+      }
+      if (this.sceneSetup.ambientLight) {
+        this.scene.remove(this.sceneSetup.ambientLight)
+      }
+    }
+
     this.grassManager?.dispose()
     this.flowers?.dispose()
     this.fireflies?.dispose()

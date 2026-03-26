@@ -12,17 +12,17 @@ export default class ScoreSheetCloth {
     this._windStrength = 1.0
 
     // Placeholder off-white texture
-    const placeholder = new THREE.DataTexture(
+    this.dataTexture = new THREE.DataTexture(
       new Uint8Array([255, 255, 240, 255]), 1, 1
     )
-    placeholder.needsUpdate = true
+    this.dataTexture.needsUpdate = true
 
     for (let i = 0; i < count; i++) {
       // 8x6 grid cloth
       const solver = new ClothSolver(1.8, 1.3, 8, 6)
       const geometry = new THREE.PlaneGeometry(1.8, 1.3, 8, 6)
       const material = new THREE.MeshStandardMaterial({
-        map: placeholder,
+        map: this.dataTexture,
         side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.9,
@@ -77,6 +77,7 @@ export default class ScoreSheetCloth {
   }
 
   dispose() {
+    if (this.dataTexture) this.dataTexture.dispose()
     for (const { mesh } of this.sheets) {
       this.scene.remove(mesh)
       mesh.geometry.dispose()
