@@ -14,12 +14,14 @@ const copy = {
     construction: 'Site under construction',
     contact: 'Contact',
     shop: 'Shop',
+    shopUrl: 'https://store.michaelkimsheng.com',
   },
   es: {
     desc: 'un compositor entre mundos musicales',
     construction: 'Sitio en construcci\u00f3n',
     contact: 'Contacto',
     shop: 'Tienda',
+    shopUrl: 'https://store.michaelkimsheng.com/es',
   },
 }
 
@@ -68,7 +70,7 @@ export default function ProfessionalSite() {
         className="fixed top-4 right-4 z-30 flex items-center gap-4 px-5 py-2.5 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
       >
         <motion.a
-          href="https://store.michaelkimsheng.com"
+          href={t.shopUrl}
           target="_blank" rel="noopener noreferrer"
           className="font-body text-[11px] font-light tracking-[0.08em] uppercase text-text/40 hover:text-text/80 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
           whileHover={{ y: -1 }} transition={spring}
