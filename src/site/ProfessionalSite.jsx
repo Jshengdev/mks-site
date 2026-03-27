@@ -10,13 +10,13 @@ const spring = { type: 'spring', stiffness: 80, damping: 18 }
 
 const copy = {
   en: {
-    desc: 'a composer between worlds',
+    desc: 'a composer between musical worlds',
     construction: 'Site under construction',
     contact: 'Contact',
     shop: 'Shop',
   },
   es: {
-    desc: 'un compositor entre mundos',
+    desc: 'un compositor entre mundos musicales',
     construction: 'Sitio en construcci\u00f3n',
     contact: 'Contacto',
     shop: 'Tienda',
