@@ -67,7 +67,7 @@ export default function ProfessionalSite() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 grid grid-cols-3 items-center px-6 md:px-10 py-5 md:py-6"
+        className="relative z-30 grid grid-cols-3 items-center mx-4 md:mx-8 mt-4 px-6 md:px-10 py-4 md:py-5 rounded-2xl bg-white/[0.06] backdrop-blur-3xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.1),0_8px_32px_rgba(0,0,0,0.3)]"
       >
         {/* Left: Nav links */}
         <nav className="flex items-center gap-6 md:gap-8">
@@ -161,22 +161,22 @@ function NavLink({ children, onClick, href, external }) {
 /* ── Language toggle — sliding pill indicator ── */
 function LangToggle({ lang, setLang }) {
   return (
-    <div className="relative flex items-center bg-white/[0.04] backdrop-blur-xl border border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] rounded-full p-1">
-      {/* Sliding indicator */}
+    <div className="relative flex items-center bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.2)] rounded-full p-1">
+      {/* Sliding glass indicator */}
       <motion.div
-        className="absolute top-1 bottom-1 w-[calc(50%-2px)] rounded-full bg-white/[0.1] border border-white/[0.08]"
+        className="absolute top-1 bottom-1 w-[calc(50%-2px)] rounded-full bg-white/[0.15] border border-white/[0.15] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_4px_rgba(0,0,0,0.15)]"
         animate={{ left: lang === 'en' ? 4 : 'calc(50% + 0px)' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 28 }}
       />
       <button
         onClick={() => setLang('en')}
-        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-text/90' : 'text-text/30 hover:text-text/50'}`}
+        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
       >
         EN
       </button>
       <button
         onClick={() => setLang('es')}
-        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-text/90' : 'text-text/30 hover:text-text/50'}`}
+        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
       >
         ES
       </button>
