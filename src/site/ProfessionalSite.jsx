@@ -56,7 +56,7 @@ export default function ProfessionalSite() {
           src={portrait}
           alt=""
           loading="eager"
-          className="w-full h-full object-cover object-[center_18%] brightness-[0.35] saturate-[0.6]"
+          className="w-full h-full object-cover object-[center_18%] brightness-[0.5] saturate-[0.7]"
         />
       </div>
 
