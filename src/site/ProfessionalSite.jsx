@@ -63,52 +63,39 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── NAV BAR ── */}
+      {/* ── NAV BAR — clean text, no pills, Lanterne style ── */}
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 flex items-center justify-between px-6 md:px-10 py-4 md:py-5"
+        className="relative z-30 flex items-center justify-between px-8 md:px-14 py-7 md:py-9"
       >
-        {/* Left: nav buttons */}
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="lg" asChild
-            className="rounded-full bg-white/[0.06] backdrop-blur-2xl border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.16] text-[13px] tracking-[0.04em] font-light px-6"
-          >
-            <a href={t.shopUrl} target="_blank" rel="noopener noreferrer">{t.shop}</a>
-          </Button>
-          <Button variant="outline" size="lg"
-            onClick={() => setPage('contact')}
-            className="rounded-full bg-white/[0.06] backdrop-blur-2xl border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.16] text-[13px] tracking-[0.04em] font-light px-6"
-          >
-            {t.contact}
-          </Button>
-        </div>
+        {/* Left: nav links */}
+        <nav className="flex items-center gap-10 md:gap-14">
+          <a href={t.shopUrl} target="_blank" rel="noopener noreferrer"
+            className="font-body text-[16px] md:text-[18px] font-light text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          >{t.shop}</a>
+          <button onClick={() => setPage('contact')}
+            className="font-body text-[16px] md:text-[18px] font-light text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          >{t.contact}</button>
+        </nav>
 
-        {/* Right: EN / ES as clean toggle buttons */}
-        <div className="flex items-center gap-1 bg-white/[0.05] backdrop-blur-2xl border border-white/[0.08] rounded-full p-0.5">
-          <Button
-            variant="ghost" size="sm"
-            onClick={() => setLang('en')}
-            className={`rounded-full text-[11px] tracking-[0.06em] px-3.5 h-8 font-light transition-all duration-300 ${
+        {/* Right: EN / ES toggle — larger, cleaner */}
+        <div className="flex items-center gap-1 bg-white/[0.06] backdrop-blur-2xl border border-white/[0.1] rounded-full p-1">
+          <button onClick={() => setLang('en')}
+            className={`rounded-full text-[14px] md:text-[15px] tracking-[0.04em] px-5 py-2 font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'en'
-                ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
-                : 'text-text/30 hover:text-text/60 bg-transparent'
+                ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
+                : 'text-text/30 hover:text-text/60'
             }`}
-          >
-            EN
-          </Button>
-          <Button
-            variant="ghost" size="sm"
-            onClick={() => setLang('es')}
-            className={`rounded-full text-[11px] tracking-[0.06em] px-3.5 h-8 font-light transition-all duration-300 ${
+          >EN</button>
+          <button onClick={() => setLang('es')}
+            className={`rounded-full text-[14px] md:text-[15px] tracking-[0.04em] px-5 py-2 font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'es'
-                ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
-                : 'text-text/30 hover:text-text/60 bg-transparent'
+                ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
+                : 'text-text/30 hover:text-text/60'
             }`}
-          >
-            ES
-          </Button>
+          >ES</button>
         </div>
       </motion.header>
 
