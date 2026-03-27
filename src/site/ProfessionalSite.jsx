@@ -115,7 +115,7 @@ export default function ProfessionalSite() {
           initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
           animate={{ opacity: 0.95, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.2, ease }}
-          className="font-display text-[clamp(1.5rem,4vw,2.5rem)] font-light tracking-[0.15em] uppercase leading-tight"
+          className="font-display text-[clamp(2.2rem,6vw,4rem)] font-light tracking-[0.15em] uppercase leading-tight text-white"
         >
           Michael Kim-Sheng
         </motion.h1>
