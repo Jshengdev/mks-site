@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import SocialIcons from './SocialIcons.jsx'
 import ContactPage from './ContactPage.jsx'
 import portrait from '../assets/textures/mks-portrait.jpg'
@@ -62,20 +62,33 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── TOP RIGHT: Shop, Contact, EN/ES ── */}
-      <motion.nav
+      {/* ── NAV BAR — Spectrum style: clean, spaced, no glass on bar ── */}
+      <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8, ease }}
-        className="fixed top-5 right-5 md:top-6 md:right-8 z-30 flex items-center gap-3"
+        transition={{ delay: 1.2, duration: 0.8, ease }}
+        className="relative z-30 flex items-center justify-between px-8 md:px-12 py-5 md:py-6"
       >
-        <GlassButton href={t.shopUrl} external>{t.shop}</GlassButton>
-        <GlassButton onClick={() => setPage('contact')}>{t.contact}</GlassButton>
+        {/* Left: nav links */}
+        <nav className="flex items-center gap-8 md:gap-10">
+          <motion.a
+            href={t.shopUrl} target="_blank" rel="noopener noreferrer"
+            className="font-body text-[14px] md:text-[15px] font-light tracking-[0.04em] text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            whileHover={{ y: -1 }} transition={spring}
+          >{t.shop}</motion.a>
+          <motion.button
+            onClick={() => setPage('contact')}
+            className="font-body text-[14px] md:text-[15px] font-light tracking-[0.04em] text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            whileHover={{ y: -1 }} transition={spring}
+          >{t.contact}</motion.button>
+        </nav>
+
+        {/* Right: EN/ES toggle */}
         <LangToggle lang={lang} setLang={setLang} />
-      </motion.nav>
+      </motion.header>
 
       {/* ── CENTER CONTENT ── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center gap-6">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center gap-7">
 
         <motion.h1
           initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
@@ -90,7 +103,7 @@ export default function ProfessionalSite() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.45 }}
           transition={{ delay: 0.6, duration: 1, ease }}
-          className="font-body text-[13px] md:text-[15px] font-light tracking-[0.04em]"
+          className="font-body text-[14px] md:text-[16px] font-light tracking-[0.04em]"
         >
           {t.desc}
         </motion.p>
@@ -110,51 +123,39 @@ export default function ProfessionalSite() {
         >
           {t.construction}
         </motion.p>
+
+        {/* Social icons — glassmorphic orbs */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.3, duration: 0.8, ease }}
+          className="mt-2"
+        >
+          <SocialIcons size={22} lang={lang} glass />
+        </motion.div>
       </div>
 
-      {/* ── BOTTOM: SOCIALS (mobile only — desktop shows in header) ── */}
-      <motion.footer
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.4, duration: 0.8, ease }}
-        className="relative z-10 flex justify-center pb-8 pt-4 md:pb-10"
-      >
-        <SocialIcons size={20} lang={lang} />
-      </motion.footer>
+      {/* Bottom spacer */}
+      <div className="relative z-10 h-12 md:h-16" />
     </div>
   )
 }
 
-/* ── Glass button ── */
-function GlassButton({ children, onClick, href, external }) {
-  const cls = "font-body text-[13px] md:text-[14px] font-light tracking-[0.08em] uppercase px-6 py-2.5 md:px-7 md:py-3 rounded-full bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_12px_rgba(0,0,0,0.2)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.18] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-  const anim = { whileHover: { y: -1, scale: 1.02 }, whileTap: { scale: 0.97 }, transition: spring }
-  if (href) return <motion.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={cls} {...anim}>{children}</motion.a>
-  return <motion.button onClick={onClick} className={cls} {...anim}>{children}</motion.button>
-}
-
-/* ── Language toggle — sliding pill indicator ── */
+/* ── Language toggle ── */
 function LangToggle({ lang, setLang }) {
   return (
     <div className="relative flex items-center bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.2)] rounded-full p-1">
-      {/* Sliding glass indicator */}
       <motion.div
         className="absolute top-1 bottom-1 w-[calc(50%-2px)] rounded-full bg-white/[0.15] border border-white/[0.15] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_4px_rgba(0,0,0,0.15)]"
         animate={{ left: lang === 'en' ? 4 : 'calc(50% + 0px)' }}
         transition={{ type: 'spring', stiffness: 400, damping: 28 }}
       />
-      <button
-        onClick={() => setLang('en')}
-        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLang('es')}
-        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >
-        ES
-      </button>
+      <button onClick={() => setLang('en')}
+        className={`relative z-10 font-body text-[12px] font-light tracking-[0.06em] uppercase px-4 py-2 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
+      >EN</button>
+      <button onClick={() => setLang('es')}
+        className={`relative z-10 font-body text-[12px] font-light tracking-[0.06em] uppercase px-4 py-2 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
+      >ES</button>
     </div>
   )
 }
@@ -164,26 +165,4 @@ function setMeta(key, value) {
   let el = document.querySelector(`meta[${attr}="${key}"]`)
   if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el) }
   el.setAttribute('content', value)
-}
-g-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLang('es')}
-        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >
-        ES
-      </button>
-    </div>
-  )
-}
-
-function setMeta(key, value) {
-  const attr = key.startsWith('og:') || key.startsWith('twitter:') ? 'property' : 'name'
-  let el = document.querySelector(`meta[${attr}="${key}"]`)
-  if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el) }
-  el.setAttribute('content', value)
-}
-e('content', value)
 }

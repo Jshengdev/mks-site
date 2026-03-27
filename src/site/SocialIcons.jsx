@@ -27,8 +27,32 @@ const linkSets = {
   ],
 }
 
-export default function SocialIcons({ className = '', size = 18, lang = 'en' }) {
+export default function SocialIcons({ className = '', size = 18, lang = 'en', glass = false }) {
   const links = linkSets[lang] || linkSets.en
+
+  if (glass) {
+    return (
+      <div className={`flex items-center gap-4 ${className}`}>
+        {links.map(({ label, href, icon }) => (
+          <motion.a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_12px_rgba(0,0,0,0.15)] text-text/50 hover:text-white hover:bg-white/[0.14] hover:border-white/[0.2] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            whileHover={{ y: -3, scale: 1.08 }}
+            whileTap={{ scale: 0.93 }}
+            transition={spring}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: size, height: size }}>
+              <path d={icons[icon]} />
+            </svg>
+          </motion.a>
+        ))}
+      </div>
+    )
+  }
 
   return (
     <div className={`flex items-center gap-5 ${className}`}>
