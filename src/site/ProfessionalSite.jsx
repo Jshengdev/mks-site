@@ -62,26 +62,31 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── TOP NAV BAR — full-width frosted glass ── */}
+      {/* ── TOP NAV BAR — Ariana-style: links left, name center, socials + lang right ── */}
       <motion.header
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 flex items-center justify-between px-8 md:px-12 py-4 bg-white/[0.03] backdrop-blur-2xl border-b border-white/[0.06] shadow-[inset_0_-1px_0_rgba(255,255,255,0.03)]"
+        className="relative z-30 grid grid-cols-3 items-center px-6 md:px-10 py-5 md:py-6"
       >
-        {/* Left: Brand mark */}
-        <span className="font-display text-[14px] md:text-[16px] font-light tracking-[0.12em] uppercase text-text/50">
-          MKS
-        </span>
-
-        {/* Center: Nav links */}
-        <nav className="flex items-center gap-8 md:gap-12">
+        {/* Left: Nav links */}
+        <nav className="flex items-center gap-6 md:gap-8">
           <NavLink href={t.shopUrl} external>{t.shop}</NavLink>
           <NavLink onClick={() => setPage('contact')}>{t.contact}</NavLink>
         </nav>
 
-        {/* Right: Language toggle */}
-        <LangToggle lang={lang} setLang={setLang} />
+        {/* Center: Artist name */}
+        <div className="flex justify-center">
+          <span className="font-display text-[15px] md:text-[18px] font-light tracking-[0.1em] text-text/70 whitespace-nowrap">
+            Michael Kim-Sheng
+          </span>
+        </div>
+
+        {/* Right: Social icons + language toggle */}
+        <div className="flex items-center justify-end gap-5 md:gap-6">
+          <SocialIcons size={16} lang={lang} className="hidden md:flex" />
+          <LangToggle lang={lang} setLang={setLang} />
+        </div>
       </motion.header>
 
       {/* ── CENTER CONTENT ── */}
@@ -122,14 +127,14 @@ export default function ProfessionalSite() {
         </motion.p>
       </div>
 
-      {/* ── BOTTOM: SOCIALS ── */}
+      {/* ── BOTTOM: SOCIALS (mobile only — desktop shows in header) ── */}
       <motion.footer
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.4, duration: 0.8, ease }}
-        className="relative z-10 flex justify-center pb-8 pt-4"
+        className="relative z-10 flex justify-center pb-8 pt-4 md:pb-10"
       >
-        <SocialIcons size={20} lang={lang} />
+        <SocialIcons size={20} lang={lang} className="md:hidden" />
       </motion.footer>
     </div>
   )
