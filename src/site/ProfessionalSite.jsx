@@ -84,20 +84,20 @@ export default function ProfessionalSite() {
         {/* Right: EN / ES toggle — larger, cleaner */}
         <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-2xl border border-white/[0.1] rounded-full" style={{ padding: '5px' }}>
           <button onClick={() => setLang('en')}
-            className={`rounded-full font-body text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            className={`rounded-full text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'en'
                 ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
                 : 'text-text/30 hover:text-text/60'
             }`}
-            style={{ padding: '8px 20px' }}
+            style={{ padding: '8px 20px', fontFamily: "'DM Sans', -apple-system, sans-serif" }}
           >EN</button>
           <button onClick={() => setLang('es')}
-            className={`rounded-full font-body text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            className={`rounded-full text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'es'
                 ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
                 : 'text-text/30 hover:text-text/60'
             }`}
-            style={{ padding: '8px 20px' }}
+            style={{ padding: '8px 20px', fontFamily: "'DM Sans', -apple-system, sans-serif" }}
           >ES</button>
         </div>
       </motion.header>
