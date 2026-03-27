@@ -15,6 +15,7 @@ const text = {
     message: 'Message',
     send: 'Send',
     back: 'Back',
+    thanks: 'Thank you for your message.',
   },
   es: {
     title: 'Contacto',
@@ -25,8 +26,11 @@ const text = {
     message: 'Mensaje',
     send: 'Enviar',
     back: 'Volver',
+    thanks: 'Gracias por tu mensaje.',
   },
 }
+
+const inputClass = 'w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] rounded-lg px-4 py-3 font-body text-sm font-light text-text/80 outline-none focus:border-teal/30 focus:bg-white/[0.05] transition-all duration-300 placeholder:text-text/10'
 
 export default function ContactPage({ lang = 'en', onBack }) {
   const t = text[lang]
@@ -45,11 +49,11 @@ export default function ContactPage({ lang = 'en', onBack }) {
   return (
     <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col items-center justify-center relative px-6 py-16 selection:bg-teal/20">
 
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 flex justify-between items-center px-6 py-5">
+      {/* Back button — frosted glass pill */}
+      <div className="fixed top-4 left-4 z-30">
         <motion.button onClick={onBack}
-          className="font-mono text-[11px] tracking-[0.1em] uppercase text-text/30 hover:text-text/70 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          whileHover={{ x: -3 }} transition={spring}
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] font-body text-[11px] font-light tracking-[0.08em] uppercase text-text/40 hover:text-text/80 hover:bg-white/[0.07] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          whileHover={{ x: -2 }} transition={spring}
         >
           &larr; {t.back}
         </motion.button>
@@ -74,7 +78,7 @@ export default function ContactPage({ lang = 'en', onBack }) {
             animate={{ opacity: 0.5 }}
             className="font-body text-sm text-center text-text/50"
           >
-            {lang === 'es' ? 'Gracias por tu mensaje.' : 'Thank you for your message.'}
+            {t.thanks}
           </motion.p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -83,35 +87,25 @@ export default function ContactPage({ lang = 'en', onBack }) {
               { key: 'email', label: t.email, type: 'email' },
               { key: 'subject', label: t.subject, type: 'text' },
             ].map(({ key, label, type }) => (
-              <div key={key} className="flex flex-col gap-1.5">
-                <label className="font-mono text-[9px] tracking-[0.15em] uppercase text-text/20">
+              <div key={key} className="flex flex-col gap-2">
+                <label className="font-body text-[10px] font-light tracking-[0.12em] uppercase text-text/25">
                   {label}
                 </label>
-                <input
-                  type={type}
-                  required
-                  value={form[key]}
-                  onChange={set(key)}
-                  className="bg-text/[0.03] border border-text/[0.06] rounded-sm px-4 py-3 font-body text-sm font-light text-text/80 outline-none focus:border-teal/30 transition-colors duration-300 placeholder:text-text/10"
-                />
+                <input type={type} required value={form[key]} onChange={set(key)} className={inputClass} />
               </div>
             ))}
-            <div className="flex flex-col gap-1.5">
-              <label className="font-mono text-[9px] tracking-[0.15em] uppercase text-text/20">
+            <div className="flex flex-col gap-2">
+              <label className="font-body text-[10px] font-light tracking-[0.12em] uppercase text-text/25">
                 {t.message}
               </label>
-              <textarea
-                required
-                rows={5}
-                value={form.message}
-                onChange={set('message')}
-                className="bg-text/[0.03] border border-text/[0.06] rounded-sm px-4 py-3 font-body text-sm font-light text-text/80 outline-none focus:border-teal/30 transition-colors duration-300 resize-none placeholder:text-text/10"
+              <textarea required rows={5} value={form.message} onChange={set('message')}
+                className={`${inputClass} resize-none`}
               />
             </div>
             <motion.button
               type="submit"
-              className="mt-4 font-body text-[13px] font-light tracking-[0.08em] uppercase py-3 border border-text/10 rounded-full text-text/50 hover:text-text/80 hover:border-teal/30 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-              whileHover={{ scale: 1.02 }}
+              className="mt-4 py-3 rounded-full bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] font-body text-[13px] font-light tracking-[0.08em] uppercase text-text/50 hover:text-text/80 hover:bg-white/[0.08] hover:border-teal/25 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               transition={spring}
             >
