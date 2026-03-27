@@ -103,18 +103,13 @@ export default function ContactPage({ lang = 'en', onBack }) {
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
 
   return (
-    <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col items-center justify-center relative px-6 py-20 selection:bg-teal/20 overflow-hidden">
+    <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col md:flex-row relative selection:bg-teal/20 overflow-hidden">
 
-      {/* Piano background */}
-      <div className="absolute inset-0">
-        <img src={pianoBg} alt="" loading="eager"
-          className="w-full h-full object-cover brightness-[0.2] saturate-[0.5]"
-        />
-      </div>
-      <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, rgba(10,10,10,0.7) 100%)' }} />
+      {/* Left: form side */}
+      <div className="relative z-10 flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-20">
 
       {/* Back button */}
-      <div className="fixed top-6 left-6 md:top-8 md:left-10 z-30">
+      <div className="fixed top-6 left-6 md:top-10 md:left-12 z-30">
         <motion.button onClick={onBack}
           className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] font-body text-[13px] font-light tracking-[0.06em] uppercase text-text/60 hover:text-white hover:bg-white/[0.1] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
           whileHover={{ x: -2 }} transition={spring}
@@ -151,10 +146,10 @@ export default function ContactPage({ lang = 'en', onBack }) {
             transition={{ duration: 0.8, ease }}
             className="w-full max-w-md relative z-10"
           >
-            <h1 className="font-display text-3xl md:text-4xl font-light tracking-[0.08em] text-center mb-5 text-white">
+            <h1 className="font-display text-3xl md:text-4xl font-light tracking-[0.08em] mb-5 text-white">
               {t.title}
             </h1>
-            <p className="font-body text-[15px] font-light text-text/55 text-center mb-12 max-w-sm mx-auto leading-relaxed">
+            <p className="font-body text-[15px] font-light text-text/55 mb-12 max-w-sm leading-relaxed">
               {t.subtitle}
             </p>
 
@@ -216,6 +211,15 @@ export default function ContactPage({ lang = 'en', onBack }) {
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
+
+      {/* Right: piano photo */}
+      <div className="hidden md:block md:w-[45%] relative">
+        <img src={pianoBg} alt="Michael Kim-Sheng at the piano" loading="eager"
+          className="absolute inset-0 w-full h-full object-cover brightness-[0.6] saturate-[0.8]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-void via-void/60 to-transparent" />
+      </div>
     </div>
   )
 }
