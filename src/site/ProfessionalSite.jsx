@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
 import SocialIcons from './SocialIcons.jsx'
 import ContactPage from './ContactPage.jsx'
 import portrait from '../assets/textures/mks-portrait.jpg'
@@ -62,33 +63,57 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── NAV BAR — Spectrum style: clean, spaced, no glass on bar ── */}
+      {/* ── NAV BAR ── */}
       <motion.header
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 flex items-center justify-between px-8 md:px-12 py-5 md:py-6"
+        className="relative z-30 flex items-center justify-between px-6 md:px-10 py-4 md:py-5"
       >
-        {/* Left: nav links */}
-        <nav className="flex items-center gap-8 md:gap-10">
-          <motion.a
-            href={t.shopUrl} target="_blank" rel="noopener noreferrer"
-            className="font-body text-[14px] md:text-[15px] font-light tracking-[0.04em] text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            whileHover={{ y: -1 }} transition={spring}
-          >{t.shop}</motion.a>
-          <motion.button
+        {/* Left: nav buttons */}
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="lg" asChild
+            className="rounded-full bg-white/[0.06] backdrop-blur-2xl border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.16] text-[13px] tracking-[0.04em] font-light px-6"
+          >
+            <a href={t.shopUrl} target="_blank" rel="noopener noreferrer">{t.shop}</a>
+          </Button>
+          <Button variant="outline" size="lg"
             onClick={() => setPage('contact')}
-            className="font-body text-[14px] md:text-[15px] font-light tracking-[0.04em] text-text/50 hover:text-white transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            whileHover={{ y: -1 }} transition={spring}
-          >{t.contact}</motion.button>
-        </nav>
+            className="rounded-full bg-white/[0.06] backdrop-blur-2xl border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.16] text-[13px] tracking-[0.04em] font-light px-6"
+          >
+            {t.contact}
+          </Button>
+        </div>
 
-        {/* Right: EN/ES toggle */}
-        <LangToggle lang={lang} setLang={setLang} />
+        {/* Right: EN / ES as clean toggle buttons */}
+        <div className="flex items-center gap-1 bg-white/[0.05] backdrop-blur-2xl border border-white/[0.08] rounded-full p-0.5">
+          <Button
+            variant="ghost" size="sm"
+            onClick={() => setLang('en')}
+            className={`rounded-full text-[11px] tracking-[0.06em] px-3.5 h-8 font-light transition-all duration-300 ${
+              lang === 'en'
+                ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
+                : 'text-text/30 hover:text-text/60 bg-transparent'
+            }`}
+          >
+            EN
+          </Button>
+          <Button
+            variant="ghost" size="sm"
+            onClick={() => setLang('es')}
+            className={`rounded-full text-[11px] tracking-[0.06em] px-3.5 h-8 font-light transition-all duration-300 ${
+              lang === 'es'
+                ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
+                : 'text-text/30 hover:text-text/60 bg-transparent'
+            }`}
+          >
+            ES
+          </Button>
+        </div>
       </motion.header>
 
-      {/* ── CENTER CONTENT ── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center gap-7">
+      {/* ── CENTER CONTENT — pushed down slightly ── */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-end pb-[18vh] px-6 text-center gap-7">
 
         <motion.h1
           initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
@@ -134,28 +159,6 @@ export default function ProfessionalSite() {
           <SocialIcons size={22} lang={lang} glass />
         </motion.div>
       </div>
-
-      {/* Bottom spacer */}
-      <div className="relative z-10 h-12 md:h-16" />
-    </div>
-  )
-}
-
-/* ── Language toggle ── */
-function LangToggle({ lang, setLang }) {
-  return (
-    <div className="relative flex items-center bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.2)] rounded-full p-1">
-      <motion.div
-        className="absolute top-1 bottom-1 w-[calc(50%-2px)] rounded-full bg-white/[0.15] border border-white/[0.15] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_4px_rgba(0,0,0,0.15)]"
-        animate={{ left: lang === 'en' ? 4 : 'calc(50% + 0px)' }}
-        transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      />
-      <button onClick={() => setLang('en')}
-        className={`relative z-10 font-body text-[12px] font-light tracking-[0.06em] uppercase px-4 py-2 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >EN</button>
-      <button onClick={() => setLang('es')}
-        className={`relative z-10 font-body text-[12px] font-light tracking-[0.06em] uppercase px-4 py-2 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
-      >ES</button>
     </div>
   )
 }
