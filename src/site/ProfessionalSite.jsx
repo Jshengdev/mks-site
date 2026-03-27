@@ -62,18 +62,23 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── TOP NAV BAR ── */}
+      {/* ── TOP NAV BAR — full-width frosted glass ── */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 flex items-center justify-between px-6 md:px-10 py-5"
+        className="relative z-30 flex items-center justify-between px-8 md:px-12 py-4 bg-white/[0.03] backdrop-blur-2xl border-b border-white/[0.06] shadow-[inset_0_-1px_0_rgba(255,255,255,0.03)]"
       >
-        {/* Left: Shop + Contact */}
-        <div className="flex items-center gap-1">
-          <NavButton href={t.shopUrl} external>{t.shop}</NavButton>
-          <NavButton onClick={() => setPage('contact')}>{t.contact}</NavButton>
-        </div>
+        {/* Left: Brand mark */}
+        <span className="font-display text-[14px] md:text-[16px] font-light tracking-[0.12em] uppercase text-text/50">
+          MKS
+        </span>
+
+        {/* Center: Nav links */}
+        <nav className="flex items-center gap-8 md:gap-12">
+          <NavLink href={t.shopUrl} external>{t.shop}</NavLink>
+          <NavLink onClick={() => setPage('contact')}>{t.contact}</NavLink>
+        </nav>
 
         {/* Right: Language toggle */}
         <LangToggle lang={lang} setLang={setLang} />
@@ -130,9 +135,9 @@ export default function ProfessionalSite() {
   )
 }
 
-/* ── Nav button — frosted glass pill ── */
-function NavButton({ children, onClick, href, external }) {
-  const cls = "font-body text-[12px] md:text-[13px] font-light tracking-[0.06em] uppercase px-5 py-2.5 rounded-full bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] text-text/50 hover:text-text/90 hover:bg-white/[0.1] hover:border-white/[0.12] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+/* ── Nav link — clean text, no pill (the bar is the glass) ── */
+function NavLink({ children, onClick, href, external }) {
+  const cls = "font-body text-[13px] md:text-[14px] font-light tracking-[0.1em] uppercase text-text/45 hover:text-text/90 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
 
   if (href) {
     return (
