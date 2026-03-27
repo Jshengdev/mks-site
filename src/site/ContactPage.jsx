@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import pianoBg from '/hero-bg.jpg'
 import './site.css'
 
 const ease = [0.32, 0.72, 0, 1]
@@ -46,8 +47,8 @@ const text = {
   },
 }
 
-const inputClass = 'w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] rounded-lg px-4 py-3 font-body text-sm font-light text-text/80 outline-none focus:border-teal/30 focus:bg-white/[0.05] transition-all duration-300 placeholder:text-text/15'
-const selectClass = 'w-full bg-white/[0.03] backdrop-blur-sm border border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] rounded-lg px-4 py-3 font-body text-sm font-light text-text/80 outline-none focus:border-teal/30 focus:bg-white/[0.05] transition-all duration-300 appearance-none cursor-pointer'
+const inputClass = 'w-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] rounded-lg px-5 py-3.5 font-body text-[15px] font-light text-white/90 outline-none focus:border-teal/40 focus:bg-white/[0.08] transition-all duration-300 placeholder:text-text/20'
+const selectClass = 'w-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] rounded-lg px-5 py-3.5 font-body text-[15px] font-light text-white/90 outline-none focus:border-teal/40 focus:bg-white/[0.08] transition-all duration-300 appearance-none cursor-pointer'
 
 function generateRef() {
   const now = new Date()
@@ -102,12 +103,20 @@ export default function ContactPage({ lang = 'en', onBack }) {
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
 
   return (
-    <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col items-center justify-center relative px-6 py-20 selection:bg-teal/20">
+    <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col items-center justify-center relative px-6 py-20 selection:bg-teal/20 overflow-hidden">
+
+      {/* Piano background */}
+      <div className="absolute inset-0">
+        <img src={pianoBg} alt="" loading="eager"
+          className="w-full h-full object-cover brightness-[0.2] saturate-[0.5]"
+        />
+      </div>
+      <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 20%, rgba(10,10,10,0.7) 100%)' }} />
 
       {/* Back button */}
-      <div className="fixed top-4 left-4 z-30">
+      <div className="fixed top-6 left-6 md:top-8 md:left-10 z-30">
         <motion.button onClick={onBack}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] font-body text-[11px] font-light tracking-[0.08em] uppercase text-text/40 hover:text-text/80 hover:bg-white/[0.07] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.06] backdrop-blur-xl border border-white/[0.1] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] font-body text-[13px] font-light tracking-[0.06em] uppercase text-text/60 hover:text-white hover:bg-white/[0.1] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
           whileHover={{ x: -2 }} transition={spring}
         >
           &larr; {t.back}
@@ -140,12 +149,12 @@ export default function ContactPage({ lang = 'en', onBack }) {
             initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.8, ease }}
-            className="w-full max-w-md"
+            className="w-full max-w-md relative z-10"
           >
-            <h1 className="font-display text-2xl md:text-3xl font-light tracking-[0.08em] text-center mb-4">
+            <h1 className="font-display text-3xl md:text-4xl font-light tracking-[0.08em] text-center mb-5 text-white">
               {t.title}
             </h1>
-            <p className="font-body text-[13px] font-light text-text/35 text-center mb-10 max-w-sm mx-auto leading-relaxed">
+            <p className="font-body text-[15px] font-light text-text/55 text-center mb-12 max-w-sm mx-auto leading-relaxed">
               {t.subtitle}
             </p>
 
@@ -215,7 +224,7 @@ function Field({ label, hint, children }) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline gap-2">
-        <label className="font-body text-[10px] font-light tracking-[0.12em] uppercase text-text/25">
+        <label className="font-body text-[12px] font-light tracking-[0.1em] uppercase text-text/50">
           {label}
         </label>
         {hint && (
