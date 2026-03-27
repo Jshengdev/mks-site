@@ -62,32 +62,17 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* ── TOP NAV BAR — Ariana-style: links left, name center, socials + lang right ── */}
-      <motion.header
+      {/* ── TOP RIGHT: Shop, Contact, EN/ES ── */}
+      <motion.nav
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 grid grid-cols-3 items-center mx-4 md:mx-8 mt-4 px-6 md:px-10 py-4 md:py-5 rounded-2xl bg-white/[0.06] backdrop-blur-3xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.1),0_8px_32px_rgba(0,0,0,0.3)]"
+        transition={{ delay: 1.5, duration: 0.8, ease }}
+        className="fixed top-5 right-5 md:top-6 md:right-8 z-30 flex items-center gap-3"
       >
-        {/* Left: Nav links */}
-        <nav className="flex items-center gap-6 md:gap-8">
-          <NavLink href={t.shopUrl} external>{t.shop}</NavLink>
-          <NavLink onClick={() => setPage('contact')}>{t.contact}</NavLink>
-        </nav>
-
-        {/* Center: Artist name */}
-        <div className="flex justify-center">
-          <span className="font-display text-[15px] md:text-[18px] font-light tracking-[0.1em] text-text/70 whitespace-nowrap">
-            Michael Kim-Sheng
-          </span>
-        </div>
-
-        {/* Right: Social icons + language toggle */}
-        <div className="flex items-center justify-end gap-5 md:gap-6">
-          <SocialIcons size={16} lang={lang} className="hidden md:flex" />
-          <LangToggle lang={lang} setLang={setLang} />
-        </div>
-      </motion.header>
+        <GlassButton href={t.shopUrl} external>{t.shop}</GlassButton>
+        <GlassButton onClick={() => setPage('contact')}>{t.contact}</GlassButton>
+        <LangToggle lang={lang} setLang={setLang} />
+      </motion.nav>
 
       {/* ── CENTER CONTENT ── */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center gap-6">
@@ -134,28 +119,18 @@ export default function ProfessionalSite() {
         transition={{ delay: 1.4, duration: 0.8, ease }}
         className="relative z-10 flex justify-center pb-8 pt-4 md:pb-10"
       >
-        <SocialIcons size={20} lang={lang} className="md:hidden" />
+        <SocialIcons size={20} lang={lang} />
       </motion.footer>
     </div>
   )
 }
 
-/* ── Nav link — clean text, no pill (the bar is the glass) ── */
-function NavLink({ children, onClick, href, external }) {
-  const cls = "font-body text-[13px] md:text-[14px] font-light tracking-[0.1em] uppercase text-text/45 hover:text-text/90 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-
-  if (href) {
-    return (
-      <motion.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}
-        className={cls} whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }} transition={spring}
-      >{children}</motion.a>
-    )
-  }
-  return (
-    <motion.button onClick={onClick} className={cls}
-      whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }} transition={spring}
-    >{children}</motion.button>
-  )
+/* ── Glass button ── */
+function GlassButton({ children, onClick, href, external }) {
+  const cls = "font-body text-[13px] md:text-[14px] font-light tracking-[0.08em] uppercase px-6 py-2.5 md:px-7 md:py-3 rounded-full bg-white/[0.07] backdrop-blur-2xl border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),inset_0_-1px_1px_rgba(0,0,0,0.05),0_2px_12px_rgba(0,0,0,0.2)] text-text/60 hover:text-white hover:bg-white/[0.12] hover:border-white/[0.18] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+  const anim = { whileHover: { y: -1, scale: 1.02 }, whileTap: { scale: 0.97 }, transition: spring }
+  if (href) return <motion.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} className={cls} {...anim}>{children}</motion.a>
+  return <motion.button onClick={onClick} className={cls} {...anim}>{children}</motion.button>
 }
 
 /* ── Language toggle — sliding pill indicator ── */
@@ -189,4 +164,26 @@ function setMeta(key, value) {
   let el = document.querySelector(`meta[${attr}="${key}"]`)
   if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el) }
   el.setAttribute('content', value)
+}
+g-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
+      >
+        EN
+      </button>
+      <button
+        onClick={() => setLang('es')}
+        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-white' : 'text-text/30 hover:text-text/50'}`}
+      >
+        ES
+      </button>
+    </div>
+  )
+}
+
+function setMeta(key, value) {
+  const attr = key.startsWith('og:') || key.startsWith('twitter:') ? 'property' : 'name'
+  let el = document.querySelector(`meta[${attr}="${key}"]`)
+  if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el) }
+  el.setAttribute('content', value)
+}
+e('content', value)
 }
