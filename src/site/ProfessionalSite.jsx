@@ -113,7 +113,7 @@ export default function ProfessionalSite() {
       </motion.header>
 
       {/* ── CENTER CONTENT — pushed down slightly ── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-end pb-[18vh] px-6 text-center gap-7">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center pt-8 px-6 text-center gap-7">
 
         <motion.h1
           initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
