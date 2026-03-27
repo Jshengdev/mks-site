@@ -82,20 +82,22 @@ export default function ProfessionalSite() {
         </nav>
 
         {/* Right: EN / ES toggle — larger, cleaner */}
-        <div className="flex items-center gap-1 bg-white/[0.06] backdrop-blur-2xl border border-white/[0.1] rounded-full p-1">
+        <div className="flex items-center gap-2 bg-white/[0.06] backdrop-blur-2xl border border-white/[0.1] rounded-full" style={{ padding: '5px' }}>
           <button onClick={() => setLang('en')}
-            className={`rounded-full text-[14px] md:text-[15px] tracking-[0.04em] px-5 py-2 font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            className={`rounded-full font-body text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'en'
                 ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
                 : 'text-text/30 hover:text-text/60'
             }`}
+            style={{ padding: '8px 20px' }}
           >EN</button>
           <button onClick={() => setLang('es')}
-            className={`rounded-full text-[14px] md:text-[15px] tracking-[0.04em] px-5 py-2 font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            className={`rounded-full font-body text-[16px] md:text-[18px] font-light transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
               lang === 'es'
                 ? 'bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]'
                 : 'text-text/30 hover:text-text/60'
             }`}
+            style={{ padding: '8px 20px' }}
           >ES</button>
         </div>
       </motion.header>
