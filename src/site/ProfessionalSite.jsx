@@ -68,7 +68,8 @@ export default function ProfessionalSite() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease }}
-        className="relative z-30 flex items-center justify-between px-12 md:px-20 lg:px-24 py-10 md:py-12"
+        className="relative z-30 flex items-center justify-between"
+        style={{ padding: '2.5rem 4rem' }}
       >
         {/* Left: nav links */}
         <nav className="flex items-center gap-10 md:gap-14">

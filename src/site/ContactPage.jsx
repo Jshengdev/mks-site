@@ -106,7 +106,7 @@ export default function ContactPage({ lang = 'en', onBack }) {
     <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col md:flex-row relative selection:bg-teal/20 overflow-hidden">
 
       {/* Left: form side */}
-      <div className="relative z-10 flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-20">
+      <div className="relative z-10 flex-1 flex flex-col justify-center" style={{ padding: '5rem 3rem 5rem 4rem' }}>
 
       {/* Back button */}
       <div className="fixed top-6 left-6 md:top-10 md:left-12 z-30">
