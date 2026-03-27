@@ -65,39 +65,36 @@ export default function ContactPage({ lang = 'en', onBack }) {
   const [status, setStatus] = useState('idle') // idle | sending | sent
   const [ref, setRef] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const ticketRef = generateRef()
     setRef(ticketRef)
     setStatus('sending')
 
-    const inquiryType = form.type || t.types[5]
-    const phoneLine = form.phone ? `Phone: ${form.phone}` : ''
-    const emailBody = [
-      `--- Inquiry ${ticketRef} ---`,
-      '',
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      phoneLine,
-      `Type: ${inquiryType}`,
-      `Subject: ${form.subject}`,
-      '',
-      '--- Message ---',
-      '',
-      form.message,
-      '',
-      '---',
-      `Ref: ${ticketRef}`,
-      `Submitted: ${new Date().toISOString()}`,
-      `Language: ${lang.toUpperCase()}`,
-    ].filter(Boolean).join('%0D%0A')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          type: form.type || t.types[5],
+          subject: form.subject,
+          message: form.message,
+          ref: ticketRef,
+          lang,
+        }),
+      })
 
-    const mailSubject = `[${ticketRef}] ${inquiryType} — ${form.subject}`
-
-    setTimeout(() => {
-      window.location.href = `mailto:mgmt@mynovaproduction.com?subject=${encodeURIComponent(mailSubject)}&body=${emailBody}`
+      if (!res.ok) throw new Error('Send failed')
       setStatus('sent')
-    }, 600)
+    } catch {
+      // Fallback to mailto if API fails
+      const body = `Name: ${form.name}%0D%0AEmail: ${form.email}%0D%0ASubject: ${form.subject}%0D%0A%0D%0A${form.message}`
+      window.location.href = `mailto:mgmt@mynovaproduction.com?subject=${encodeURIComponent(`[${ticketRef}] ${form.subject}`)}&body=${body}`
+      setStatus('sent')
+    }
   }
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
