@@ -63,17 +63,34 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* Top right: EN/ES toggle + Contact */}
-      <motion.div
+      {/* Top right nav: Shop, Contact, EN/ES */}
+      <motion.nav
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 0.8, ease }}
-        className="fixed top-0 right-0 z-30 flex items-center gap-6 px-6 py-5"
+        className="fixed top-0 right-0 z-30 flex items-center gap-5 px-6 py-5"
       >
+        <motion.a
+          href="https://store.michaelkimsheng.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-[10px] tracking-[0.1em] uppercase text-text/30 hover:text-text/70 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          whileHover={{ y: -1 }} transition={spring}
+        >
+          {t.shop}
+        </motion.a>
+        <motion.button
+          onClick={() => setPage('contact')}
+          className="font-mono text-[10px] tracking-[0.1em] uppercase text-text/30 hover:text-text/70 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+          whileHover={{ y: -1 }} transition={spring}
+        >
+          {t.contact}
+        </motion.button>
+        <span className="text-text/8">|</span>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setLang('en')}
-            className={`font-mono text-[10px] tracking-[0.08em] uppercase px-2 py-1 transition-all duration-300 ${
+            className={`font-mono text-[10px] tracking-[0.08em] uppercase px-1.5 py-0.5 transition-all duration-300 ${
               lang === 'en' ? 'text-text/70' : 'text-text/20 hover:text-text/50'
             }`}
           >
@@ -82,21 +99,14 @@ export default function ProfessionalSite() {
           <span className="text-text/10 text-[10px]">/</span>
           <button
             onClick={() => setLang('es')}
-            className={`font-mono text-[10px] tracking-[0.08em] uppercase px-2 py-1 transition-all duration-300 ${
+            className={`font-mono text-[10px] tracking-[0.08em] uppercase px-1.5 py-0.5 transition-all duration-300 ${
               lang === 'es' ? 'text-text/70' : 'text-text/20 hover:text-text/50'
             }`}
           >
             ES
           </button>
         </div>
-        <motion.button
-          onClick={() => setPage('contact')}
-          className="font-mono text-[10px] tracking-[0.1em] uppercase text-text/30 hover:text-text/70 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          whileHover={{ y: -1 }} transition={spring}
-        >
-          {t.contact}
-        </motion.button>
-      </motion.div>
+      </motion.nav>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-8 px-6 text-center">
@@ -143,19 +153,6 @@ export default function ProfessionalSite() {
           <SocialIcons size={20} lang={lang} />
         </motion.div>
 
-        {/* Shop link */}
-        <motion.a
-          href="https://store.michaelkimsheng.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.35 }}
-          transition={{ delay: 1.6, duration: 0.8, ease }}
-          className="font-mono text-[10px] tracking-[0.12em] uppercase hover:opacity-70 transition-opacity duration-500 border-b border-text/10 pb-0.5"
-          whileHover={{ y: -1 }} whileTap={{ scale: 0.98 }}
-        >
-          {t.shop}
-        </motion.a>
 
       </div>
     </div>
