@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import SocialIcons from './SocialIcons.jsx'
 import ContactPage from './ContactPage.jsx'
 import portrait from '../assets/textures/mks-portrait.jpg'
@@ -44,11 +44,11 @@ export default function ProfessionalSite() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col items-center justify-center relative overflow-hidden selection:bg-teal/20">
+    <div className="h-[100dvh] bg-void text-text antialiased cursor-auto flex flex-col relative overflow-hidden selection:bg-teal/20">
 
       {/* Grain */}
       <div
-        className="fixed inset-0 z-50 pointer-events-none opacity-[0.03] mix-blend-overlay"
+        className="fixed inset-0 z-50 pointer-events-none opacity-[0.035] mix-blend-overlay"
         style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'g\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23g)\'/%3E%3C/svg%3E")', backgroundSize: '100px' }}
       />
 
@@ -62,42 +62,25 @@ export default function ProfessionalSite() {
       {/* Vignette */}
       <div className="absolute inset-0 z-[1]" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,10,0.6) 100%)' }} />
 
-      {/* Top right nav — frosted glass pill */}
-      <motion.nav
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8, ease }}
-        className="fixed top-4 right-4 z-30 flex items-center gap-4 px-5 py-2.5 rounded-full bg-white/[0.04] backdrop-blur-xl border border-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+      {/* ── TOP NAV BAR ── */}
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.8, ease }}
+        className="relative z-30 flex items-center justify-between px-6 md:px-10 py-5"
       >
-        <motion.a
-          href={t.shopUrl}
-          target="_blank" rel="noopener noreferrer"
-          className="font-body text-[11px] font-light tracking-[0.08em] uppercase text-text/40 hover:text-text/80 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          whileHover={{ y: -1 }} transition={spring}
-        >
-          {t.shop}
-        </motion.a>
-        <span className="w-px h-3 bg-text/[0.08]" />
-        <motion.button
-          onClick={() => setPage('contact')}
-          className="font-body text-[11px] font-light tracking-[0.08em] uppercase text-text/40 hover:text-text/80 transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
-          whileHover={{ y: -1 }} transition={spring}
-        >
-          {t.contact}
-        </motion.button>
-        <span className="w-px h-3 bg-text/[0.08]" />
-        <div className="flex items-center gap-0.5">
-          <button onClick={() => setLang('en')}
-            className={`font-body text-[10px] font-light tracking-[0.06em] uppercase px-1.5 py-0.5 rounded-full transition-all duration-300 ${lang === 'en' ? 'text-text/80 bg-white/[0.06]' : 'text-text/25 hover:text-text/50'}`}
-          >EN</button>
-          <button onClick={() => setLang('es')}
-            className={`font-body text-[10px] font-light tracking-[0.06em] uppercase px-1.5 py-0.5 rounded-full transition-all duration-300 ${lang === 'es' ? 'text-text/80 bg-white/[0.06]' : 'text-text/25 hover:text-text/50'}`}
-          >ES</button>
+        {/* Left: Shop + Contact */}
+        <div className="flex items-center gap-1">
+          <NavButton href={t.shopUrl} external>{t.shop}</NavButton>
+          <NavButton onClick={() => setPage('contact')}>{t.contact}</NavButton>
         </div>
-      </motion.nav>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-8 px-6 text-center">
+        {/* Right: Language toggle */}
+        <LangToggle lang={lang} setLang={setLang} />
+      </motion.header>
+
+      {/* ── CENTER CONTENT ── */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center gap-6">
 
         <motion.h1
           initial={{ opacity: 0, y: 16, filter: 'blur(8px)' }}
@@ -112,7 +95,7 @@ export default function ProfessionalSite() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.45 }}
           transition={{ delay: 0.6, duration: 1, ease }}
-          className="font-body text-[13px] font-light tracking-[0.04em]"
+          className="font-body text-[13px] md:text-[15px] font-light tracking-[0.04em]"
         >
           {t.desc}
         </motion.p>
@@ -128,20 +111,65 @@ export default function ProfessionalSite() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.2 }}
           transition={{ delay: 1.1, duration: 1, ease }}
-          className="font-body text-[10px] font-light tracking-[0.12em] uppercase"
+          className="font-body text-[11px] font-light tracking-[0.12em] uppercase"
         >
           {t.construction}
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.8, ease }}
-        >
-          <SocialIcons size={20} lang={lang} />
-        </motion.div>
-
       </div>
+
+      {/* ── BOTTOM: SOCIALS ── */}
+      <motion.footer
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.4, duration: 0.8, ease }}
+        className="relative z-10 flex justify-center pb-8 pt-4"
+      >
+        <SocialIcons size={20} lang={lang} />
+      </motion.footer>
+    </div>
+  )
+}
+
+/* ── Nav button — frosted glass pill ── */
+function NavButton({ children, onClick, href, external }) {
+  const cls = "font-body text-[12px] md:text-[13px] font-light tracking-[0.06em] uppercase px-5 py-2.5 rounded-full bg-white/[0.05] backdrop-blur-xl border border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] text-text/50 hover:text-text/90 hover:bg-white/[0.1] hover:border-white/[0.12] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+
+  if (href) {
+    return (
+      <motion.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}
+        className={cls} whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }} transition={spring}
+      >{children}</motion.a>
+    )
+  }
+  return (
+    <motion.button onClick={onClick} className={cls}
+      whileHover={{ y: -1 }} whileTap={{ scale: 0.97 }} transition={spring}
+    >{children}</motion.button>
+  )
+}
+
+/* ── Language toggle — sliding pill indicator ── */
+function LangToggle({ lang, setLang }) {
+  return (
+    <div className="relative flex items-center bg-white/[0.04] backdrop-blur-xl border border-white/[0.07] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] rounded-full p-1">
+      {/* Sliding indicator */}
+      <motion.div
+        className="absolute top-1 bottom-1 w-[calc(50%-2px)] rounded-full bg-white/[0.1] border border-white/[0.08]"
+        animate={{ left: lang === 'en' ? 4 : 'calc(50% + 0px)' }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+      />
+      <button
+        onClick={() => setLang('en')}
+        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'en' ? 'text-text/90' : 'text-text/30 hover:text-text/50'}`}
+      >
+        EN
+      </button>
+      <button
+        onClick={() => setLang('es')}
+        className={`relative z-10 font-body text-[11px] font-light tracking-[0.06em] uppercase px-4 py-1.5 rounded-full transition-colors duration-300 ${lang === 'es' ? 'text-text/90' : 'text-text/30 hover:text-text/50'}`}
+      >
+        ES
+      </button>
     </div>
   )
 }
