@@ -140,7 +140,7 @@ export default function ProfessionalSite() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3, duration: 0.8, ease }}
         >
-          <SocialIcons size={20} />
+          <SocialIcons size={20} lang={lang} />
         </motion.div>
 
         {/* Shop link */}
