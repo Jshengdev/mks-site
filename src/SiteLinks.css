@@ -1,43 +1,3 @@
-/* Under construction — subtle top-right notice */
-.site-construction {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 1.2rem;
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(8px);
-  border-bottom-left-radius: 8px;
-  border-left: 1px solid rgba(200, 212, 232, 0.06);
-  border-bottom: 1px solid rgba(200, 212, 232, 0.06);
-}
-
-.site-construction__text {
-  font-family: var(--font-body, 'DM Sans', sans-serif);
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #5a6a6a;
-}
-
-.site-construction__store {
-  font-family: var(--font-body, 'DM Sans', sans-serif);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #d4c968;
-  text-decoration: none;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.site-construction__store:hover {
-  opacity: 1;
-}
-
 /* Social links — fixed bottom right, vertical stack */
 .site-socials {
   position: fixed;
@@ -76,7 +36,6 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .site-construction__store,
   .site-socials__link {
     transition: none;
   }

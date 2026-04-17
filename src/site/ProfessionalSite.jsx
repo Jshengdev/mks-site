@@ -12,14 +12,12 @@ const spring = { type: 'spring', stiffness: 80, damping: 18 }
 const copy = {
   en: {
     desc: 'a composer between musical worlds',
-    construction: 'Site under construction',
     contact: 'Contact',
     shop: 'Shop',
     shopUrl: 'https://store.michaelkimsheng.com',
   },
   es: {
     desc: 'un compositor entre mundos musicales',
-    construction: 'Sitio en construcci\u00f3n',
     contact: 'Contacto',
     shop: 'Tienda',
     shopUrl: 'https://store.michaelkimsheng.com/es',
@@ -130,20 +128,11 @@ export default function ProfessionalSite() {
           className="h-px w-10 bg-text/10"
         />
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.2 }}
-          transition={{ delay: 1.1, duration: 1, ease }}
-          className="font-body text-[11px] font-light tracking-[0.12em] uppercase"
-        >
-          {t.construction}
-        </motion.p>
-
         {/* Social icons — glassmorphic orbs */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.3, duration: 0.8, ease }}
+          transition={{ delay: 1.1, duration: 0.8, ease }}
           className="mt-2"
         >
           <SocialIcons size={22} lang={lang} glass />
