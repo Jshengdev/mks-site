@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import SocialIcons from './SocialIcons.jsx'
 import ContactPage from './ContactPage.jsx'
-import portrait from '../assets/textures/mks-portrait.jpg'
+import portrait from '../assets/textures/mks-hero.jpg'
 import './site.css'
 
 const ease = [0.32, 0.72, 0, 1]
@@ -54,7 +54,7 @@ export default function ProfessionalSite() {
       {/* Portrait bg */}
       <div className="absolute inset-0">
         <img src={portrait} alt="" loading="eager"
-          className="w-full h-full object-cover object-[center_18%] brightness-[0.5] saturate-[0.7]"
+          className="w-full h-full object-cover object-center brightness-[0.95] saturate-[0.9]"
         />
       </div>
 
