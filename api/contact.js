@@ -14,8 +14,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'MKS Contact Form <contact@send.michaelkimsheng.com>',
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'MKS Contact Form <contact@michaelkimsheng.com>',
       to: 'mgmt@mynovaproduction.com',
       replyTo: email,
       subject: `[${ref}] ${type || 'Inquiry'} — ${subject}`,
@@ -42,7 +42,12 @@ export default async function handler(req, res) {
       `,
     })
 
-    return res.status(200).json({ success: true, ref })
+    if (error) {
+      console.error('Resend error:', error)
+      return res.status(500).json({ error: error.message || 'Failed to send message' })
+    }
+
+    return res.status(200).json({ success: true, ref, id: data?.id })
   } catch (error) {
     console.error('Resend error:', error)
     return res.status(500).json({ error: 'Failed to send message' })
