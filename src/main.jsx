@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import ProfessionalSite from './site/ProfessionalSite.jsx'
+import ComposeWithMe from './site/ComposeWithMe.jsx'
 
 // Lazy-load the entire WebGL experience — zero Three.js on the professional site
 const ExperienceApp = lazy(() => import('./App.jsx'))
@@ -28,6 +29,8 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<ProfessionalSite />} />
+        <Route path="/compose-with-me" element={<ComposeWithMe />} />
+        <Route path="/compose-with-me/:date" element={<ComposeWithMe />} />
         <Route path="/experience/*" element={
           <Suspense fallback={experienceFallback}>
             <ExperienceApp />
